@@ -1,11 +1,11 @@
 @extends('new_layouts.app')
 
-@section('title', 'Home Page')
+@section('title', 'Admin dashbored')
 
 @section('content')
     <div class="row row-card-no-pd">
         <div style="font-size: 20px">
-            Home Page
+            Admin Page
         </div>
     </div>
 @endsection
