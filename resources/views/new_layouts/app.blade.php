@@ -105,16 +105,6 @@
                             <h4 class="text-section">Components</h4>
                         </li>
 
-                        @if (auth()->user()->role === 'user')
-                            <li class="nav-item">
-                                <a href=" {{ route('up') }} ">
-                                    <i class="fas fa-upload"></i>
-                                    <p>Upload</p>
-                                </a>
-                            </li>
-
-                        @endif
-
                         <li class="nav-item">
                             <a data-bs-toggle="collapse" href="#base">
                                 <i class="fas fa-layer-group"></i>
