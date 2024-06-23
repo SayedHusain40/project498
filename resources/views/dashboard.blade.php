@@ -5,7 +5,7 @@
 @section('content')
     <div class="row row-card-no-pd">
         <div style="font-size: 20px">
-            Home Pagec
+            User Home Page
         </div>
     </div>
 @endsection
