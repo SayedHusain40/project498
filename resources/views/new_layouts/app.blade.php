@@ -8,6 +8,11 @@
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
     <link rel="icon" href="{{ asset('assets/img/kaiadmin/favicon.ico') }}" type="image/x-icon" />
 
+    <!-- FilePond stylesheet -->
+    <link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" />
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
+        rel="stylesheet" />
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -105,6 +110,68 @@
                             <h4 class="text-section">Components</h4>
                         </li>
 
+                        @if (auth()->user()->role === 'user')
+                            <li class="nav-item">
+                                <a href=" {{ route('up') }} ">
+                                    <i class="fas fa-upload"></i>
+                                    <p>Upload</p>
+                                </a>
+                            </li>
+
+
+                            <li class="nav-item">
+                                <a data-bs-toggle="collapse" href="#menuLevelsSubmenu">
+                                    <i class="fas fa-bars"></i>
+                                    <p>Menu Levels</p>
+                                    <span class="caret"></span>
+                                </a>
+                                <div class="collapse" id="menuLevelsSubmenu">
+                                    <ul class="nav nav-collapse">
+                                        <li>
+                                            <a data-bs-toggle="collapse" href="#subnavMenu1">
+                                                <span class="sub-item">Level 1</span>
+                                                <span class="caret"></span>
+                                            </a>
+                                            <div class="collapse" id="subnavMenu1">
+                                                <ul class="nav nav-collapse subnav">
+                                                    <li>
+                                                        <a href="#">
+                                                            <span class="sub-item">Level 2</span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#">
+                                                            <span class="sub-item">Level 2</span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <a data-bs-toggle="collapse" href="#subnavMenu2">
+                                                <span class="sub-item">Level 1</span>
+                                                <span class="caret"></span>
+                                            </a>
+                                            <div class="collapse" id="subnavMenu2">
+                                                <ul class="nav nav-collapse subnav">
+                                                    <li>
+                                                        <a href="#">
+                                                            <span class="sub-item">Level 2</span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <span class="sub-item">Level 1</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        @endif
+
                         <li class="nav-item">
                             <a data-bs-toggle="collapse" href="#base">
                                 <i class="fas fa-layer-group"></i>
@@ -140,57 +207,7 @@
                             </a>
                         </li>
 
-                        <li class="nav-item">
-                            <a data-bs-toggle="collapse" href="#submenu">
-                                <i class="fas fa-bars"></i>
-                                <p>Menu Levels</p>
-                                <span class="caret"></span>
-                            </a>
-                            <div class="collapse" id="submenu">
-                                <ul class="nav nav-collapse">
-                                    <li>
-                                        <a data-bs-toggle="collapse" href="#subnav1">
-                                            <span class="sub-item">Level 1</span>
-                                            <span class="caret"></span>
-                                        </a>
-                                        <div class="collapse" id="subnav1">
-                                            <ul class="nav nav-collapse subnav">
-                                                <li>
-                                                    <a href="#">
-                                                        <span class="sub-item">Level 2</span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">
-                                                        <span class="sub-item">Level 2</span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <a data-bs-toggle="collapse" href="#subnav2">
-                                            <span class="sub-item">Level 1</span>
-                                            <span class="caret"></span>
-                                        </a>
-                                        <div class="collapse" id="subnav2">
-                                            <ul class="nav nav-collapse subnav">
-                                                <li>
-                                                    <a href="#">
-                                                        <span class="sub-item">Level 2</span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <span class="sub-item">Level 1</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
+
                     </ul>
                 </div>
             </div>
@@ -629,6 +646,32 @@
             </div>
         </div>
     </div>
+
+
+    <!-- Load FilePond library -->
+    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+    <script src="https://unpkg.com/filepond@^4/dist/filepond.js"></script>
+
+    <!-- Turn all file input elements into ponds -->
+    <script>
+        // Register the plugin
+        FilePond.registerPlugin(FilePondPluginImagePreview);
+        // Get a reference to the file input element
+        const inputElement = document.querySelector('input[type="file"]');
+
+        // Create a FilePond instance
+        const pond = FilePond.create(inputElement);
+
+        FilePond.setOptions({
+            server: {
+                process: '/upload',
+                revert: '/delete',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            },
+        });
+    </script>
 
     <!-- Core JS Files -->
     <script src="{{ asset('assets/js/core/jquery-3.7.1.min.js') }}"></script>
