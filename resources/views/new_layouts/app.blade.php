@@ -85,11 +85,12 @@
                 </div>
                 <!-- End Logo Header -->
             </div>
+
             <div class="sidebar-wrapper scrollbar scrollbar-inner">
                 <div class="sidebar-content">
                     <ul class="nav nav-secondary">
-                        <li class="nav-item active">
-
+                        <li
+                            class="nav-item {{ request()->routeIs('dashboard') || request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                             @if (auth()->user()->role === 'user')
                                 <a href="{{ route('dashboard') }}">
                                     <i class="fas fa-home"></i>
@@ -101,7 +102,6 @@
                                     <p>Dashboard</p>
                                 </a>
                             @endif
-
                         </li>
                         <li class="nav-section">
                             <span class="sidebar-mini-icon">
@@ -111,15 +111,14 @@
                         </li>
 
                         @if (auth()->user()->role === 'user')
-                            <li class="nav-item">
-                                <a href=" {{ route('up') }} ">
+                            <li class="nav-item {{ request()->routeIs('up') ? 'active' : '' }}">
+                                <a href="{{ route('up') }}">
                                     <i class="fas fa-upload"></i>
                                     <p>Upload</p>
                                 </a>
                             </li>
 
-
-                            <li class="nav-item">
+                            <li class="nav-item {{ request()->routeIs('menu.levels') ? 'active' : '' }}">
                                 <a data-bs-toggle="collapse" href="#menuLevelsSubmenu">
                                     <i class="fas fa-bars"></i>
                                     <p>Menu Levels</p>
@@ -172,7 +171,7 @@
                             </li>
                         @endif
 
-                        <li class="nav-item">
+                        <li class="nav-item {{ request()->routeIs('base') ? 'active' : '' }}">
                             <a data-bs-toggle="collapse" href="#base">
                                 <i class="fas fa-layer-group"></i>
                                 <p>Base</p>
@@ -199,18 +198,17 @@
                             </div>
                         </li>
 
-                        <li class="nav-item">
+                        <li class="nav-item {{ request()->routeIs('widgets') ? 'active' : '' }}">
                             <a href="#">
                                 <i class="fas fa-desktop"></i>
                                 <p>Widgets</p>
                                 <span class="badge badge-success">4</span>
                             </a>
                         </li>
-
-
                     </ul>
                 </div>
             </div>
+
         </div>
         <!-- End Sidebar -->
 
