@@ -11,6 +11,8 @@ use App\Http\Controllers\DeleteTemporaryFileController;
 use App\Http\Controllers\UploadTemporaryFileController;
 use App\Http\Controllers\UploadController;
 
+use App\Http\Controllers\DiscountController;
+
 
 //admin
 use App\Http\Controllers\Admin\HomeController;
@@ -19,6 +21,8 @@ use App\Http\Controllers\Admin\HomeController;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/discount', [DiscountController::class, 'index'])->name('discount.index');
 
 Route::middleware('auth')->group(function () {
 
