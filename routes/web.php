@@ -37,7 +37,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 
-        //For Posts
+        //For Posts --- EDIT NAME OF Controller !!!!! 
+        //For Posts --- EDIT NAME OF Controller !!!!! 
         Route::get('/Posts', UploadController::class)->name('Posts');
 
 });
