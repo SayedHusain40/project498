@@ -2,6 +2,10 @@
 
 @section('title', 'Upload Page')
 
+@section('page_name', 'Upload')
+
+@section('page_description', 'this is Upload page ..')
+
 @section('content')
     <div class="container">
         <div class="row justify-content-center">

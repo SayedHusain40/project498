@@ -18,9 +18,9 @@
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
     <!-- font - Awesom CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" 
-    integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" 
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <!-- Fonts and icons -->
     <script src="{{ asset('assets/js/plugin/webfont/webfont.min.js') }}"></script>
@@ -116,18 +116,17 @@
                         </li>
 
                         @if (auth()->user()->role === 'user')
-
-                                <!-- Route posts -->
+                            <!-- Route posts -->
 
                             <li class="nav-item {{ request()->routeIs('posts') ? 'active' : '' }}">
                                 <a href="{{ route('posts') }}">
                                     <i class="fas fa-upload"></i>
                                     <p>Posts</p>
                                 </a>
-                            </li> 
+                            </li>
 
 
-                                    <!-- Route Upload -->
+                            <!-- Route Upload -->
                             <li class="nav-item {{ request()->routeIs('up') ? 'active' : '' }}">
                                 <a href="{{ route('up') }}">
                                     <i class="fas fa-upload"></i>
@@ -224,13 +223,13 @@
                             </a>
                         </li>
 
-                                                        <!-- Route Discounts -->
-                                                        <li class="nav-item">
-                                <a href="{{ route('discount.index') }}">
+                        <!-- Route Discounts -->
+                        <li class="nav-item">
+                            <a href="{{ route('discount.index') }}">
                                 <i class="fa-solid fa-tag"></i>
-                                    <p>Student Discounts</p>
-                                </a>
-                            </li>
+                                <p>Student Discounts</p>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -559,8 +558,10 @@
                 <div class="page-inner">
                     <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
                         <div>
-                            <h3 class="fw-bold mb-3">Dashboard</h3>
-                            <h6 class="op-7 mb-2">Free Bootstrap 5 Admin Dashboard</h6>
+
+                            <h3 class="fw-bold mb-3">@yield('page_name')</h3>
+                            <h6 class="op-7 mb-2">@yield('page_description')</h6>
+
                         </div>
                         <div class="ms-md-auto py-2 py-md-0">
                             <a href="#" class="btn btn-label-info btn-round me-2">Manage</a>

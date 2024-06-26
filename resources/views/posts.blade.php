@@ -2,6 +2,10 @@
 
 @section('title', 'Posts Page')
 
+@section('page_name', 'Post')
+
+@section('page_description', 'this is post page ..')
+
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
