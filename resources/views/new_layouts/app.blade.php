@@ -111,6 +111,12 @@
                         </li>
 
                         @if (auth()->user()->role === 'user')
+
+                                <!-- Route posts -->
+
+
+
+                                    <!-- Route Upload -->
                             <li class="nav-item {{ request()->routeIs('up') ? 'active' : '' }}">
                                 <a href="{{ route('up') }}">
                                     <i class="fas fa-upload"></i>
