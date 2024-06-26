@@ -6,7 +6,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-8"> <!-- Adjust the width as per your requirement -->
-                <form method="post" action="/Posts" enctype="multipart/form-data">
+                <form method="post" action="{{ route('posts.store') }}" enctype="multipart/form-data">
                     @csrf
                     <div class="card">
                         <div class="card-body">

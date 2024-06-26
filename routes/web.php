@@ -13,6 +13,8 @@ use App\Http\Controllers\UploadController;
 
 use App\Http\Controllers\DiscountController;
 
+use App\Http\Controllers\PostsController;
+
 
 //admin
 use App\Http\Controllers\Admin\HomeController;
@@ -41,10 +43,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 
-        //For Posts --- EDIT NAME OF Controller !!!!! 
-        //For Posts --- EDIT NAME OF Controller !!!!! 
-        Route::get('/Posts', UploadController::class)->name('Posts');
+    //For Posts --- EDIT NAME OF Controller !!!!! 
 
+    // Display a listing of posts
+    Route::get('/posts', [PostsController::class, 'index'])->name('posts');
+    // Store a new created post
+    Route::post('/posts', [PostsController::class, 'store'])->name('posts.store');
 });
 
 // Only for admin

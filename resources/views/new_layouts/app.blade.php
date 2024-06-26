@@ -119,12 +119,12 @@
 
                                 <!-- Route posts -->
 
-                                <!-- <li class="nav-item {{ request()->routeIs('Posts') ? 'active' : '' }}">
-                                <a href="{{ route('Posts') }}">
+                            <li class="nav-item {{ request()->routeIs('posts') ? 'active' : '' }}">
+                                <a href="{{ route('posts') }}">
                                     <i class="fas fa-upload"></i>
                                     <p>Posts</p>
                                 </a>
-                            </li> -->
+                            </li> 
 
 
                                     <!-- Route Upload -->
