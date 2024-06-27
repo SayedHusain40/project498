@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\College;
+use App\Models\Department;
+
+
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -20,5 +24,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //
+        $colleges = College::with('departments.courses')->get();
+        view()->share('colleges', $colleges);
     }
 }

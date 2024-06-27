@@ -130,13 +130,58 @@
                             <li class="nav-item {{ request()->routeIs('up') ? 'active' : '' }}">
                                 <a href="{{ route('up') }}">
                                     <i class="fas">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-cloud-upload-fill" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M8 0a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 4.095 0 5.555 0 7.318 0 9.366 1.708 11 3.781 11H7.5V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11h4.188C14.502 11 16 9.57 16 7.773c0-1.636-1.242-2.969-2.834-3.194C12.923 1.999 10.69 0 8 0m-.5 14.5V11h1v3.5a.5.5 0 0 1-1 0"/>
-</svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            fill="currentColor" class="bi bi-cloud-upload-fill" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd"
+                                                d="M8 0a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 4.095 0 5.555 0 7.318 0 9.366 1.708 11 3.781 11H7.5V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11h4.188C14.502 11 16 9.57 16 7.773c0-1.636-1.242-2.969-2.834-3.194C12.923 1.999 10.69 0 8 0m-.5 14.5V11h1v3.5a.5.5 0 0 1-1 0" />
+                                        </svg>
                                     </i>
                                     <p>Upload</p>
                                 </a>
                             </li>
+
+<li class="nav-item">
+    <a data-bs-toggle="collapse" href="#collegesSubmenu">
+        <i class="fas fa-bars"></i>
+        <p>colleges</p>
+        <span class="caret"></span>
+    </a>
+    <div class="collapse" id="collegesSubmenu">
+        <ul class="nav nav-collapse">
+            @foreach ($colleges as $index => $college)
+                <li>
+                    <a data-bs-toggle="collapse" href="#subnav{{ $index }}">
+                        <span class="sub-item">{{ $college->name }}</span>
+                        <span class="caret"></span>
+                    </a>
+                    <div class="collapse" id="subnav{{ $index }}">
+                        <ul class="nav nav-collapse subnav">
+                            @foreach ($college->departments as $department)
+                                <li>
+                                    <a data-bs-toggle="collapse" href="#subnavDept{{ $department->id }}">
+                                        <span class="sub-item">{{ $department->name }}</span>
+                                        <span class="caret"></span>
+                                    </a>
+                                    <div class="collapse" id="subnavDept{{ $department->id }}">
+                                        <ul class="nav nav-collapse subnav">
+                                            @foreach ($department->courses as $course)
+                                                <li class="nav-item">
+                                                    <a href="#">
+                                                        <span class="sub-item">{{ $course->name }}</span>
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </li>
+            @endforeach
+        </ul>
+    </div>
+</li>
 
 
                             <li class="nav-item {{ request()->routeIs('menu.levels') ? 'active' : '' }}">
