@@ -10,4 +10,8 @@ class Material extends Model
     use HasFactory;
     protected $guarded = [];
     
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
+    }
 }
