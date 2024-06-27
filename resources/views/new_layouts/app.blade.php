@@ -99,7 +99,7 @@
                             @if (auth()->user()->role === 'user')
                                 <a href="{{ route('dashboard') }}">
                                     <i class="fas fa-home"></i>
-                                    <p>Dashboard</p>
+                                    <p>Home Page</p>
                                 </a>
                             @elseif(auth()->user()->role === 'admin')
                                 <a href="{{ route('admin.dashboard') }}">
@@ -556,17 +556,19 @@
 
             <div class="container">
                 <div class="page-inner">
-                    <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+                    <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
                         <div>
 
                             <h3 class="fw-bold mb-3">@yield('page_name')</h3>
                             <h6 class="op-7 mb-2">@yield('page_description')</h6>
 
                         </div>
+
                         <div class="ms-md-auto py-2 py-md-0">
                             <a href="#" class="btn btn-label-info btn-round me-2">Manage</a>
                             <a href="#" class="btn btn-primary btn-round">Add Customer</a>
                         </div>
+
                     </div>
 
                     {{-- Content --}}

@@ -9,7 +9,7 @@
 @section('content')
     <div class="row row-card-no-pd">
         <div style="font-size: 20px">
-            fwafwfqd User Home Page
+            Content
         </div>
     </div>
 @endsection
