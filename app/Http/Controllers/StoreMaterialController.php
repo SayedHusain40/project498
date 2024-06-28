@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\File;
 use App\Models\Material;
-use Illuminate\Http\Request;
+use App\Models\File;
 use App\Models\TemporaryFile;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
@@ -15,10 +15,10 @@ class StoreMaterialController extends Controller
 {
     public function __invoke(Request $request)
     {
-        // Validate the request data
         $validator = Validator::make($request->all(), [
             'title' => 'required',
-            'description' => 'required'
+            'description' => 'required',
+            'course_id' => 'required'  
         ]);
 
         // Get all temporary files
@@ -38,12 +38,15 @@ class StoreMaterialController extends Controller
             return redirect('/up')->withErrors($validator)->withInput();
         }
 
+        // Create the material record
         $material = Material::create([
             'user_id' => Auth::id(),
             'title' => $request->title,
-            'description' => $request->description
+            'description' => $request->description,
+            'course_id' => $request->course_id  
         ]);
 
+        // Handle file uploads and move from temporary storage
         foreach ($temporaryFiles as $temporaryFile) {
             $finalPath = 'files/' . $temporaryFile->file;
 
@@ -68,7 +71,7 @@ class StoreMaterialController extends Controller
             }
         }
 
-        // Redirect to the desired route
+        // Redirect to the desired route after successful upload
         return redirect('/up');
     }
 }

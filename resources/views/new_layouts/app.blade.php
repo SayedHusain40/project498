@@ -167,7 +167,7 @@
                                             @foreach ($department->courses as $course)
                                                 <li class="nav-item">
                                                     <a href="#">
-                                                        <span class="sub-item">{{ $course->name }}</span>
+                                                        <span class="sub-item" style="font: 16px">{{ $course->name }} - {{ $course->code }}</span> 
                                                     </a>
                                                 </li>
                                             @endforeach
@@ -182,6 +182,7 @@
         </ul>
     </div>
 </li>
+
 
 
                             <li class="nav-item {{ request()->routeIs('menu.levels') ? 'active' : '' }}">
@@ -784,6 +785,7 @@
 
     <script src="assets/js/setting-demo.js"></script>
 
+    @yield('scripts')
 </body>
 
 </html>
