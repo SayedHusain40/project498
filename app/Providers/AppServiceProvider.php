@@ -25,5 +25,6 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         $colleges = College::with('departments.courses')->get();
-        view()->share('colleges', $colleges);    }
+        view()->share('colleges', $colleges);
+    }
 }
