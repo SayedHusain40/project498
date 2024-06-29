@@ -56,7 +56,7 @@
                                 </div>
                             </div>
                             @error('course_id')
-                                <p class="text-danger">{{ $message }}</p>
+                                <p class="text-danger">The course is required.</p>
                             @enderror
 
                             <!-- FilePond input -->
