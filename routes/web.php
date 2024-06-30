@@ -45,7 +45,6 @@ Route::middleware('auth')->group(function () {
 
     //For Posts --- EDIT NAME OF Controller !!!!! 
 
-    // Display a listing of posts
     Route::get('/posts', [PostsController::class, 'index'])->name('posts');
     // Store a new created post
     Route::post('/posts', [PostsController::class, 'store'])->name('posts.store');
