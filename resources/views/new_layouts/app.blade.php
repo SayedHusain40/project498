@@ -140,48 +140,61 @@
                                 </a>
                             </li>
 
-<li class="nav-item">
-    <a data-bs-toggle="collapse" href="#collegesSubmenu">
-        <i class="fas fa-bars"></i>
-        <p>Colleges</p>
-        <span class="caret"></span>
-    </a>
-    <div class="collapse" id="collegesSubmenu">
-        <ul class="nav nav-collapse">
-            @foreach ($colleges as $index => $college)
-                <li>
-                    <a data-bs-toggle="collapse" href="#subnav{{ $index }}">
-                        <span class="sub-item">{{ $college->name }}</span>
-                        <span class="caret"></span>
-                    </a>
-                    <div class="collapse" id="subnav{{ $index }}">
-                        <ul class="nav nav-collapse subnav">
-                            @foreach ($college->departments as $department)
-                                <li>
-                                    <a data-bs-toggle="collapse" href="#subnavDept{{ $department->id }}">
-                                        <span class="sub-item">{{ $department->name }}</span>
-                                        <span class="caret"></span>
-                                    </a>
-                                    <div class="collapse" id="subnavDept{{ $department->id }}">
-                                        <ul class="nav nav-collapse subnav">
-                                            @foreach ($department->courses as $course)
-                                                <li class="nav-item">
-                                                    <a href="#">
-                                                        <span class="sub-item" style="font: 16px">{{ $course->name }} - {{ $course->code }}</span> 
-                                                    </a>
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </li>
-            @endforeach
-        </ul>
-    </div>
-</li>
+                            <!-- Route materials -->
+                            <li class="nav-item {{ request()->routeIs('materials') ? 'active' : '' }}">
+                                <a href="{{ route('materials') }}">
+                                    <i class="fas fa-folder-open"></i>
+                                    <p>Materials</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a data-bs-toggle="collapse" href="#collegesSubmenu">
+                                    <i class="fas fa-bars"></i>
+                                    <p>Colleges</p>
+                                    <span class="caret"></span>
+                                </a>
+                                <div class="collapse" id="collegesSubmenu">
+                                    <ul class="nav nav-collapse">
+                                        @foreach ($colleges as $index => $college)
+                                            <li>
+                                                <a data-bs-toggle="collapse" href="#subnav{{ $index }}">
+                                                    <span class="sub-item">{{ $college->name }}</span>
+                                                    <span class="caret"></span>
+                                                </a>
+                                                <div class="collapse" id="subnav{{ $index }}">
+                                                    <ul class="nav nav-collapse subnav">
+                                                        @foreach ($college->departments as $department)
+                                                            <li>
+                                                                <a data-bs-toggle="collapse"
+                                                                    href="#subnavDept{{ $department->id }}">
+                                                                    <span
+                                                                        class="sub-item">{{ $department->name }}</span>
+                                                                    <span class="caret"></span>
+                                                                </a>
+                                                                <div class="collapse"
+                                                                    id="subnavDept{{ $department->id }}">
+                                                                    <ul class="nav nav-collapse subnav">
+                                                                        @foreach ($department->courses as $course)
+                                                                            <li class="nav-item">
+                                                                                <a href="#">
+                                                                                    <span class="sub-item"
+                                                                                        style="font: 16px">{{ $course->name }}
+                                                                                        - {{ $course->code }}</span>
+                                                                                </a>
+                                                                            </li>
+                                                                        @endforeach
+                                                                    </ul>
+                                                                </div>
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </li>
 
 
 
