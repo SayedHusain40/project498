@@ -177,7 +177,8 @@
                                                                     <ul class="nav nav-collapse subnav">
                                                                         @foreach ($department->courses as $course)
                                                                             <li class="nav-item">
-                                                                                <a href="#">
+                                                                                <a
+                                                                                    href="{{ route('materials', ['course_code' => $course->code]) }}">
                                                                                     <span class="sub-item"
                                                                                         style="font: 16px">{{ $course->name }}
                                                                                         - {{ $course->code }}</span>

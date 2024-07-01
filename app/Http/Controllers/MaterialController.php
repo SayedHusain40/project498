@@ -3,65 +3,29 @@
 namespace App\Http\Controllers;
 
 use App\Models\Material;
+use App\Models\Course;
 use Illuminate\Http\Request;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class MaterialController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-        $materials = Material::with(['files', 'user', 'course'])->get();
-        return view('materials', compact('materials'));
-    }
+        $courses = Course::get(); 
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+        $materials = QueryBuilder::for(Material::class)
+            ->with(['files', 'user', 'course'])
+            ->allowedFilters('course.code') 
+            ->when($request->course_code, function ($query, $courseCode) {
+                $query->whereHas('course', function ($query) use ($courseCode) {
+                    $query->where('code', 'like', '%' . strtolower($courseCode) . '%');
+                });
+            })
+            ->get();
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Material $material)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Material $material)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Material $material)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Material $material)
-    {
-        //
+        return view('materials', compact('materials', 'courses'));
     }
 }
