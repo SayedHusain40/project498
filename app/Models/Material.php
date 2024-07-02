@@ -22,4 +22,8 @@ class Material extends Model
     {
         return $this->hasMany(File::class);
     }
+    public function materialType()
+    {
+        return $this->belongsTo(MaterialType::class);
+    }
 }
