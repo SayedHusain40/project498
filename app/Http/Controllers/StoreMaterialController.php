@@ -18,11 +18,13 @@ class StoreMaterialController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required',
             'description' => 'required',
-            'course_id' => 'required'  
+            'course_id' => 'required',
+            'material_type_id' => 'required|exists:material_types,id', // Validate material_type_id exists in material_types table
         ]);
 
         // Get all temporary files
         $temporaryFiles = TemporaryFile::all();
+        $temporaryFilesCount = $temporaryFiles->count(); // Count the temporary files
 
         // If validation fails, delete temporary files and return with errors
         if ($validator->fails()) {
@@ -43,7 +45,9 @@ class StoreMaterialController extends Controller
             'user_id' => Auth::id(),
             'title' => $request->title,
             'description' => $request->description,
-            'course_id' => $request->course_id  
+            'course_id' => $request->course_id,
+            'material_type_id' => $request->material_type_id, // Assign material_type_id
+            'file_count' => $temporaryFilesCount // Set the file count
         ]);
 
         // Handle file uploads and move from temporary storage

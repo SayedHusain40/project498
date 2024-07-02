@@ -13,7 +13,7 @@
                         @foreach ($courses as $course)
                             <option value="{{ $course->code }}"
                                 {{ request('course_code') == $course->code ? 'selected' : '' }}>
-                                {{ $course->code }}
+                                {{ $course->name }}-{{ $course->code }}
                             </option>
                         @endforeach
                     </select>
@@ -40,7 +40,7 @@
                             <span>{{ $material->file_count }}</span>
                         </p>
 
-                        <div><i class="fa fa-user me-2"></i> <span>{{ $material->user->name }}</span></div>
+                        <div><i class="fa fa-user me-2"></i> <span>By, {{ $material->user->name }}</span></div>
 
                         <div>
                             <a href="#" class="btn btn-label-info btn-round me-2 w-100">+ Add to my library</a>

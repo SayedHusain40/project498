@@ -32,6 +32,19 @@
                                 @enderror
                             </div>
 
+                            <div class="mb-3">
+                                <label for="material_type_id" class="form-label">Material Type:</label>
+                                <select class="form-select" id="material_type_id" name="material_type_id">
+                                    <option value="">Select a material type</option>
+                                    @foreach ($materialTypes as $materialType)
+                                        <option value="{{ $materialType->id }}">{{ $materialType->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('material_type_id')
+                                    <p class="text-danger">{{ $message }}</p>
+                                @enderror
+                            </div>
+
                             <div class="mb-3 d-flex align-items-end">
                                 <div class="me-3 flex-grow-1">
                                     <label for="college" class="form-label">College:</label>
@@ -76,7 +89,6 @@
             </div>
         </div>
     </div>
-
 @endsection
 
 @section('scripts')
