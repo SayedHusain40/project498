@@ -32,38 +32,42 @@
         </div>
     </div>
 
-<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3" id="myGrid">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3" id="myGrid">
         @foreach ($materials as $material)
-            <div class="col">
-                <div class="card border rounded-5">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between mb-3">
-                            <span><i class="fas fa-folder mr-10px" style="font-size: 20px; color:#4caf50"></i>
-                                <span>{{ $material->course->code }}</span></span>
-                            <span class="text-muted">{{ $material->created_at->format('Y-m-d') }}</span>
-                        </div>
+            <a href="#" class="text-decoration-none">
 
-                        <h4 class="card-title">{{ $material->title }}</h4>
-                        <p class="card-text">{{ $material->description }}</p>
+                <div class="col" style="cursor: pointer">
+                    <div class="card border rounded-5">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between mb-3">
+                                <span><i class="fas fa-folder mr-10px" style="font-size: 20px; color:#4caf50"></i>
+                                    <span>{{ $material->course->code }}</span></span>
+                                <span class="text-muted">{{ $material->created_at->format('Y-m-d') }}</span>
+                            </div>
 
-                        <p>
-                            <span class="badge" style="background-color:#cfe2ff; color:#ef5350"><i
-                                    class="fa-solid fa-file-lines"></i>
-                                <span>{{ $material->file_count }}</span>
-                            </span>
-                            <span class="badge" style="background-color: {{ $material->materialType->color ?? '#ccc' }}">
-                                {{ $material->materialType->name ?? 'Unknown Type' }}
-                            </span>
-                        </p>
+                            <h4 class="card-title">{{ $material->title }}</h4>
+                            <p class="card-text">{{ $material->description }}</p>
 
-                        <div><i class="fa fa-user me-2"></i> <span>By, {{ $material->user->name }}</span></div>
+                            <p>
+                                <span class="badge" style="background-color:#cfe2ff; color:#ef5350"><i
+                                        class="fa-solid fa-file-lines"></i>
+                                    <span>{{ $material->file_count }}</span>
+                                </span>
+                                <span class="badge"
+                                    style="background-color: {{ $material->materialType->color ?? '#ccc' }}">
+                                    {{ $material->materialType->name ?? 'Unknown Type' }}
+                                </span>
+                            </p>
 
-                        <div>
-                            <button class="btn btn-primary btn-border btn-round mt-1 w-100">+ Add to library</button>
+                            <div><i class="fa fa-user me-2"></i> <span>By, {{ $material->user->name }}</span></div>
+
+                            <div>
+                                <button class="btn btn-primary btn-border btn-round mt-1 w-100">+ Add to library</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </a>
         @endforeach
     </div>
 @endsection
