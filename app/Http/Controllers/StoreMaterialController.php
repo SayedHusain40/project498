@@ -19,14 +19,12 @@ class StoreMaterialController extends Controller
             'title' => 'required',
             'description' => 'required',
             'course_id' => 'required',
-            'material_type_id' => 'required|exists:material_types,id', // Validate material_type_id exists in material_types table
+            'material_type_id' => 'required|exists:material_types,id', 
         ]);
 
-        // Get all temporary files
         $temporaryFiles = TemporaryFile::all();
-        $temporaryFilesCount = $temporaryFiles->count(); // Count the temporary files
+        $temporaryFilesCount = $temporaryFiles->count(); 
 
-        // If validation fails, delete temporary files and return with errors
         if ($validator->fails()) {
             foreach ($temporaryFiles as $temporaryFile) {
                 $folderPath = 'files/tmp/' . $temporaryFile->folder;
@@ -40,17 +38,15 @@ class StoreMaterialController extends Controller
             return redirect('/up')->withErrors($validator)->withInput();
         }
 
-        // Create the material record
         $material = Material::create([
             'user_id' => Auth::id(),
             'title' => $request->title,
             'description' => $request->description,
             'course_id' => $request->course_id,
-            'material_type_id' => $request->material_type_id, // Assign material_type_id
-            'file_count' => $temporaryFilesCount // Set the file count
+            'material_type_id' => $request->material_type_id, 
+            'file_count' => $temporaryFilesCount 
         ]);
 
-        // Handle file uploads and move from temporary storage
         foreach ($temporaryFiles as $temporaryFile) {
             $finalPath = 'files/' . $temporaryFile->file;
 
@@ -63,10 +59,8 @@ class StoreMaterialController extends Controller
                 'file_type' => $temporaryFile->file_type,
             ]);
 
-            // Delete temporary file record
             $temporaryFile->delete();
 
-            // Try deleting the temporary folder (in case it's empty now)
             $folderPath = 'files/tmp/' . $temporaryFile->folder;
             if (Storage::deleteDirectory($folderPath)) {
                 Log::info("Deleted directory: " . $folderPath);
@@ -75,7 +69,6 @@ class StoreMaterialController extends Controller
             }
         }
 
-        // Redirect to the desired route after successful upload
         return redirect('/up');
     }
 }
