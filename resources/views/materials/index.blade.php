@@ -34,7 +34,7 @@
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3" id="myGrid">
         @foreach ($materials as $material)
-            <a href="#" class="text-decoration-none">
+             <a href="{{ route('materials.show', $material->id) }}" class="text-decoration-none">
 
                 <div class="col" style="cursor: pointer">
                     <div class="card border rounded-5">

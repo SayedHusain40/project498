@@ -27,7 +27,7 @@ class StoreMaterialController extends Controller
 
         if ($validator->fails()) {
             foreach ($temporaryFiles as $temporaryFile) {
-                $folderPath = 'files/tmp/' . $temporaryFile->folder;
+                $folderPath = 'public/files/tmp/' . $temporaryFile->folder;
                 if (Storage::deleteDirectory($folderPath)) {
                     Log::info("Deleted directory: " . $folderPath);
                 } else {
@@ -48,9 +48,9 @@ class StoreMaterialController extends Controller
         ]);
 
         foreach ($temporaryFiles as $temporaryFile) {
-            $finalPath = 'files/' . $temporaryFile->file;
+            $finalPath = 'public/files/' . $temporaryFile->file;
 
-            Storage::move('files/tmp/' . $temporaryFile->folder . '/' . $temporaryFile->file, $finalPath);
+            Storage::move('public/files/tmp/' . $temporaryFile->folder . '/' . $temporaryFile->file, $finalPath);
 
             File::create([
                 'material_id' => $material->id,
@@ -61,7 +61,7 @@ class StoreMaterialController extends Controller
 
             $temporaryFile->delete();
 
-            $folderPath = 'files/tmp/' . $temporaryFile->folder;
+            $folderPath = 'public/files/tmp/' . $temporaryFile->folder;
             if (Storage::deleteDirectory($folderPath)) {
                 Log::info("Deleted directory: " . $folderPath);
             } else {

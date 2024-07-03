@@ -31,6 +31,11 @@ class MaterialController extends Controller
             })
             ->get();
 
-        return view('materials', compact('materials', 'courses', 'materialTypes'));
+        return view('materials.index', compact('materials', 'courses', 'materialTypes'));
+    }
+    public function show(Material $material)
+    {
+        $files = $material->files;
+        return view('materials.show', compact('material', 'files'));
     }
 }

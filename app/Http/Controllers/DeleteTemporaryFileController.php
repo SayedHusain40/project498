@@ -15,7 +15,7 @@ class DeleteTemporaryFileController extends Controller
 
         if ($temporaryFile) {
             // Delete the directory from storage
-            Storage::deleteDirectory('files/tmp/' . $temporaryFile->folder);
+            Storage::deleteDirectory('public/files/tmp/' . $temporaryFile->folder);
             // Delete the record from the database
             $temporaryFile->delete();
         }
