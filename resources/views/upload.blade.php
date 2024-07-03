@@ -37,7 +37,9 @@
                                 <select class="form-select" id="material_type_id" name="material_type_id">
                                     <option value="">Select a material type</option>
                                     @foreach ($materialTypes as $materialType)
-                                        <option value="{{ $materialType->id }}">{{ $materialType->name }}</option>
+                                        <option value="{{ $materialType->id }}"
+                                            {{ old('material_type_id') == $materialType->id ? 'selected' : '' }}>
+                                            {{ $materialType->name }}</option>
                                     @endforeach
                                 </select>
                                 @error('material_type_id')
@@ -76,6 +78,9 @@
                             <div class="mb-3">
                                 <input type="file" class="filepond" name="file" multiple credits="false">
                             </div>
+                            @error('file')
+                                <p class="text-danger">Please upload at least one file.</p>
+                            @enderror
 
                             <div class="mt-4">
                                 <button type="submit"
@@ -128,11 +133,12 @@
                 if (selectedDepartmentId) {
                     courseSelect.disabled = false;
                     const selectedCollege = colleges.find(college => college.id == collegeSelect.value);
-                    const selectedDepartment = selectedCollege.departments.find(department => department.id == selectedDepartmentId);
+                    const selectedDepartment = selectedCollege.departments.find(department => department
+                        .id == selectedDepartmentId);
                     selectedDepartment.courses.forEach(course => {
                         const option = document.createElement('option');
                         option.value = course.id;
-                        option.textContent = `${course.code} - ${course.name}`; 
+                        option.textContent = `${course.code} - ${course.name}`;
                         courseSelect.appendChild(option);
                     });
                 } else {

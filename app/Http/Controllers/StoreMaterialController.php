@@ -19,7 +19,8 @@ class StoreMaterialController extends Controller
             'title' => 'required',
             'description' => 'required',
             'course_id' => 'required',
-            'material_type_id' => 'required|exists:material_types,id', 
+            'material_type_id' => 'required|exists:material_types,id',
+            'file' => 'required|min:1', 
         ]);
 
         $temporaryFiles = TemporaryFile::all();
