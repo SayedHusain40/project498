@@ -20,56 +20,69 @@ class StoreMaterialController extends Controller
             'description' => 'required',
             'course_id' => 'required',
             'material_type_id' => 'required|exists:material_types,id',
-            'file' => 'required|min:1', 
+            'file' => 'required|min:1',
         ]);
 
         $temporaryFiles = TemporaryFile::all();
-        $temporaryFilesCount = $temporaryFiles->count(); 
+        $temporaryFilesCount = $temporaryFiles->count();
 
         if ($validator->fails()) {
             foreach ($temporaryFiles as $temporaryFile) {
-                $folderPath = 'public/files/tmp/' . $temporaryFile->folder;
-                if (Storage::deleteDirectory($folderPath)) {
-                    Log::info("Deleted directory: " . $folderPath);
-                } else {
-                    Log::warning("Failed to delete directory: " . $folderPath);
-                }
-                $temporaryFile->delete();
+                $this->deleteTemporaryFiles($temporaryFile);
             }
             return redirect('/up')->withErrors($validator)->withInput();
         }
 
+        $user = Auth::user();
+        $course = $request->course_id;
+        $materialType = $request->material_type_id;
+
+        // Generate folder names based on user, course, and material type
+        $userFolder = 'user_' . $user->id;
+        $courseFolder = 'course_' . $course;
+        $typeFolder = 'type_' . $materialType;
+
+        // Base path for storing files
+        $basePath = "public/files/{$userFolder}/{$courseFolder}/{$typeFolder}/";
+
         $material = Material::create([
-            'user_id' => Auth::id(),
+            'user_id' => $user->id,
             'title' => $request->title,
             'description' => $request->description,
-            'course_id' => $request->course_id,
-            'material_type_id' => $request->material_type_id, 
-            'file_count' => $temporaryFilesCount 
+            'course_id' => $course,
+            'material_type_id' => $materialType,
+            'file_count' => $temporaryFilesCount,
         ]);
 
         foreach ($temporaryFiles as $temporaryFile) {
-            $finalPath = 'public/files/' . $temporaryFile->file;
+            // Generate a unique file name using a timestamp or unique ID
+            $fileName = time() . '_' . $temporaryFile->file;
 
-            Storage::move('public/files/tmp/' . $temporaryFile->folder . '/' . $temporaryFile->file, $finalPath);
+            $finalPath = "{$basePath}{$fileName}";
+
+            Storage::move("public/files/tmp/{$temporaryFile->folder}/{$temporaryFile->file}", $finalPath);
 
             File::create([
                 'material_id' => $material->id,
-                'name' => $temporaryFile->file,
+                'name' => $fileName,
                 'path' => $finalPath,
                 'file_type' => $temporaryFile->file_type,
             ]);
 
-            $temporaryFile->delete();
-
-            $folderPath = 'public/files/tmp/' . $temporaryFile->folder;
-            if (Storage::deleteDirectory($folderPath)) {
-                Log::info("Deleted directory: " . $folderPath);
-            } else {
-                Log::warning("Failed to delete directory: " . $folderPath);
-            }
+            $this->deleteTemporaryFiles($temporaryFile);
         }
 
         return redirect('/up');
+    }
+
+    private function deleteTemporaryFiles($temporaryFile)
+    {
+        $folderPath = 'public/files/tmp/' . $temporaryFile->folder;
+        if (Storage::deleteDirectory($folderPath)) {
+            Log::info("Deleted directory: " . $folderPath);
+        } else {
+            Log::warning("Failed to delete directory: " . $folderPath);
+        }
+        $temporaryFile->delete();
     }
 }

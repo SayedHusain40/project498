@@ -13,7 +13,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">{{$file->name }}</h5>
-                        <a href="#" class="btn btn-primary">View File</a>
+                        <a href="{{ Storage::url($file->path) }}" class="btn btn-primary" target="_blank">View File</a>
                     </div>
                 </div>
             </div>

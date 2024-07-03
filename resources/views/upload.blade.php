@@ -79,7 +79,7 @@
                                 <input type="file" class="filepond" name="file" multiple credits="false">
                             </div>
                             @error('file')
-                                <p class="text-danger">Please upload at least one file.</p>
+                                <p class="text-danger">{{ $message }}</p>
                             @enderror
 
                             <div class="mt-4">
