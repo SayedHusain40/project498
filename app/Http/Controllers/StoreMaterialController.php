@@ -33,24 +33,12 @@ class StoreMaterialController extends Controller
             return redirect('/up')->withErrors($validator)->withInput();
         }
 
-        $user = Auth::user();
-        $course = $request->course_id;
-        $materialType = $request->material_type_id;
-
-        // Generate folder names based on user, course, and material type
-        $userFolder = 'user_' . $user->id;
-        $courseFolder = 'course_' . $course;
-        $typeFolder = 'type_' . $materialType;
-
-        // Base path for storing files
-        $basePath = "public/files/{$userFolder}/{$courseFolder}/{$typeFolder}/";
-
         $material = Material::create([
-            'user_id' => $user->id,
+            'user_id' => Auth::id(),
             'title' => $request->title,
             'description' => $request->description,
-            'course_id' => $course,
-            'material_type_id' => $materialType,
+            'course_id' => $request->course_id,
+            'material_type_id' => $request->material_type_id,
             'file_count' => $temporaryFilesCount,
         ]);
 
@@ -61,7 +49,7 @@ class StoreMaterialController extends Controller
             // Generate a unique file name using a timestamp or unique ID
             $uniqueFileName = time() . '_' . $originalFileName;
 
-            $finalPath = "{$basePath}{$uniqueFileName}";
+            $finalPath = "public/files/{$uniqueFileName}";
 
             Storage::move("public/files/tmp/{$temporaryFile->folder}/{$temporaryFile->file}", $finalPath);
 
