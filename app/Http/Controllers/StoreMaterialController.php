@@ -55,16 +55,19 @@ class StoreMaterialController extends Controller
         ]);
 
         foreach ($temporaryFiles as $temporaryFile) {
-            // Generate a unique file name using a timestamp or unique ID
-            $fileName = time() . '_' . $temporaryFile->file;
+            // Store the original file name
+            $originalFileName = $temporaryFile->file;
 
-            $finalPath = "{$basePath}{$fileName}";
+            // Generate a unique file name using a timestamp or unique ID
+            $uniqueFileName = time() . '_' . $originalFileName;
+
+            $finalPath = "{$basePath}{$uniqueFileName}";
 
             Storage::move("public/files/tmp/{$temporaryFile->folder}/{$temporaryFile->file}", $finalPath);
 
             File::create([
                 'material_id' => $material->id,
-                'name' => $fileName,
+                'name' => $originalFileName, // Store the original file name here
                 'path' => $finalPath,
                 'file_type' => $temporaryFile->file_type,
             ]);
