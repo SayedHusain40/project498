@@ -35,7 +35,7 @@ class MaterialController extends Controller
     }
     public function show(Material $material)
     {
-        $files = $material->files;
+        $files = $material->files()->get();
         return view('materials.show', compact('material', 'files'));
     }
 }

@@ -26,4 +26,5 @@ class Material extends Model
     {
         return $this->belongsTo(MaterialType::class);
     }
+    
 }
