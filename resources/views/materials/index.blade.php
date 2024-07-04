@@ -34,7 +34,7 @@
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3" id="myGrid">
         @foreach ($materials as $material)
-             <a href="{{ route('materials.show', $material->id) }}" class="text-decoration-none">
+            <a href="{{ route('materials.show', $material->id) }}" class="text-decoration-none">
 
                 <div class="col" style="cursor: pointer">
                     <div class="card border rounded-5">
@@ -49,8 +49,8 @@
                             <p class="card-text">{{ $material->description }}</p>
 
                             <p>
-                                <span class="badge" style="background-color:#cfe2ff; color:#ef5350"><i
-                                        class="fa-solid fa-file-lines"></i>
+                                <span class="badge" style="background-color:#cfe2ff; color:black; font-size:15px">
+                                    <i class="fa-solid fa-file-lines" style="color: #3092fa;"></i>
                                     <span>{{ $material->file_count }}</span>
                                 </span>
                                 <span class="badge"
@@ -62,7 +62,8 @@
                             <div><i class="fa fa-user me-2"></i> <span>By, {{ $material->user->name }}</span></div>
 
                             <div>
-                                <button class="btn btn-primary btn-border btn-round mt-1 w-100">+ Add to library</button>
+                                <button type="button" class="btn btn-rounded w-100" style="background-color: #e2eaf7; color:#294f8d;"  data-mdb-ripple-init>+ Add to library</button>
+                                
                             </div>
                         </div>
                     </div>
