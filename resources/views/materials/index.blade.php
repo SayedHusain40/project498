@@ -34,9 +34,9 @@
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3" id="myGrid">
         @foreach ($materials as $material)
-            <a href="{{ route('materials.show', $material->id) }}" class="text-decoration-none">
-
-                <div class="col" style="cursor: pointer">
+        
+        <div class="col">
+                    <a href="{{ route('materials.show', $material->id) }}" class="text-decoration-none" >
                     <div class="card border rounded-5">
                         <div class="card-body">
                             <div class="d-flex justify-content-between mb-3">
@@ -49,11 +49,11 @@
                             <p class="card-text">{{ $material->description }}</p>
 
                             <p>
-                                <span class="badge" style="background-color:#cfe2ff; color:black; font-size:15px">
+                                <span class="badge rounded-pill" style="background-color:#cfe2ff; color:black;">
                                     <i class="fa-solid fa-file-lines" style="color: #3092fa;"></i>
                                     <span>{{ $material->file_count }}</span>
                                 </span>
-                                <span class="badge"
+                                <span class="badge rounded-pill"
                                     style="background-color: {{ $material->materialType->color ?? '#ccc' }}">
                                     {{ $material->materialType->name ?? 'Unknown Type' }}
                                 </span>
@@ -67,8 +67,8 @@
                             </div>
                         </div>
                     </div>
+                </a>
                 </div>
-            </a>
         @endforeach
     </div>
 @endsection

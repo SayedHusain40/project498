@@ -53,7 +53,7 @@
                             <span class="badge bg-success">{{ $file->rating }}% ({{ $file->rating_count }})</span>
                         </td>
                         <td>
-                            <a class="btn btn-primary rounded-pill" href="{{ Storage::url($file->path) }}" download>Download</a>
+                            <a class="btn btn-primary rounded-pill" href="{{ Storage::url($file->path) }}" target="_blank">Open</a>
                         </td>
                     </tr>
                 @endforeach
