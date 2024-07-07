@@ -18,7 +18,7 @@
 
 @section('content')
     <div class="d-flex justify-content-between mb-4">
-        <h1>{{ $material->title }}</h1>
+        <h1>Title: {{ $material->title }}</h1>
     </div>
 
     <div class="table-responsive">
@@ -37,14 +37,9 @@
                         <td>
                             @php
                                 $extension = pathinfo($file->name, PATHINFO_EXTENSION);
-                                $isPdf = strtolower($extension) === 'pdf';
                             @endphp
-                            @if ($isPdf)
-                                <i class="fas fa-file-pdf" style="color: #d62728;"></i>
-                            @else
-                                <i class="fas fa-file" style="color: #3092fa;"></i>
-                            @endif
-                            <a href="{{ Storage::url($file->path) }}" target="_blank">
+                            <i class="fa-solid fa-file-lines" style="color: #0068b8; margin-right: 5px;"></i> <a
+                                href="{{ Storage::url($file->path) }}" target="_blank">
                                 {{ pathinfo($file->name, PATHINFO_FILENAME) }}
                             </a>
                         </td>
@@ -53,7 +48,8 @@
                             <span class="badge bg-success">{{ $file->rating }}% ({{ $file->rating_count }})</span>
                         </td>
                         <td>
-                            <a class="btn btn-primary rounded-pill" href="{{ Storage::url($file->path) }}" target="_blank">Open</a>
+                            <a class="btn btn-primary rounded-pill" href="{{ Storage::url($file->path) }}"
+                                target="_blank">Open</a>
                         </td>
                     </tr>
                 @endforeach
