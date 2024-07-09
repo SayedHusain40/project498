@@ -26,8 +26,17 @@
 @endsection
 
 @section('content')
-    <div class="d-flex justify-content-between mb-4">
-        <h1>Title: {{ $material->title }}</h1>
+    <div class="d-flex justify-content-between">
+        <div>
+            <h1>Title: {{ $material->title }}</h1>
+
+        </div>
+        <div>
+        <a class="btn rounded-3" style="background-color: #4CAF50; color: white" href="{{ route('materials.downloadAll', $material) }}">
+            <i class="fas fa-download me-1"></i> Download All
+        </a>
+        </div>
+
     </div>
 
     <div class="table-responsive">
@@ -64,8 +73,6 @@
                                 <i class="fa-solid fa-file-lines" style="color: #0068b8; margin-right: 5px;"></i> <a
                                     href="{{ Storage::url($file->path) }}" target="_blank">
                                     {{ pathinfo($file->name, PATHINFO_FILENAME) }}
-
-
                                 </a>
                                 <span>
                                     <span class="badge badge-file-extension">
@@ -73,14 +80,12 @@
                                     </span>
                                 </span>
                             </div>
-
                         </td>
                         <td>
                             <a class="btn btn-primary rounded-pill" href="{{ Storage::url($file->path) }}" download>
                                 <i class="fas fa-download me-1"></i> Download
                             </a>
                         </td>
-
                     </tr>
                 @endforeach
             </tbody>

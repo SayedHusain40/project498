@@ -7,6 +7,8 @@ use App\Models\Course;
 use App\Models\MaterialType;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\QueryBuilder;
+use ZipArchive;
+
 
 class MaterialController extends Controller
 {
@@ -38,4 +40,23 @@ class MaterialController extends Controller
         $files = $material->files()->get();
         return view('materials.show', compact('material', 'files'));
     }
+    public function downloadAll(Material $material)
+    {
+        $zip = new ZipArchive;
+        $fileName = $material->title . '_files.zip';
+
+        if ($zip->open(storage_path($fileName), ZipArchive::CREATE) === TRUE) {
+            $files = $material->files;
+
+            foreach ($files as $file) {
+                $filePath = storage_path('app/' . $file->path);
+                $relativeName = basename($filePath);
+                $zip->addFile($filePath, $relativeName);
+            }
+
+            $zip->close();
+        }
+
+        return response()->download(storage_path($fileName))->deleteFileAfterSend(true);}
+
 }

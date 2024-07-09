@@ -48,6 +48,8 @@ Route::middleware('auth')->group(function () {
     //for martials
     Route::get('/materials', [MaterialController::class, 'index'])->name('materials');
     Route::get('/materials/{material}', [MaterialController::class, 'show'])->name('materials.show');
+    Route::get('/materials/{material}/downloadAll', [MaterialController::class, 'downloadAll'])->name('materials.downloadAll');
+
 
 
 
