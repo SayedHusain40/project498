@@ -14,6 +14,7 @@ use App\Http\Controllers\UploadController;
 use App\Http\Controllers\DiscountController;
 
 use App\Http\Controllers\MaterialController;
+use App\Http\Controllers\BookmarkController;
 
 use App\Http\Controllers\PostsController;
 
@@ -49,7 +50,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/materials', [MaterialController::class, 'index'])->name('materials');
     Route::get('/materials/{material}', [MaterialController::class, 'show'])->name('materials.show');
     Route::get('/materials/{material}/downloadAll', [MaterialController::class, 'downloadAll'])->name('materials.downloadAll');
-
+    Route::post('/bookmark-toggle', [BookmarkController::class, 'toggleBookmark'])->name('bookmark.toggle');
+    Route::get('/bookmarks', [BookmarkController::class, 'index'])->name('bookmarks.index');
 
 
 

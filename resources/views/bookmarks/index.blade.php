@@ -1,6 +1,6 @@
 @extends('new_layouts.app')
-@section('page_name', 'Material Files')
-@section('page_description', 'Files for the selected material.')
+@section('page_name', 'Bookmarked Files')
+@section('page_description', 'Your bookmarked files.')
 
 @section('styles')
     <style>
@@ -24,22 +24,14 @@
         }
 
         .bookmark-active svg {
-            fill: #FF9800;
+            fill: #FF9800; 
         }
     </style>
 @endsection
 
 @section('content')
-    <div class="d-flex justify-content-between">
-        <div>
-            <h1>Title: {{ $material->title }}</h1>
-        </div>
-        <div>
-            <a class="btn rounded-3" style="background-color: #4CAF50; color: white"
-                href="{{ route('materials.downloadAll', $material) }}">
-                <i class="fas fa-download me-1"></i> Download All
-            </a>
-        </div>
+    <div>
+        <h1>Bookmarked Files</h1>
     </div>
 
     <div class="table-responsive">
@@ -52,37 +44,29 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($files as $file)
+                @foreach ($bookmarks as $bookmark)
                     <tr>
                         <td>
                             @php
-                                $isBookmarked = $file->bookmarks()->where('user_id', Auth::id())->exists();
+                                $isBookmarked = true; 
                             @endphp
-                            <button type="button" class="btn btn-outline-dark bookmark-toggle {{ $isBookmarked ? 'bookmark-active' : '' }}" data-file-id="{{ $file->id }}">
-                                @if ($isBookmarked)
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                        class="bi bi-bookmarks-fill" viewBox="0 0 16 16">
-                                        <path d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L7 13.101l-4.223 2.815A.5.5 0 0 1 2 15.5z"/>
-                                        <path d="M4.268 1A2 2 0 0 1 6 0h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L13 13.768V2a1 1 0 0 0-1-1z"/>
-                                    </svg>
-                                @else
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                        class="bi bi-bookmarks" viewBox="0 0 16 16">
-                                        <path d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L7 13.101l-4.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v10.566l3.723-2.482a.5.5 0 0 1 .554 0L11 14.566V4a1 1 0 0 0-1-1z"/>
-                                        <path d="M4.268 1H12a1 1 0 0 1 1 1v11.768l.223.148A.5.5 0 0 0 14 13.5V2a2 2 0 0 0-2-2H6a2 2 0 0 0-1.732 1"/>
-                                    </svg>
-                                @endif
+                            <button type="button" class="btn btn-outline-dark bookmark-toggle bookmark-active" data-file-id="{{ $bookmark->file->id }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-bookmarks-fill" viewBox="0 0 16 16">
+                                    <path d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L7 13.101l-4.223 2.815A.5.5 0 0 1 2 15.5z"/>
+                                    <path d="M4.268 1A2 2 0 0 1 6 0h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L13 13.768V2a1 1 0 0 0-1-1z"/>
+                                </svg>
                                 <span class="visually-hidden">Button</span>
                             </button>
                         </td>
                         <td>
                             <div>
                                 @php
-                                    $extension = pathinfo($file->name, PATHINFO_EXTENSION);
+                                    $extension = pathinfo($bookmark->file->name, PATHINFO_EXTENSION);
                                 @endphp
                                 <i class="fa-solid fa-file-lines" style="color: #0068b8; margin-right: 5px;"></i> <a
-                                    href="{{ Storage::url($file->path) }}" target="_blank">
-                                    {{ pathinfo($file->name, PATHINFO_FILENAME) }}
+                                    href="{{ Storage::url($bookmark->file->path) }}" target="_blank">
+                                    {{ pathinfo($bookmark->file->name, PATHINFO_FILENAME) }}
                                 </a>
                                 <span>
                                     <span class="badge badge-file-extension">
@@ -92,7 +76,7 @@
                             </div>
                         </td>
                         <td>
-                            <a class="btn btn-primary rounded-pill" href="{{ Storage::url($file->path) }}" download>
+                            <a class="btn btn-primary rounded-pill" href="{{ Storage::url($bookmark->file->path) }}" download>
                                 <i class="fas fa-download me-1"></i> Download
                             </a>
                         </td>
@@ -123,19 +107,14 @@
                     })
                     .then(response => response.json())
                     .then(data => {
-                        if (data.status === 'added') {
+                        if (data.status === 'removed') {
+                            button.closest('tr').remove(); 
+                        } else if (data.status === 'added') {
                             button.classList.add('bookmark-active');
                             button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                         class="bi bi-bookmarks-fill" viewBox="0 0 16 16">
                                         <path d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L7 13.101l-4.223 2.815A.5.5 0 0 1 2 15.5z"/>
                                         <path d="M4.268 1A2 2 0 0 1 6 0h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L13 13.768V2a1 1 0 0 0-1-1z"/>
-                                    </svg>`;
-                        } else if (data.status === 'removed') {
-                            button.classList.remove('bookmark-active');
-                            button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                        class="bi bi-bookmarks" viewBox="0 0 16 16">
-                                        <path d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L7 13.101l-4.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v10.566l3.723-2.482a.5.5 0 0 1 .554 0L11 14.566V4a1 1 0 0 0-1-1z"/>
-                                        <path d="M4.268 1H12a1 1 0 0 1 1 1v11.768l.223.148A.5.5 0 0 0 14 13.5V2a2 2 0 0 0-2-2H6a2 2 0 0 0-1.732 1"/>
                                     </svg>`;
                         }
                     })

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class File extends Model
+class Bookmark extends Model
 {
     use HasFactory;
     protected $guarded = [];
@@ -13,9 +13,10 @@ class File extends Model
     {
         return $this->belongsTo(User::class);
     }
-    public function bookmarks()
+
+    public function file()
     {
-        return $this->hasMany(Bookmark::class);
+        return $this->belongsTo(File::class);
     }
 
 }
