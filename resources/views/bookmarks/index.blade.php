@@ -30,9 +30,6 @@
 @endsection
 
 @section('content')
-    <div>
-        <h1>Bookmarked Files</h1>
-    </div>
 
     <div class="table-responsive">
         <table class="table table-striped custom-table">
