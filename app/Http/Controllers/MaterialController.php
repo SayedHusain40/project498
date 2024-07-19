@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Material;
 use App\Models\Course;
+use App\Models\Follow;
 use App\Models\MaterialType;
 use Illuminate\Http\Request;
-use Spatie\QueryBuilder\QueryBuilder;
+use Illuminate\Support\Facades\Auth;
 use ZipArchive;
 
 
@@ -19,22 +20,27 @@ class MaterialController extends Controller
     {
         $courses = Course::all();
         $materialTypes = MaterialType::all();
+        $userId = Auth::id(); 
 
-        $materials = QueryBuilder::for(Material::class)
-            ->with(['files', 'user', 'course', 'materialType'])
-            ->allowedFilters(['course.code', 'material_type_id'])
-            ->when($request->course_code, function ($query, $courseCode) {
-                $query->whereHas('course', function ($query) use ($courseCode) {
-                    $query->where('code', 'like', '%' . strtolower($courseCode) . '%');
-                });
+        $materials = Material::with('course', 'materialType', 'user')
+        ->when($request->course_code, function ($query) use ($request) {
+            return $query->whereHas('course', function ($q) use ($request) {
+                $q->where('code', $request->course_code);
+            });
+        })
+            ->when($request->material_type_id, function ($query) use ($request) {
+                return $query->where('material_type_id', $request->material_type_id);
             })
-            ->when($request->material_type_id, function ($query, $materialTypeId) {
-                $query->where('material_type_id', $materialTypeId);
-            })
-            ->get();
+            ->get()
+            ->map(function ($material) use ($userId) {
+                $material->is_followed = Follow::where('user_id', $userId)->where('material_id', $material->id)->exists();
+                return $material;
+            });
 
-        return view('materials.index', compact('materials', 'courses', 'materialTypes'));
+        return view('materials.index', compact('courses', 'materialTypes', 'materials'));
     }
+
+
     public function show(Material $material)
     {
         $files = $material->files()->get();
