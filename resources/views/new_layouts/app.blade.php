@@ -305,6 +305,15 @@
                                 <p>Student Discounts</p>
                             </a>
                         </li>
+
+                        <!-- Route Reports -->
+                        <li class="nav-item">
+                            <a href="{{ route('admin.reports.index') }}">
+                                <i class="fa-solid fa-tag"></i>
+                                <p>Reports</p>
+                            </a>
+                        </li>
+
                     </ul>
                 </div>
             </div>
