@@ -307,12 +307,14 @@
                         </li>
 
                         <!-- Route Reports -->
+                        @if(auth()->user()->role === 'admin')
                         <li class="nav-item">
                             <a href="{{ route('admin.reports.index') }}">
                                 <i class="fa-solid fa-tag"></i>
                                 <p>Reports</p>
                             </a>
                         </li>
+                        @endif
 
                     </ul>
                 </div>
