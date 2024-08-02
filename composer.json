@@ -9,11 +9,8 @@
         "barryvdh/laravel-dompdf": "^2.2",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
-<<<<<<< Updated upstream
-        "spatie/laravel-query-builder": "^6.0"
-=======
+        "spatie/laravel-query-builder": "^6.0",
         "tecnickcom/tcpdf": "^6.7"
->>>>>>> Stashed changes
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
