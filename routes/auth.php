@@ -63,6 +63,6 @@ Route::middleware('auth')->group(function () {
     
                 Route::get('/admin/reports', [ReportController::class, 'index'])->name('admin.reports.index');
                 Route::post('/admin/reports/generate', [ReportController::class, 'generate'])->name('admin.reports.generate');
-                Route::get('/dashboard', [StatController::class, 'index'])->name('dashboard');
+                Route::get('/admin/dashboard', [StatController::class, 'index'])->name('admin.dashboard');
 
 });

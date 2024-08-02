@@ -1,5 +1,5 @@
 <?php
-// In app/Http/Controllers/Admin/StatController.php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -19,5 +19,6 @@ class StatController extends Controller
         ]);
     }
 }
+
 
 
