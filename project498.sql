@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 20, 2024 at 01:15 PM
+-- Generation Time: Aug 05, 2024 at 07:19 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -93,6 +93,52 @@ CREATE TABLE `colleges` (
 INSERT INTO `colleges` (`id`, `name`, `created_at`, `updated_at`) VALUES
 (7, 'College of Information Technology', '2024-06-27 15:55:58', '2024-06-27 15:55:58'),
 (9, 'College of Science', '2024-06-27 15:55:58', '2024-06-27 15:55:58');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `comments`
+--
+
+CREATE TABLE `comments` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `material_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `parent_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `content` text NOT NULL,
+  `likes` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `dislikes` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `comment_dislikes`
+--
+
+CREATE TABLE `comment_dislikes` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `comment_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `comment_likes`
+--
+
+CREATE TABLE `comment_likes` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `comment_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -305,13 +351,16 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (5, '2024_06_14_070520_create_files_table', 2),
 (6, '2024_06_21_150050_create_colleges_table', 2),
 (7, '2024_06_26_071910_create_ideas_table', 2),
-(8, '2024_06_26_073028_create_posts_table', 2),
 (12, '2024_06_20_104434_create_departments_table', 6),
 (13, '2024_06_27_223553_create_courses_table', 7),
 (17, '2024_07_01_230806_create_material_types_table', 8),
 (18, '2024_06_12_082243_create_materials_table', 9),
 (20, '2024_07_10_205219_create_bookmarks_table', 10),
-(23, '2024_07_18_171745_create_follows_table', 11);
+(23, '2024_07_18_171745_create_follows_table', 11),
+(27, '2024_06_26_073028_create_posts_table', 12),
+(30, '2024_07_25_221142_create_comment_likes_table', 15),
+(31, '2024_07_25_221143_create_comment_dislikes_table', 15),
+(34, '2024_07_24_175714_create_comments_table', 16);
 
 -- --------------------------------------------------------
 
@@ -359,7 +408,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('RfKdbaJkTFHtDZ4vIZsjcoEYozR3irwX3XX4wOol', 6, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoieXlpS0h3WGF4Q2hUc2EzYUhiOTBKNmVoaHZ0Vm5qNTJJTlJvbTJZYSI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjMxOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvbWF0ZXJpYWxzIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6Njt9', 1721393711);
+('7VZ2sVsLDRmBIPnv0YyIBlt1rFQaRlc4jRahNPkK', 6, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiMzBDMGFuQzJ3WTJpcnZ2c1VOM2gwSjRhRXRUeENZRVM4eFhlUk1xdSI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjM0OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvbWF0ZXJpYWxzLzQyIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6Njt9', 1722878251);
 
 -- --------------------------------------------------------
 
@@ -399,7 +448,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `role`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Sayed', 'user', 's@h.com', NULL, '$2y$12$6TNjgRZ6oXvIcJvynPozo.lPrgvVxVmpug2TIn9O6OF6GfZ5p2XPm', 'H2XLtu90qkSvh3eTPexTZ4QwV279byqfbdbuJgyY6D6HYSGZD5O8YVhzgQXa', '2024-06-28 18:06:33', '2024-06-28 18:06:33'),
+(1, 'Sayed', 'user', 's@h.com', NULL, '$2y$12$6TNjgRZ6oXvIcJvynPozo.lPrgvVxVmpug2TIn9O6OF6GfZ5p2XPm', 'uI8I7am7HtkBZxyclQhDT22hyHFwugcakYzyx1os5u3choGJ3JsUVekdxSTR', '2024-06-28 18:06:33', '2024-06-28 18:06:33'),
 (2, 'Ali', 'user', 'a1@h.com', NULL, '$2y$12$sKfr.OAXAG6rEv4wslCbKO77KCZ7IqvCaZTNgGnwVMPLpMnsaxZzW', NULL, '2024-06-30 00:07:53', '2024-06-30 00:07:53'),
 (3, 'Admin', 'admin', 'admin@a.com', NULL, '$2y$12$PGCwWVfd3WIiAtCIj/oQqOoH.bh/ugTJkf/H/Nx/P27CEjyccpqJS', NULL, '2024-06-30 13:29:23', '2024-06-30 13:29:23'),
 (4, 'Ahmed', 'user', 'ahmad@a.com', NULL, '$2y$12$jxf5Q48OJ2wwx1NFhXxSHewPoQqdHX7TYUaqcheehj31eWJ6j7lc.', NULL, '2024-07-01 20:43:52', '2024-07-01 20:43:52'),
@@ -436,6 +485,31 @@ ALTER TABLE `cache_locks`
 --
 ALTER TABLE `colleges`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `comments`
+--
+ALTER TABLE `comments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `comments_material_id_foreign` (`material_id`),
+  ADD KEY `comments_user_id_foreign` (`user_id`),
+  ADD KEY `comments_parent_id_foreign` (`parent_id`);
+
+--
+-- Indexes for table `comment_dislikes`
+--
+ALTER TABLE `comment_dislikes`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `comment_dislikes_comment_id_user_id_unique` (`comment_id`,`user_id`),
+  ADD KEY `comment_dislikes_user_id_foreign` (`user_id`);
+
+--
+-- Indexes for table `comment_likes`
+--
+ALTER TABLE `comment_likes`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `comment_likes_comment_id_user_id_unique` (`comment_id`,`user_id`),
+  ADD KEY `comment_likes_user_id_foreign` (`user_id`);
 
 --
 -- Indexes for table `courses`
@@ -554,13 +628,31 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `bookmarks`
 --
 ALTER TABLE `bookmarks`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `colleges`
 --
 ALTER TABLE `colleges`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `comments`
+--
+ALTER TABLE `comments`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `comment_dislikes`
+--
+ALTER TABLE `comment_dislikes`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
+
+--
+-- AUTO_INCREMENT for table `comment_likes`
+--
+ALTER TABLE `comment_likes`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
 
 --
 -- AUTO_INCREMENT for table `courses`
@@ -584,13 +676,13 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `files`
 --
 ALTER TABLE `files`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
 
 --
 -- AUTO_INCREMENT for table `follows`
 --
 ALTER TABLE `follows`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `ideas`
@@ -608,7 +700,7 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `materials`
 --
 ALTER TABLE `materials`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
 -- AUTO_INCREMENT for table `material_types`
@@ -620,7 +712,7 @@ ALTER TABLE `material_types`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `posts`
@@ -632,7 +724,7 @@ ALTER TABLE `posts`
 -- AUTO_INCREMENT for table `temporary_files`
 --
 ALTER TABLE `temporary_files`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=101;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=121;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -650,6 +742,28 @@ ALTER TABLE `users`
 ALTER TABLE `bookmarks`
   ADD CONSTRAINT `bookmarks_file_id_foreign` FOREIGN KEY (`file_id`) REFERENCES `files` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `bookmarks_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `comments`
+--
+ALTER TABLE `comments`
+  ADD CONSTRAINT `comments_material_id_foreign` FOREIGN KEY (`material_id`) REFERENCES `materials` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `comments_parent_id_foreign` FOREIGN KEY (`parent_id`) REFERENCES `comments` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `comments_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `comment_dislikes`
+--
+ALTER TABLE `comment_dislikes`
+  ADD CONSTRAINT `comment_dislikes_comment_id_foreign` FOREIGN KEY (`comment_id`) REFERENCES `comments` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `comment_dislikes_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `comment_likes`
+--
+ALTER TABLE `comment_likes`
+  ADD CONSTRAINT `comment_likes_comment_id_foreign` FOREIGN KEY (`comment_id`) REFERENCES `comments` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `comment_likes_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `courses`
