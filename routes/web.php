@@ -14,7 +14,7 @@ use App\Http\Controllers\DiscountController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\FollowController;
-
+use App\Http\Controllers\CommentController;
 
 use App\Http\Controllers\PostsController;
 
@@ -51,11 +51,21 @@ Route::middleware('auth')->group(function () {
     Route::get('/materials/{material}', [MaterialController::class, 'show'])->name('materials.show');
     Route::get('/materials/{material}/downloadAll', [MaterialController::class, 'downloadAll'])->name('materials.downloadAll');
     Route::post('/bookmark-toggle', [BookmarkController::class, 'toggleBookmark'])->name('bookmark.toggle');
-
     Route::get('/bookmarks', [BookmarkController::class, 'index'])->name('bookmarks.index');
-
     Route::get('/followed-materials', [FollowController::class, 'followedMaterials'])->name('followed.materials');
     Route::post('/follow-toggle', [FollowController::class, 'toggleFollow'])->name('follow.toggle');
+
+
+    //for comments
+    Route::post('materials/{material}/comments', [CommentController::class, 'storeComment'])->name('comments.store');
+    Route::post('/comments/{comment}/reply', [CommentController::class, 'storeReply'])->name('replies.store');
+    Route::post('/comments/{comment}/{action}', [CommentController::class, 'likeDislikeComment'])->name('comments.likeDislike');
+    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+    Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
+
+
+
+
 
     //For Posts --- EDIT NAME OF Controller !!!!! 
 

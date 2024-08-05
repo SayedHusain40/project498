@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Material;
 use App\Models\Course;
+use App\Models\Comment;
 use App\Models\Follow;
 use App\Models\MaterialType;
 use Illuminate\Http\Request;
@@ -44,8 +45,17 @@ class MaterialController extends Controller
     public function show(Material $material)
     {
         $files = $material->files()->get();
-        return view('materials.show', compact('material', 'files'));
+
+        $comments = Comment::where('material_id', $material->id)
+            ->whereNull('parent_id')
+            ->with(['replies' => function ($query) {
+                $query->with('replies');
+            }])
+            ->get();
+            
+        return view('materials.show', compact('material', 'files', 'comments'));
     }
+    
     public function downloadAll(Material $material)
     {
         $zip = new ZipArchive;
