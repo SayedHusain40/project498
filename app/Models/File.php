@@ -17,5 +17,11 @@ class File extends Model
     {
         return $this->hasMany(Bookmark::class);
     }
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'file_user');
+    }
+
+
 
 }

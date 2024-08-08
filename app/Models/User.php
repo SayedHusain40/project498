@@ -15,7 +15,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Bookmark::class);
     }
-
+    public function files()
+    {
+        return $this->belongsToMany(File::class, 'file_user');
+    }
 
     /**
      * The attributes that are mass assignable.

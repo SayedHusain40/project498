@@ -226,10 +226,11 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <a class="btn btn-primary rounded-pill" href="{{ Storage::url($file->path) }}" download>
+                                    <a class="btn btn-primary rounded-pill" href="{{ route('files.download', $file) }}">
                                         <i class="fas fa-download me-1"></i> Download
                                     </a>
                                 </td>
+
                             </tr>
                         @endforeach
                     </tbody>
@@ -432,7 +433,6 @@
         </div>
     </div>
 @endsection
-
 
 @section('scripts')
     <script>
@@ -835,7 +835,7 @@
                                     replyList.insertAdjacentHTML('beforeend', newReplyHtml);
                                     form.reset();
                                     form.style.display =
-                                        'none'; 
+                                        'none';
 
                                     // Ensure the replies are displayed
                                     const replyToggle = form.closest('.comment').querySelector(

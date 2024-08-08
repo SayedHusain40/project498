@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Material;
 use App\Models\Course;
+use App\Models\File;
 use App\Models\Comment;
 use App\Models\Follow;
 use App\Models\MaterialType;
@@ -55,11 +56,32 @@ class MaterialController extends Controller
             
         return view('materials.show', compact('material', 'files', 'comments'));
     }
-    
+
+
+    public function download(File $file)
+    {
+        $userId = Auth::id();
+
+        // Check if the user has already downloaded this file
+        $hasDownloaded = $file->users()->where('user_id', $userId)->exists();
+
+        if (!$hasDownloaded) {
+            // Increment the download count for this file
+            $file->increment('downloads');
+
+            $file->users()->attach($userId);
+        }
+
+        return response()->download(storage_path('app/' . $file->path));
+    }
+
+
+
     public function downloadAll(Material $material)
     {
         $zip = new ZipArchive;
         $fileName = $material->title . '_files.zip';
+        $userId = Auth::id();
 
         if ($zip->open(storage_path($fileName), ZipArchive::CREATE) === TRUE) {
             $files = $material->files;
@@ -68,11 +90,22 @@ class MaterialController extends Controller
                 $filePath = storage_path('app/' . $file->path);
                 $relativeName = basename($filePath);
                 $zip->addFile($filePath, $relativeName);
+
+                $hasDownloaded = $file->users()->where('user_id', $userId)->exists();
+
+                if (!$hasDownloaded) {
+                    $file->increment('downloads');
+
+                    $file->users()->attach($userId);
+                }
             }
 
             $zip->close();
         }
 
-        return response()->download(storage_path($fileName))->deleteFileAfterSend(true);}
+        return response()->download(storage_path($fileName))->deleteFileAfterSend(true);
+    }
+
+
 
 }

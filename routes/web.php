@@ -49,6 +49,7 @@ Route::middleware('auth')->group(function () {
     //for martials
     Route::get('/materials', [MaterialController::class, 'index'])->name('materials');
     Route::get('/materials/{material}', [MaterialController::class, 'show'])->name('materials.show');
+    Route::get('/files/{file}', [MaterialController::class, 'download'])->name('files.download');
     Route::get('/materials/{material}/downloadAll', [MaterialController::class, 'downloadAll'])->name('materials.downloadAll');
     Route::post('/bookmark-toggle', [BookmarkController::class, 'toggleBookmark'])->name('bookmark.toggle');
     Route::get('/bookmarks', [BookmarkController::class, 'index'])->name('bookmarks.index');
