@@ -835,7 +835,7 @@
                                     replyList.insertAdjacentHTML('beforeend', newReplyHtml);
                                     form.reset();
                                     form.style.display =
-                                        'none'; // Hide the reply form after successful submission
+                                        'none'; 
 
                                     // Ensure the replies are displayed
                                     const replyToggle = form.closest('.comment').querySelector(
