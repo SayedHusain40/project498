@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Comment; 
-use App\Models\Material; 
-use App\Models\Reply; 
+use App\Models\Comment;
+use App\Models\Material;
+use App\Models\Reply;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -44,10 +44,10 @@ class CommentController extends Controller
         ]);
 
         $reply = new Comment();
-        $reply->material_id = $comment->material_id; 
+        $reply->material_id = $comment->material_id;
         $reply->user_id = auth()->id();
         $reply->content = $validated['content'];
-        $reply->parent_id = $comment->id; 
+        $reply->parent_id = $comment->id;
         $reply->save();
 
         return response()->json([
@@ -57,13 +57,13 @@ class CommentController extends Controller
                 'user_name' => auth()->user()->name,
                 'created_at' => $reply->created_at->diffForHumans(),
                 'content' => $reply->content,
-                'parent_name' => $comment->user->name 
+                'parent_name' => $comment->user->name
 
             ]
         ]);
     }
 
-    
+
     public function likeDislikeComment(Request $request, Comment $comment, $action)
     {
         $user = Auth::user();
@@ -113,18 +113,18 @@ class CommentController extends Controller
 
     public function update(Request $request, Comment $comment)
     {
-        $validated = $request->validate([
-            'content' => 'required|string|max:5000',
+        $request->validate([
+            'content' => 'required|string|max:255',
         ]);
 
         if ($comment->user_id !== auth()->id()) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return response()->json(['success' => false, 'message' => 'Unauthorized.'], 403);
         }
 
-        $comment->content = $validated['content'];
+        $comment->content = $request->content;
         $comment->save();
 
-        return response()->json(['success' => true, 'comment' => $comment]);
+        return response()->json(['success' => true, 'content' => $comment->content]);
     }
 
 }

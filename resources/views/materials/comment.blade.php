@@ -28,9 +28,9 @@
                 </div>
                 <div class="comment-body">
                     @if ($reply->parent)
-                        <a href="">{{ '@' . $reply->parent->user->name }}</a>
+                        <a href="#" class="reply-mention">{{ '@' . $reply->parent->user->name }}</a>
                     @endif
-                    {{ $reply->content }}
+                    <span class="reply-content">{{ $reply->content }}</span>
                 </div>
                 <div class="comment-actions">
                     <a href="#"
@@ -52,11 +52,26 @@
                 </div>
                 <form class="reply-form" action="{{ route('replies.store', $reply) }}" method="POST">
                     @csrf
-                    <textarea name="content" class="form-control comment-input" placeholder="Write a reply..." rows="2"></textarea>
-                    <div class="text-end mt-2">
-                        <button type="submit" class="btn btn-primary">Post Reply</button>
+                    <div class="d-flex flex-column">
+                        <textarea name="content" class="form-control comment-input" placeholder="Write a reply..." rows="2"></textarea>
+                        <div class="d-flex justify-content-between  mt-2">
+                            <div id="comment-form-error" class="text-danger" style="display: none;">
+                                Error: Reply cannot be empty
+                            </div>
+                            <button type="submit" class="btn btn-primary ms-auto">Post Reply</button>
+                        </div>
                     </div>
+
                 </form>
+                <div id="edit-comment-template" style="display: none;">
+                    <div class="edit-comment-form">
+                        <textarea class="form-control edit-comment-input" rows="3"></textarea>
+                        <div class="text-end mt-2">
+                            <button type="button" class="btn btn-primary save-edit-button">Save</button>
+                            <button type="button" class="btn btn-secondary cancel-edit-button">Cancel</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
