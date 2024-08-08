@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 05, 2024 at 07:19 PM
+-- Generation Time: Aug 08, 2024 at 06:11 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -219,6 +219,21 @@ CREATE TABLE `files` (
   `name` varchar(255) NOT NULL,
   `path` varchar(255) NOT NULL,
   `file_type` varchar(255) NOT NULL,
+  `downloads` int(11) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `file_user`
+--
+
+CREATE TABLE `file_user` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `file_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -348,7 +363,6 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (2, '0001_01_01_000001_create_cache_table', 1),
 (3, '0001_01_01_000002_create_jobs_table', 1),
 (4, '2024_06_12_082424_create_temporary_files_table', 2),
-(5, '2024_06_14_070520_create_files_table', 2),
 (6, '2024_06_21_150050_create_colleges_table', 2),
 (7, '2024_06_26_071910_create_ideas_table', 2),
 (12, '2024_06_20_104434_create_departments_table', 6),
@@ -360,7 +374,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (27, '2024_06_26_073028_create_posts_table', 12),
 (30, '2024_07_25_221142_create_comment_likes_table', 15),
 (31, '2024_07_25_221143_create_comment_dislikes_table', 15),
-(34, '2024_07_24_175714_create_comments_table', 16);
+(34, '2024_07_24_175714_create_comments_table', 16),
+(35, '2024_06_14_070520_create_files_table', 17),
+(37, '2024_08_08_152859_create_file_user_table', 18);
 
 -- --------------------------------------------------------
 
@@ -408,7 +424,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('7VZ2sVsLDRmBIPnv0YyIBlt1rFQaRlc4jRahNPkK', 6, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiMzBDMGFuQzJ3WTJpcnZ2c1VOM2gwSjRhRXRUeENZRVM4eFhlUk1xdSI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjM0OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvbWF0ZXJpYWxzLzQyIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6Njt9', 1722878251);
+('D2zWXByXeBsKu0LwJCQIeFRqi38jdo4raRKXIfzt', 6, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiME1hZHRWN3YyMnc0QU5iMlJMekc2NFdyWEVGQkVSWU15NDZ1MFpFRSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjQ2OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvbWF0ZXJpYWxzLzUwL2Rvd25sb2FkQWxsIjt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6Njt9', 1723133298);
 
 -- --------------------------------------------------------
 
@@ -448,7 +464,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `role`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Sayed', 'user', 's@h.com', NULL, '$2y$12$6TNjgRZ6oXvIcJvynPozo.lPrgvVxVmpug2TIn9O6OF6GfZ5p2XPm', 'uI8I7am7HtkBZxyclQhDT22hyHFwugcakYzyx1os5u3choGJ3JsUVekdxSTR', '2024-06-28 18:06:33', '2024-06-28 18:06:33'),
+(1, 'Sayed', 'user', 's@h.com', NULL, '$2y$12$6TNjgRZ6oXvIcJvynPozo.lPrgvVxVmpug2TIn9O6OF6GfZ5p2XPm', 'hATodbIesoZc9yA29zsSrEpZo0VjgBhIgqwKaX5gnWgMn0KAICbEzairlghc', '2024-06-28 18:06:33', '2024-06-28 18:06:33'),
 (2, 'Ali', 'user', 'a1@h.com', NULL, '$2y$12$sKfr.OAXAG6rEv4wslCbKO77KCZ7IqvCaZTNgGnwVMPLpMnsaxZzW', NULL, '2024-06-30 00:07:53', '2024-06-30 00:07:53'),
 (3, 'Admin', 'admin', 'admin@a.com', NULL, '$2y$12$PGCwWVfd3WIiAtCIj/oQqOoH.bh/ugTJkf/H/Nx/P27CEjyccpqJS', NULL, '2024-06-30 13:29:23', '2024-06-30 13:29:23'),
 (4, 'Ahmed', 'user', 'ahmad@a.com', NULL, '$2y$12$jxf5Q48OJ2wwx1NFhXxSHewPoQqdHX7TYUaqcheehj31eWJ6j7lc.', NULL, '2024-07-01 20:43:52', '2024-07-01 20:43:52'),
@@ -540,6 +556,14 @@ ALTER TABLE `files`
   ADD KEY `files_material_id_foreign` (`material_id`);
 
 --
+-- Indexes for table `file_user`
+--
+ALTER TABLE `file_user`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `file_user_file_id_user_id_unique` (`file_id`,`user_id`),
+  ADD KEY `file_user_user_id_foreign` (`user_id`);
+
+--
 -- Indexes for table `follows`
 --
 ALTER TABLE `follows`
@@ -628,7 +652,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `bookmarks`
 --
 ALTER TABLE `bookmarks`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `colleges`
@@ -640,19 +664,19 @@ ALTER TABLE `colleges`
 -- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=117;
 
 --
 -- AUTO_INCREMENT for table `comment_dislikes`
 --
 ALTER TABLE `comment_dislikes`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
 
 --
 -- AUTO_INCREMENT for table `comment_likes`
 --
 ALTER TABLE `comment_likes`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
 
 --
 -- AUTO_INCREMENT for table `courses`
@@ -676,7 +700,13 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `files`
 --
 ALTER TABLE `files`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `file_user`
+--
+ALTER TABLE `file_user`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `follows`
@@ -700,7 +730,7 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `materials`
 --
 ALTER TABLE `materials`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `material_types`
@@ -712,7 +742,7 @@ ALTER TABLE `material_types`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `posts`
@@ -724,7 +754,7 @@ ALTER TABLE `posts`
 -- AUTO_INCREMENT for table `temporary_files`
 --
 ALTER TABLE `temporary_files`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=121;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=132;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -782,6 +812,13 @@ ALTER TABLE `departments`
 --
 ALTER TABLE `files`
   ADD CONSTRAINT `files_material_id_foreign` FOREIGN KEY (`material_id`) REFERENCES `materials` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `file_user`
+--
+ALTER TABLE `file_user`
+  ADD CONSTRAINT `file_user_file_id_foreign` FOREIGN KEY (`file_id`) REFERENCES `files` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `file_user_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `follows`
