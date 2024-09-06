@@ -68,14 +68,14 @@ class MaterialController extends Controller
         if (!$hasDownloaded) {
             // Increment the download count for this file
             $file->increment('downloads');
-
             $file->users()->attach($userId);
         }
 
-        return response()->download(storage_path('app/' . $file->path));
+        // Remove unique number from filename
+        $originalName = preg_replace('/^\d+_/', '', basename($file->path));
+
+        return response()->download(storage_path('app/' . $file->path), $originalName);
     }
-
-
 
     public function downloadAll(Material $material)
     {
@@ -88,14 +88,16 @@ class MaterialController extends Controller
 
             foreach ($files as $file) {
                 $filePath = storage_path('app/' . $file->path);
-                $relativeName = basename($filePath);
+
+                // Remove unique number from filename
+                $relativeName = preg_replace('/^\d+_/', '', basename($filePath));
+
                 $zip->addFile($filePath, $relativeName);
 
                 $hasDownloaded = $file->users()->where('user_id', $userId)->exists();
 
                 if (!$hasDownloaded) {
                     $file->increment('downloads');
-
                     $file->users()->attach($userId);
                 }
             }
