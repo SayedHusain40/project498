@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\Admin\StatController;
+//use App\Http\Controllers\Admin\ActivityController;
 
 Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
@@ -64,5 +65,7 @@ Route::middleware('auth')->group(function () {
                 Route::get('/admin/reports', [ReportController::class, 'index'])->name('admin.reports.index');
                 Route::post('/admin/reports/generate', [ReportController::class, 'generate'])->name('admin.reports.generate');
                 Route::get('/admin/dashboard', [StatController::class, 'index'])->name('admin.dashboard');
+
+                //Route::get('/admin/active-users', [ActivityController::class, 'showActiveUsers'])->name('admin.active.users');
 
 });
