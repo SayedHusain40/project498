@@ -397,6 +397,25 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal for delete confirmation -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <div class="mb-3">
+                        <i class="fa-solid fa-triangle-exclamation modal-icon"></i>
+                    </div>
+                    <h5 class="modal-title" id="deleteModalLabel">Delete Comment</h5>
+                    <p>Are you sure you want to delete this comment?</p>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button type="button" class="btn btn-danger ms-2" id="confirmDelete">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('scripts')
@@ -492,40 +511,50 @@
         document.addEventListener('DOMContentLoaded', function() {
 
             // for delete 
+            let commentIdToDelete = null;
+
             document.getElementById('comment-list').addEventListener('click', function(event) {
                 const button = event.target.closest('a[data-action="delete"]');
                 if (button) {
                     event.preventDefault();
+                    commentIdToDelete = button.getAttribute('data-comment-id');
 
-                    const commentId = button.getAttribute('data-comment-id');
+                    // Show the delete confirmation modal
+                    const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+                    deleteModal.show();
+                }
+            });
 
-                    if (confirm('Are you sure you want to delete this comment?')) {
-                        fetch(`/comments/${commentId}`, {
-                                method: 'DELETE',
-                                headers: {
-                                    'X-Requested-With': 'XMLHttpRequest',
-                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                        .getAttribute('content'),
-                                    'Content-Type': 'application/json',
+            document.getElementById('confirmDelete').addEventListener('click', function() {
+                if (commentIdToDelete) {
+                    fetch(`/comments/${commentIdToDelete}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                    .getAttribute('content'),
+                                'Content-Type': 'application/json',
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                const commentElement = document.querySelector(
+                                    `.comment[data-comment-id="${commentIdToDelete}"]`);
+                                if (commentElement) {
+                                    commentElement.remove();
                                 }
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success) {
-                                    const commentElement = document.querySelector(
-                                        `.comment[data-comment-id="${commentId}"]`);
-                                    if (commentElement) {
-                                        commentElement.remove();
-                                    }
-                                } else {
-                                    alert(data.message || 'Error deleting comment');
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error:', error);
-                                alert('Something went wrong');
-                            });
-                    }
+                            } else {
+                                alert('Error: Comment deleted because parent removed');
+                            }
+                        })
+                        .catch(error => {
+                            // console.error('Error:', error);
+                            // alert('Something went wrong');
+                        });
+
+                    const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
+                    deleteModal.hide();
                 }
             });
 
