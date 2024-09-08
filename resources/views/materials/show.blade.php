@@ -1,25 +1,6 @@
 @extends('new_layouts.app')
 @section('styles')
     <style>
-        .modal-icon {
-            font-size: 3rem;
-            color: #dc3545;
-        }
-
-        .modal-body {
-            padding: 2rem;
-        }
-
-        .modal-title {
-            font-size: 1.25rem;
-            margin-top: 1rem;
-        }
-
-        .modal-body p {
-            font-size: 1rem;
-            margin-top: 0.5rem;
-        }
-
         .custom-table {
             border-collapse: collapse;
             border-radius: 1rem;
@@ -153,92 +134,89 @@
     </style>
 @endsection
 @section('content')
-    <div class="container">
-
-        <div>
-            <div class="d-flex flex-column">
-                <h1>Title: {{ $material->title }}</h1>
-                @if ($material->description)
-                    <p class="description-text"><strong>Description:</strong> {{ $material->description }}</p>
-                @endif
-            </div>
-
-            <div class="d-flex justify-content-end mb-4">
-                <a class="btn rounded-3" style="background-color: #4CAF50; color: white"
-                    href="{{ route('materials.downloadAll', $material) }}">
-                    <i class="fas fa-download me-1"></i> Download All
-                </a>
-            </div>
-
-            <div class="table-responsive">
-                <table class="table table-striped custom-table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Bookmarks</th>
-                            <th scope="col">Document</th>
-                            <th scope="col">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($files as $file)
-                            <tr>
-                                <td>
-                                    @php
-                                        $isBookmarked = $file->bookmarks()->where('user_id', Auth::id())->exists();
-                                    @endphp
-                                    <button type="button"
-                                        class="btn btn-outline-dark bookmark-toggle {{ $isBookmarked ? 'bookmark-active' : '' }}"
-                                        data-file-id="{{ $file->id }}">
-                                        @if ($isBookmarked)
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                fill="currentColor" class="bi bi-bookmarks-fill" viewBox="0 0 16 16">
-                                                <path
-                                                    d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L7 13.101l-4.223 2.815A.5.5 0 0 1 2 15.5z" />
-                                                <path
-                                                    d="M4.268 1A2 2 0 0 1 6 0h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L13 13.768V2a1 1 0 0 0-1-1z" />
-                                            </svg>
-                                        @else
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                fill="currentColor" class="bi bi-bookmarks" viewBox="0 0 16 16">
-                                                <path
-                                                    d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L7 13.101l-4.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v10.566l3.723-2.482a.5.5 0 0 1 .554 0L11 14.566V4a1 1 0 0 0-1-1z" />
-                                                <path
-                                                    d="M4.268 1H12a1 1 0 0 1 1 1v11.768l.223.148A.5.5 0 0 0 14 13.5V2a2 2 0 0 0-2-2H6a2 2 0 0 0-1.732 1" />
-                                            </svg>
-                                        @endif
-                                        <span class="visually-hidden">Button</span>
-                                    </button>
-                                </td>
-                                <td>
-                                    <div>
-                                        @php
-                                            $extension = pathinfo($file->name, PATHINFO_EXTENSION);
-                                        @endphp
-                                        <i class="fa-solid fa-file-lines" style="color: #0068b8; margin-right: 5px;"></i>
-                                        <a href="{{ Storage::url($file->path) }}" target="_blank">
-                                            {{ pathinfo($file->name, PATHINFO_FILENAME) }}
-                                        </a>
-                                        <span>
-                                            <span class="badge badge-file-extension">
-                                                {{ strtoupper($extension) }} File
-                                            </span>
-                                        </span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <a class="btn btn-primary rounded-pill" href="{{ route('files.download', $file) }}">
-                                        <i class="fas fa-download me-1"></i> Download
-                                    </a>
-                                </td>
-
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+    <div>
+        <div class="d-flex flex-column">
+            <h1>Title: {{ $material->title }}</h1>
+            @if ($material->description)
+                <p class="description-text"><strong>Description:</strong> {{ $material->description }}</p>
+            @endif
         </div>
 
+        <div class="d-flex justify-content-end mb-4">
+            <a class="btn rounded-3" style="background-color: #4CAF50; color: white"
+                href="{{ route('materials.downloadAll', $material) }}">
+                <i class="fas fa-download me-1"></i> Download All
+            </a>
+        </div>
 
+        <div class="table-responsive">
+            <table class="table table-striped custom-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Bookmarks</th>
+                        <th scope="col">Document</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($files as $file)
+                        <tr>
+                            <td>
+                                @php
+                                    $isBookmarked = $file->bookmarks()->where('user_id', Auth::id())->exists();
+                                @endphp
+                                <button type="button"
+                                    class="btn btn-outline-dark bookmark-toggle {{ $isBookmarked ? 'bookmark-active' : '' }}"
+                                    data-file-id="{{ $file->id }}">
+                                    @if ($isBookmarked)
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-bookmarks-fill" viewBox="0 0 16 16">
+                                            <path
+                                                d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L7 13.101l-4.223 2.815A.5.5 0 0 1 2 15.5z" />
+                                            <path
+                                                d="M4.268 1A2 2 0 0 1 6 0h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L13 13.768V2a1 1 0 0 0-1-1z" />
+                                        </svg>
+                                    @else
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-bookmarks" viewBox="0 0 16 16">
+                                            <path
+                                                d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L7 13.101l-4.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v10.566l3.723-2.482a.5.5 0 0 1 .554 0L11 14.566V4a1 1 0 0 0-1-1z" />
+                                            <path
+                                                d="M4.268 1H12a1 1 0 0 1 1 1v11.768l.223.148A.5.5 0 0 0 14 13.5V2a2 2 0 0 0-2-2H6a2 2 0 0 0-1.732 1" />
+                                        </svg>
+                                    @endif
+                                    <span class="visually-hidden">Button</span>
+                                </button>
+                            </td>
+                            <td>
+                                <div>
+                                    @php
+                                        $extension = pathinfo($file->name, PATHINFO_EXTENSION);
+                                    @endphp
+                                    <i class="fa-solid fa-file-lines" style="color: #0068b8; margin-right: 5px;"></i>
+                                    <a href="{{ Storage::url($file->path) }}" target="_blank">
+                                        {{ pathinfo($file->name, PATHINFO_FILENAME) }}
+                                    </a>
+                                    <span>
+                                        <span class="badge badge-file-extension">
+                                            {{ strtoupper($extension) }} File
+                                        </span>
+                                    </span>
+                                </div>
+                            </td>
+                            <td>
+                                <a class="btn btn-primary rounded-pill" href="{{ route('files.download', $file) }}">
+                                    <i class="fas fa-download me-1"></i> Download
+                                </a>
+                            </td>
+
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="container">
         <div class="mt-4 comment-section">
             <h3>Comments ( {{ $comments->count() }} )</h3>
             <div class="comment-header d-flex justify-content-between align-items-center">
@@ -317,7 +295,9 @@
                                         <div class="d-flex flex-column">
                                             <textarea name="content" class="form-control comment-input" placeholder="Write a reply..." rows="2"></textarea>
                                             <div class="d-flex justify-content-between mt-2">
-                                                <div id="reply-form-error" class="text-danger"></div>
+                                                <div id="comment-form-error" class="text-danger" style="display: none;">
+                                                    Error: Reply cannot be empty
+                                                </div>
                                                 <button type="submit" class="btn btn-primary ms-auto">Post Reply</button>
                                             </div>
                                         </div>
@@ -393,7 +373,10 @@
                                                             <div class="d-flex flex-column">
                                                                 <textarea name="content" class="form-control comment-input" placeholder="Write a reply..." rows="2"></textarea>
                                                                 <div class="d-flex justify-content-between mt-2">
-                                                                    <div id="reply-form-error" class="text-danger"></div>
+                                                                    <div id="comment-form-error" class="text-danger"
+                                                                        style="display: none;">
+                                                                        Error: Reply cannot be empty
+                                                                    </div>
                                                                     <button type="submit"
                                                                         class="btn btn-primary ms-auto">Post Reply</button>
                                                                 </div>
@@ -414,7 +397,8 @@
             </div>
         </div>
     </div>
-    <!-- delete model -->
+
+    <!-- Modal for delete confirmation -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -437,29 +421,6 @@
 @section('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const commentForm = document.getElementById('comment-form');
-            const replyForms = document.querySelectorAll('.reply-form');
-
-            commentForm.addEventListener('submit', function(e) {
-                const content = this.querySelector('textarea[name="content"]').value.trim();
-                if (content === '') {
-                    e.preventDefault();
-                    document.getElementById('comment-form-error').innerText =
-                        'Error: Comment cannot be empty';
-                }
-            });
-
-            replyForms.forEach(function(replyForm) {
-                replyForm.addEventListener('submit', function(e) {
-                    const content = this.querySelector('textarea[name="content"]').value.trim();
-                    if (content === '') {
-                        e.preventDefault();
-                        this.querySelector('#reply-form-error').innerText =
-                            'Error: Reply cannot be empty';
-                    }
-                });
-            });
-
             const commentList = document.getElementById('comment-list');
 
             // Handle edit button click
@@ -483,18 +444,13 @@
                     commentBodyElement.dataset.originalContent = commentBodyElement.innerHTML;
 
                     const editForm = `
-                        <form class="edit-comment-form" data-comment-id="${commentId}">
-                            ${mention ? `<span class="reply-mention">${mention}</span>` : ''}
-                            <textarea class="form-control">${content}</textarea>
-                            <div class="d-flex justify-content-between mt-2">
-                                <div id="edit-comment-form-error" class="text-danger"></div>
-                                <div>
-                                    <button type="submit" class="btn btn-primary">Save</button>
-                                    <button type="button" class="btn btn-secondary cancel-edit">Cancel</button>
-                                </div>
-                            </div>
-                        </form>
-                    `;
+                <form class="edit-comment-form" data-comment-id="${commentId}">
+                    ${mention ? `<span class="reply-mention">${mention}</span>` : ''}
+                    <textarea class="form-control">${content}</textarea>
+                    <button type="submit" class="btn btn-primary mt-2">Save</button>
+                    <button type="button" class="btn btn-secondary mt-2 cancel-edit">Cancel</button>
+                </form>
+            `;
 
                     commentBodyElement.innerHTML = editForm;
                     attachEditFormListeners(commentId);
@@ -507,15 +463,9 @@
                 editForm.addEventListener('submit', function(e) {
                     e.preventDefault();
                     const textarea = this.querySelector('textarea');
-                    const content = textarea.value.trim();
+                    const content = textarea.value;
                     const mention = this.querySelector('.reply-mention') ? this.querySelector(
                         '.reply-mention').innerText.trim() : '';
-
-                    if (content === '') {
-                        this.querySelector('#edit-comment-form-error').innerText =
-                            'Error: Comment cannot be empty';
-                        return;
-                    }
 
                     fetch(`/comments/${commentId}`, {
                             method: 'PUT',
@@ -561,47 +511,52 @@
         document.addEventListener('DOMContentLoaded', function() {
 
             // for delete 
+            let commentIdToDelete = null;
+
             document.getElementById('comment-list').addEventListener('click', function(event) {
                 const button = event.target.closest('a[data-action="delete"]');
                 if (button) {
                     event.preventDefault();
+                    commentIdToDelete = button.getAttribute('data-comment-id');
 
-                    const commentId = button.getAttribute('data-comment-id');
+                    // Show the delete confirmation modal
                     const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-
-                    document.getElementById('confirmDelete').onclick = function() {
-                        fetch(`/comments/${commentId}`, {
-                                method: 'DELETE',
-                                headers: {
-                                    'X-Requested-With': 'XMLHttpRequest',
-                                    'X-CSRF-TOKEN': document.querySelector(
-                                        'meta[name="csrf-token"]').getAttribute('content'),
-                                    'Content-Type': 'application/json',
-                                }
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success) {
-                                    const commentElement = document.querySelector(
-                                        `.comment[data-comment-id="${commentId}"]`);
-                                    if (commentElement) {
-                                        commentElement.remove();
-                                    }
-                                    deleteModal.hide();
-                                } else {
-                                    alert(data.message || 'Error deleting comment');
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error:', error);
-                                alert('Something went wrong');
-                            });
-                    };
-
                     deleteModal.show();
                 }
             });
 
+            document.getElementById('confirmDelete').addEventListener('click', function() {
+                if (commentIdToDelete) {
+                    fetch(`/comments/${commentIdToDelete}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                    .getAttribute('content'),
+                                'Content-Type': 'application/json',
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                const commentElement = document.querySelector(
+                                    `.comment[data-comment-id="${commentIdToDelete}"]`);
+                                if (commentElement) {
+                                    commentElement.remove();
+                                }
+                            } else {
+                                alert('Error: Comment deleted because parent removed');
+                            }
+                        })
+                        .catch(error => {
+                            // console.error('Error:', error);
+                            // alert('Something went wrong');
+                        });
+
+                    const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
+                    deleteModal.hide();
+                }
+            });
 
             // for like and dislike
             document.getElementById('comment-list').addEventListener('click', function(event) {
@@ -835,7 +790,7 @@
                                     replyList.insertAdjacentHTML('beforeend', newReplyHtml);
                                     form.reset();
                                     form.style.display =
-                                        'none';
+                                        'none'; // Hide the reply form after successful submission
 
                                     // Ensure the replies are displayed
                                     const replyToggle = form.closest('.comment').querySelector(
