@@ -66,9 +66,9 @@ Route::middleware('auth')->group(function () {
     
                 Route::get('/admin/reports', [ReportController::class, 'index'])->name('admin.reports.index');
                 Route::post('/admin/reports/generate', [ReportController::class, 'generate'])->name('admin.reports.generate');
-                Route::get('/admin/dashboard', [StatController::class, 'index'])->name('admin.dashboard');
+                //Route::get('/admin/dashboard', [StatController::class, 'index'])->name('admin.dashboard.stat');
 
-                Route::get('/admin/dashboard', [TableController::class, 'index'])->name('admin.dashboard');
+                //Route::get('/admin/dashboard', [TableController::class, 'index'])->name('admin.dashboard.table');
 
                 //Route::get('/admin/active-users', [ActivityController::class, 'showActiveUsers'])->name('admin.active.users');
 

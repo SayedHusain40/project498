@@ -24,8 +24,10 @@ use App\Http\Controllers\PostsController;
 //admin
 use App\Http\Controllers\Admin\HomeController;
 
-use App\Http\Controllers\Admin\ActivityController;
+//use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\TableController;
+use App\Http\Controllers\Admin\StatController;
+
 
 
 Route::get('/', function () {
@@ -83,9 +85,14 @@ Route::middleware('auth')->group(function () {
 // Only for admin
 Route::middleware(['admin'])->group(function () {
     Route::get('admin/dashboard', [HomeController::class, 'index'])->name('admin.dashboard');
-    Route::get('admin/dashboard', [ActivityController::class, 'showActiveUsers'])->name('admin.dashboard');
-    Route::get('/chart-data', [ActivityController::class, 'getChartData']);
-Route::get('/admin/dashboard', [TableController::class, 'index'])->name('admin.dashboard');
+    //Route::get('/chart-data', [ActivityController::class, 'getChartData']);
+
+
+
+
+    Route::get('/admin/dashboard', [StatController::class, 'index'])->name('stat');
+
+    Route::get('/admin/dashboard', [TableController::class, 'index'])->name('table');
 });
 
 require __DIR__ . '/auth.php';
