@@ -438,93 +438,99 @@
 @endsection
 
 @section('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const commentList = document.getElementById('comment-list');
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const commentList = document.getElementById('comment-list');
 
-            // Handle edit button click
-            commentList.addEventListener('click', function(event) {
-                const button = event.target.closest('a[data-action="edit"]');
-                if (button) {
-                    event.preventDefault();
-                    const commentId = button.getAttribute('data-comment-id');
-                    const commentElement = document.querySelector(
-                        `.comment[data-comment-id="${commentId}"]`);
-                    const commentBodyElement = commentElement.querySelector('.comment-body');
+        // Handle edit button click
+        commentList.addEventListener('click', function(event) {
+            const button = event.target.closest('a[data-action="edit"]');
+            if (button) {
+                event.preventDefault();
+                const commentId = button.getAttribute('data-comment-id');
+                const commentElement = document.querySelector(
+                    `.comment[data-comment-id="${commentId}"]`);
+                const commentBodyElement = commentElement.querySelector('.comment-body');
 
-                    // Extract mention and content
-                    const mentionElement = commentBodyElement.querySelector('.reply-mention');
-                    const mention = mentionElement ? mentionElement.innerText.trim() : '';
-                    const contentElement = mentionElement ? mentionElement.nextElementSibling :
-                        commentBodyElement;
-                    const content = contentElement.innerText.trim();
+                const mentionElement = commentBodyElement.querySelector('.reply-mention');
+                const mention = mentionElement ? mentionElement.innerText.trim() : '';
+                const contentElement = mentionElement ? mentionElement.nextElementSibling :
+                    commentBodyElement;
+                const content = contentElement.innerText.trim();
 
-                    // Store original content for cancel action
-                    commentBodyElement.dataset.originalContent = commentBodyElement.innerHTML;
+                commentBodyElement.dataset.originalContent = commentBodyElement.innerHTML;
 
-                    const editForm = `
-                <form class="edit-comment-form" data-comment-id="${commentId}">
-                    ${mention ? `<span class="reply-mention">${mention}</span>` : ''}
-                    <textarea class="form-control">${content}</textarea>
-                    <button type="submit" class="btn btn-primary mt-2">Save</button>
-                    <button type="button" class="btn btn-secondary mt-2 cancel-edit">Cancel</button>
-                </form>
-            `;
+                const editForm = `
+                    <form class="edit-comment-form" data-comment-id="${commentId}">
+                        ${mention ? `<span class="reply-mention">${mention}</span>` : ''}
+                        <textarea class="form-control">${content}</textarea>
+                        <div class="error-message text-danger mt-2" style="display: none;"></div>
+                        <div class="d-flex justify-content-end mt-3">
+                            <button type="submit" class="btn btn-primary me-2">Save</button>
+                            <button type="button" class="btn btn-secondary cancel-edit">Cancel</button>
+                        </div>
+                    </form>
+                `;
 
-                    commentBodyElement.innerHTML = editForm;
-                    attachEditFormListeners(commentId);
-                }
-            });
 
-            function attachEditFormListeners(commentId) {
-                const editForm = document.querySelector(`.edit-comment-form[data-comment-id="${commentId}"]`);
-
-                editForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const textarea = this.querySelector('textarea');
-                    const content = textarea.value;
-                    const mention = this.querySelector('.reply-mention') ? this.querySelector(
-                        '.reply-mention').innerText.trim() : '';
-
-                    fetch(`/comments/${commentId}`, {
-                            method: 'PUT',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                    .getAttribute('content')
-                            },
-                            body: JSON.stringify({
-                                content
-                            })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                const commentBodyElement = document.querySelector(
-                                    `.comment[data-comment-id="${commentId}"] .comment-body`);
-                                const mentionElement = mention ?
-                                    `<a href="#" class="reply-mention">${mention}</a>` : '';
-                                commentBodyElement.innerHTML =
-                                    `${mentionElement} <span class="reply-content">${data.content}</span>`;
-                            } else {
-                                alert('Error updating comment.');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                        });
-                });
-
-                editForm.querySelector('.cancel-edit').addEventListener('click', function() {
-                    const originalContent = document.querySelector(
-                            `.comment[data-comment-id="${commentId}"] .comment-body`).dataset
-                        .originalContent;
-                    document.querySelector(`.comment[data-comment-id="${commentId}"] .comment-body`)
-                        .innerHTML = originalContent;
-                });
+                commentBodyElement.innerHTML = editForm;
+                attachEditFormListeners(commentId);
             }
         });
-    </script>
+
+        function attachEditFormListeners(commentId) {
+            const editForm = document.querySelector(`.edit-comment-form[data-comment-id="${commentId}"]`);
+
+            editForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const textarea = this.querySelector('textarea');
+                const content = textarea.value.trim();
+                const errorMessageElement = this.querySelector('.error-message');
+
+                if (content === '') {
+                    errorMessageElement.textContent = 'Content cannot be empty.';
+                    errorMessageElement.style.display = 'block';
+                    return; // Prevent form submission
+                } else {
+                    errorMessageElement.style.display = 'none';
+                }
+
+                fetch(`/comments/${commentId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({ content })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const commentBodyElement = document.querySelector(
+                                `.comment[data-comment-id="${commentId}"] .comment-body`);
+                            const mentionElement = mention ?
+                                `<a href="#" class="reply-mention">${mention}</a>` : '';
+                            commentBodyElement.innerHTML =
+                                `${mentionElement} <span class="reply-content">${data.content}</span>`;
+                        } else {
+                            alert('Error updating comment.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            });
+
+            editForm.querySelector('.cancel-edit').addEventListener('click', function() {
+                const originalContent = document.querySelector(
+                    `.comment[data-comment-id="${commentId}"] .comment-body`).dataset.originalContent;
+                document.querySelector(`.comment[data-comment-id="${commentId}"] .comment-body`)
+                    .innerHTML = originalContent;
+            });
+        }
+    });
+</script>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
