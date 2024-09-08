@@ -733,7 +733,6 @@
                     const parentId = form.closest('.comment').dataset.commentId;
                     const errorDiv = form.querySelector('#comment-form-error');
 
-                    // Reset error display
                     errorDiv.style.display = 'none';
                     errorDiv.textContent = '';
 
@@ -812,7 +811,6 @@
                                     form.style.display =
                                         'none'; // Hide the reply form after successful submission
 
-                                    // Ensure the replies are displayed
                                     const replyToggle = form.closest('.comment').querySelector(
                                         '.reply-toggle');
                                     if (replyToggle) {
