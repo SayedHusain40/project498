@@ -25,6 +25,7 @@ use App\Http\Controllers\PostsController;
 use App\Http\Controllers\Admin\HomeController;
 
 use App\Http\Controllers\Admin\ActivityController;
+use App\Http\Controllers\Admin\TableController;
 
 
 Route::get('/', function () {
@@ -84,6 +85,7 @@ Route::middleware(['admin'])->group(function () {
     Route::get('admin/dashboard', [HomeController::class, 'index'])->name('admin.dashboard');
     Route::get('admin/dashboard', [ActivityController::class, 'showActiveUsers'])->name('admin.dashboard');
     Route::get('/chart-data', [ActivityController::class, 'getChartData']);
+Route::get('/admin/dashboard', [TableController::class, 'index'])->name('admin.dashboard');
 });
 
 require __DIR__ . '/auth.php';
