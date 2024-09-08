@@ -139,11 +139,8 @@
             color: #dc3545;
         }
 
-
-        /* Dropdown Styles */
         .dropdown-toggle::after {
             display: none;
-            /* Remove the default arrow */
         }
 
         .dropdown-menu {
@@ -442,7 +439,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         const commentList = document.getElementById('comment-list');
 
-        // Handle edit button click
+        // for edit
         commentList.addEventListener('click', function(event) {
             const button = event.target.closest('a[data-action="edit"]');
             if (button) {
@@ -471,7 +468,6 @@
                         </div>
                     </form>
                 `;
-
 
                 commentBodyElement.innerHTML = editForm;
                 attachEditFormListeners(commentId);
