@@ -1,6 +1,25 @@
 @extends('new_layouts.app')
 @section('styles')
     <style>
+        .modal-icon {
+            font-size: 3rem;
+            color: #dc3545;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            margin-top: 1rem;
+        }
+
+        .modal-body p {
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+
         .custom-table {
             border-collapse: collapse;
             border-radius: 1rem;
@@ -545,7 +564,8 @@
                                     commentElement.remove();
                                 }
                             } else {
-                                alert('Error: Comment deleted because parent removed');
+                                alert(
+                                    'Error: This comment was deleted because its parent comment was removed');
                             }
                         })
                         .catch(error => {
