@@ -22,7 +22,7 @@ class MaterialController extends Controller
     {
         $courses = Course::all();
         $materialTypes = MaterialType::all();
-        $userId = Auth::id(); 
+        $userId = Auth::id();
 
         $materials = Material::with('course', 'materialType', 'user')
         ->when($request->course_code, function ($query) use ($request) {
@@ -33,6 +33,7 @@ class MaterialController extends Controller
             ->when($request->material_type_id, function ($query) use ($request) {
                 return $query->where('material_type_id', $request->material_type_id);
             })
+            ->orderBy('created_at', 'desc') 
             ->get()
             ->map(function ($material) use ($userId) {
                 $material->is_followed = Follow::where('user_id', $userId)->where('material_id', $material->id)->exists();
@@ -41,6 +42,7 @@ class MaterialController extends Controller
 
         return view('materials.index', compact('courses', 'materialTypes', 'materials'));
     }
+
 
 
     public function show(Material $material)
@@ -52,10 +54,12 @@ class MaterialController extends Controller
             ->with(['replies' => function ($query) {
                 $query->with('replies');
             }])
+            ->orderBy('created_at', 'desc') 
             ->get();
-            
+
         return view('materials.show', compact('material', 'files', 'comments'));
     }
+
 
 
     public function download(File $file)
