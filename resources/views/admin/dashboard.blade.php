@@ -58,6 +58,7 @@
 <!-- Data Tables -->
 
 
+<!--
 <h1>Users Table</h1>
     <table class="table table-bordered">
         <thead>
@@ -81,6 +82,8 @@
             @endforeach
         </tbody>
     </table>
+-->
+
 
 
 
