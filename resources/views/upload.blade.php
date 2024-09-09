@@ -47,32 +47,41 @@
                                 @enderror
                             </div>
 
-                            <div class="mb-3 d-flex align-items-end">
-                                <div class="me-3 flex-grow-1">
-                                    <label for="college" class="form-label">College:</label>
-                                    <select class="form-select" id="college" name="college">
-                                        <option value="">Select a college</option>
+                            <div class="mb-3">
+                                <label for="course" class="form-label">Course:</label>
+                                <div class="dropdown">
+                                    <button class="btn btn-light dropdown-toggle" type="button" id="courseDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Select a course
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="courseDropdown">
                                         @foreach ($colleges as $college)
-                                            <option value="{{ $college->id }}">{{ $college->name }}</option>
+                                            <li class="dropdown-submenu">
+                                                <a class="dropdown-item dropdown-toggle" href="#">{{ $college->name }}</a>
+                                                <ul class="dropdown-menu">
+                                                    @foreach ($college->departments as $department)
+                                                        <li class="dropdown-submenu">
+                                                            <a class="dropdown-item dropdown-toggle" href="#">{{ $department->name }}</a>
+                                                            <ul class="dropdown-menu">
+                                                                @foreach ($department->courses as $course)
+                                                                    <li>
+                                                                        <a class="dropdown-item" href="#" data-course-id="{{ $course->id }}">
+                                                                            {{ $course->code }} - {{ $course->name }}
+                                                                        </a>
+                                                                    </li>
+                                                                @endforeach
+                                                            </ul>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            </li>
                                         @endforeach
-                                    </select>
+                                    </ul>
                                 </div>
-                                <div class="me-3 flex-grow-1">
-                                    <label for="department" class="form-label">Department:</label>
-                                    <select class="form-select" id="department" name="department" disabled>
-                                        <option value="">Select a department</option>
-                                    </select>
-                                </div>
-                                <div class="flex-grow-1">
-                                    <label for="course_id" class="form-label">Course:</label>
-                                    <select class="form-select" id="course_id" name="course_id" disabled>
-                                        <option value="">Select a course</option>
-                                    </select>
-                                </div>
+                                <input type="hidden" id="course_id" name="course_id">
+                                @error('course_id')
+                                    <p class="text-danger">The course is required.</p>
+                                @enderror
                             </div>
-                            @error('course_id')
-                                <p class="text-danger">The course is required.</p>
-                            @enderror
 
                             <!-- FilePond input -->
                             <div class="mb-3">
@@ -99,52 +108,83 @@
 @section('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const colleges = @json($colleges);
-            const collegeSelect = document.getElementById('college');
-            const departmentSelect = document.getElementById('department');
-            const courseSelect = document.getElementById('course_id');
+            const courseDropdownItems = document.querySelectorAll('.dropdown-menu .dropdown-item');
+            const courseDropdown = document.getElementById('courseDropdown');
+            const courseIdInput = document.getElementById('course_id');
 
-            collegeSelect.addEventListener('change', function() {
-                const selectedCollegeId = this.value;
+            courseDropdownItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault(); // Prevent default action
+                    e.stopPropagation(); // Stop event from bubbling up
 
-                departmentSelect.innerHTML = '<option value="">Select a department</option>';
-                courseSelect.innerHTML = '<option value="">Select a course</option>';
-                courseSelect.disabled = true;
+                    const courseId = this.getAttribute('data-course-id');
+                    if (courseId) {
+                        courseIdInput.value = courseId;
+                        courseDropdown.innerText = this.innerText;
 
-                if (selectedCollegeId) {
-                    departmentSelect.disabled = false;
-                    const selectedCollege = colleges.find(college => college.id == selectedCollegeId);
-                    selectedCollege.departments.forEach(department => {
-                        const option = document.createElement('option');
-                        option.value = department.id;
-                        option.textContent = department.name;
-                        departmentSelect.appendChild(option);
-                    });
-                } else {
-                    departmentSelect.disabled = true;
-                }
+                        // Hide the dropdown menu
+                        const dropdown = new bootstrap.Dropdown(courseDropdown);
+                        dropdown.hide();
+                    }
+                });
             });
 
-            departmentSelect.addEventListener('change', function() {
-                const selectedDepartmentId = this.value;
-
-                courseSelect.innerHTML = '<option value="">Select a course</option>';
-
-                if (selectedDepartmentId) {
-                    courseSelect.disabled = false;
-                    const selectedCollege = colleges.find(college => college.id == collegeSelect.value);
-                    const selectedDepartment = selectedCollege.departments.find(department => department
-                        .id == selectedDepartmentId);
-                    selectedDepartment.courses.forEach(course => {
-                        const option = document.createElement('option');
-                        option.value = course.id;
-                        option.textContent = `${course.code} - ${course.name}`;
-                        courseSelect.appendChild(option);
-                    });
-                } else {
-                    courseSelect.disabled = true;
-                }
+            // Optional: Add logic to show/hide submenus on hover
+            document.querySelectorAll('.dropdown-submenu .dropdown-toggle').forEach(toggle => {
+                toggle.addEventListener('mouseover', function() {
+                    this.nextElementSibling.classList.add('show');
+                });
+                toggle.addEventListener('mouseout', function() {
+                    this.nextElementSibling.classList.remove('show');
+                });
             });
         });
     </script>
+@endsection
+
+@section('styles')
+    <style>
+        .dropdown-menu {
+            background-color: #ffffff; 
+            border: 1px solid rgba(0, 0, 0, 0.125); 
+            border-radius: 0.25rem; 
+        }
+
+        .dropdown-item {
+            color: #000000; /* Black text color */
+        }
+
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .dropdown-submenu {
+            position: relative;
+        }
+
+        .dropdown-submenu .dropdown-menu {
+            top: 0;
+            left: 100%;
+            margin-top: -6px;
+            margin-left: -1px;
+            border-radius: 0.25rem;
+            border: 1px solid rgba(0, 0, 0, 0.125);
+            display: none;
+            position: absolute;
+            background-color: #ffffff; 
+        }
+
+        .dropdown-submenu:hover > .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+        .btn-light {
+
+    border-color: #E0E0E0;
+    border-radius: 7px;
+}
+    </style>
 @endsection
