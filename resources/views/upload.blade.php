@@ -6,6 +6,55 @@
 
 @section('page_description', 'This is the Upload page.')
 
+
+@section('styles')
+    <style>
+        .dropdown-menu {
+            background-color: #ffffff;
+            border: 1px solid rgba(0, 0, 0, 0.125);
+            border-radius: 0.25rem;
+        }
+
+        .dropdown-item {
+            color: #000000;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .dropdown-submenu {
+            position: relative;
+        }
+
+        .dropdown-submenu .dropdown-menu {
+            top: 0;
+            left: 100%;
+            margin-top: -6px;
+            margin-left: -1px;
+            border-radius: 0.25rem;
+            border: 1px solid rgba(0, 0, 0, 0.125);
+            display: none;
+            position: absolute;
+            background-color: #ffffff;
+        }
+
+        .dropdown-submenu:hover>.dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .btn-light {
+
+            border-color: #E0E0E0;
+            border-radius: 7px;
+        }
+    </style>
+@endsection
+
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
@@ -50,21 +99,25 @@
                             <div class="mb-3">
                                 <label for="course" class="form-label">Course:</label>
                                 <div class="dropdown">
-                                    <button class="btn btn-light dropdown-toggle" type="button" id="courseDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <button class="btn btn-light dropdown-toggle" type="button" id="courseDropdown"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
                                         Select a course
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="courseDropdown">
                                         @foreach ($colleges as $college)
                                             <li class="dropdown-submenu">
-                                                <a class="dropdown-item dropdown-toggle" href="#">{{ $college->name }}</a>
+                                                <a class="dropdown-item dropdown-toggle"
+                                                    href="#">{{ $college->name }}</a>
                                                 <ul class="dropdown-menu">
                                                     @foreach ($college->departments as $department)
                                                         <li class="dropdown-submenu">
-                                                            <a class="dropdown-item dropdown-toggle" href="#">{{ $department->name }}</a>
+                                                            <a class="dropdown-item dropdown-toggle"
+                                                                href="#">{{ $department->name }}</a>
                                                             <ul class="dropdown-menu">
                                                                 @foreach ($department->courses as $course)
                                                                     <li>
-                                                                        <a class="dropdown-item" href="#" data-course-id="{{ $course->id }}">
+                                                                        <a class="dropdown-item" href="#"
+                                                                            data-course-id="{{ $course->id }}">
                                                                             {{ $course->code }} - {{ $course->name }}
                                                                         </a>
                                                                     </li>
@@ -142,49 +195,3 @@
     </script>
 @endsection
 
-@section('styles')
-    <style>
-        .dropdown-menu {
-            background-color: #ffffff; 
-            border: 1px solid rgba(0, 0, 0, 0.125); 
-            border-radius: 0.25rem; 
-        }
-
-        .dropdown-item {
-            color: #000000; /* Black text color */
-        }
-
-        .dropdown-item:hover {
-            background-color: #f8f9fa;
-        }
-
-        .dropdown-submenu {
-            position: relative;
-        }
-
-        .dropdown-submenu .dropdown-menu {
-            top: 0;
-            left: 100%;
-            margin-top: -6px;
-            margin-left: -1px;
-            border-radius: 0.25rem;
-            border: 1px solid rgba(0, 0, 0, 0.125);
-            display: none;
-            position: absolute;
-            background-color: #ffffff; 
-        }
-
-        .dropdown-submenu:hover > .dropdown-menu {
-            display: block;
-        }
-
-        .dropdown-menu.show {
-            display: block;
-        }
-        .btn-light {
-
-    border-color: #E0E0E0;
-    border-radius: 7px;
-}
-    </style>
-@endsection
