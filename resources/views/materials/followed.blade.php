@@ -1,8 +1,20 @@
 @extends('new_layouts.app')
 
 @section('page_name', 'Followed Materials')
-@section('page_description', 'Materials you are following.')
+@section('page_description', 'Materials you are saving.')
+@section('styles')
+    <style>
+        button:focus {
+            outline: none;
+            box-shadow: none;
+        }
 
+        button.follow-button:active {
+            background-color: #e2eaf7;
+            color: #2a2f5b;
+        }
+    </style>
+@endsection
 @section('content')
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3" id="myGrid">
         @foreach ($followedMaterials as $material)
@@ -36,7 +48,7 @@
                         <button type="button" class="btn btn-rounded w-100 follow-button"
                             style="background-color: #e2eaf7; color:#2a2f5b;" data-material-id="{{ $material->id }}">
                             <i class="fa-solid {{ $material->is_followed ? 'fa-minus' : 'fa-plus' }}"></i>
-                            {{ $material->is_followed ? 'Unfollow' : 'Follow' }}
+                            {{ $material->is_followed ? 'Unsave' : 'Save' }}
                         </button>
                     </div>
                 </div>
@@ -52,11 +64,13 @@
 
             followButtons.forEach(button => {
                 button.addEventListener('click', function(event) {
-                    event
-                .stopPropagation(); 
-                    event.preventDefault(); 
+                    event.stopPropagation();
+                    event.preventDefault();
 
                     const materialId = this.getAttribute('data-material-id');
+                    const card = this.closest('.col');
+
+                    this.blur();
 
                     fetch("{{ route('follow.toggle') }}", {
                             method: 'POST',
@@ -74,11 +88,13 @@
                             if (data.status === 'followed') {
                                 icon.classList.remove('fa-plus');
                                 icon.classList.add('fa-minus');
-                                this.innerHTML = '<i class="fa-solid fa-minus"></i> Unfollow';
+                                this.innerHTML = '<i class="fa-solid fa-minus"></i> Unsave';
                             } else if (data.status === 'unfollowed') {
                                 icon.classList.remove('fa-minus');
                                 icon.classList.add('fa-plus');
-                                this.innerHTML = '<i class="fa-solid fa-plus"></i> Follow';
+                                this.innerHTML = '<i class="fa-solid fa-plus"></i> Save';
+                                // Remove the material card 
+                                card.remove();
                             }
                         });
                 });

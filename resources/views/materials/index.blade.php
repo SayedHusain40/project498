@@ -13,6 +13,16 @@
         .card {
             transition: all 0.3s ease-in-out;
         }
+
+        button:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        button.follow-button:active {
+            background-color: #e2eaf7;
+            color: #2a2f5b;
+        }
     </style>
 
     <div class="d-flex justify-content-between mb-4">
@@ -75,7 +85,7 @@
                         <button type="button" class="btn btn-rounded w-100 follow-button"
                             style="background-color: #e2eaf7; color:#2a2f5b;" data-material-id="{{ $material->id }}">
                             <i class="fa-solid {{ $material->is_followed ? 'fa-minus' : 'fa-plus' }}"></i>
-                            {{ $material->is_followed ? 'Unfollow' : 'Follow' }}
+                            {{ $material->is_followed ? 'Unsave' : 'Save' }}
                         </button>
                     </div>
                 </div>
@@ -96,6 +106,8 @@
 
                     const materialId = this.getAttribute('data-material-id');
 
+                    this.blur();
+
                     fetch("{{ route('follow.toggle') }}", {
                             method: 'POST',
                             headers: {
@@ -112,11 +124,11 @@
                             if (data.status === 'followed') {
                                 icon.classList.remove('fa-plus');
                                 icon.classList.add('fa-minus');
-                                this.innerHTML = '<i class="fa-solid fa-minus"></i> Unfollow';
+                                this.innerHTML = '<i class="fa-solid fa-minus"></i> Unsave';
                             } else if (data.status === 'unfollowed') {
                                 icon.classList.remove('fa-minus');
                                 icon.classList.add('fa-plus');
-                                this.innerHTML = '<i class="fa-solid fa-plus"></i> Follow';
+                                this.innerHTML = '<i class="fa-solid fa-plus"></i> Save';
                             }
                         });
                 });

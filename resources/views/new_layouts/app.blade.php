@@ -209,6 +209,12 @@
                                 </a>
                             </li>
 
+                            <li class="nav-item {{ request()->routeIs('user.materials') ? 'active' : '' }}">
+                                <a href="{{ route('user.materials') }}">
+                                    <i class="fas fa-book"></i>
+                                    <p>My Uploaded Materials</p>
+                                </a>
+                            </li>
 
 
                             <li class="nav-item {{ request()->routeIs('menu.levels') ? 'active' : '' }}">
@@ -308,13 +314,13 @@
                         </li>
 
                         <!-- Route Reports -->
-                        @if(auth()->user()->role === 'admin')
-                        <li class="nav-item">
-                            <a href="{{ route('admin.reports.index') }}">
-                                <i class="fas fa-file-alt"></i>
-                                <p>Reports</p>
-                            </a>
-                        </li>
+                        @if (auth()->user()->role === 'admin')
+                            <li class="nav-item">
+                                <a href="{{ route('admin.reports.index') }}">
+                                    <i class="fas fa-file-alt"></i>
+                                    <p>Reports</p>
+                                </a>
+                            </li>
                         @endif
 
                     </ul>
@@ -770,7 +776,7 @@
     <script src="{{ asset('assets/js/kaiadmin.min.js') }}"></script>
 
     <script src="assets/js/setting-demo.js"></script>
-    
+
     @yield('scripts')
 </body>
 

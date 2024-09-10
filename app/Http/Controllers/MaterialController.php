@@ -43,6 +43,36 @@ class MaterialController extends Controller
         return view('materials.index', compact('courses', 'materialTypes', 'materials'));
     }
 
+    public function userMaterials(Request $request)
+    {
+        $courses = Course::all();
+        $materialTypes = MaterialType::all();
+        $userId = Auth::id();
+
+        $materials = Material::with('course', 'materialType', 'user')
+        ->where('user_id', $userId) 
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function ($material) use ($userId) {
+                $material->is_followed = Follow::where('user_id', $userId)->where('material_id', $material->id)->exists();
+                return $material;
+            });
+
+        return view('materials.user-materials', compact('courses', 'materialTypes', 'materials'));
+    }
+    public function destroy($id)
+    {
+        $material = Material::find($id);
+
+        if ($material && $material->user_id === Auth::id()) {
+            $material->delete();
+            return response()->json(['status' => 'success']);
+        }
+
+        return response()->json(['status' => 'error'], 403); 
+    }
+
+
 
 
     public function show(Material $material)

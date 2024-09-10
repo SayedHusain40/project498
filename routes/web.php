@@ -48,6 +48,8 @@ Route::middleware('auth')->group(function () {
 
     //for martials
     Route::get('/materials', [MaterialController::class, 'index'])->name('materials');
+    Route::get('/my-materials', [MaterialController::class, 'userMaterials'])->name('user.materials');
+    Route::delete('/materials/{id}', [MaterialController::class, 'destroy'])->name('materials.delete');
     Route::get('/materials/{material}', [MaterialController::class, 'show'])->name('materials.show');
     Route::get('/files/{file}', [MaterialController::class, 'download'])->name('files.download');
     Route::get('/materials/{material}/downloadAll', [MaterialController::class, 'downloadAll'])->name('materials.downloadAll');
