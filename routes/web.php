@@ -15,6 +15,7 @@ use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\UserReportController;
 
 use App\Http\Controllers\PostsController;
 
@@ -66,7 +67,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
     Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
 
+    // report
+    Route::post('/report/submit', [UserReportController::class, 'submit'])->name('user_report.submit');
 
+    // web.php
+    Route::post('/report', [CommentController::class, 'submit'])->name('report.submit');
 
 
 

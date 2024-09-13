@@ -22,6 +22,10 @@
                                 <li><a class="dropdown-item text-danger" href="#" data-action="delete"
                                         data-comment-id="{{ $reply->id }}">Delete</a>
                                 </li>
+                                <li><a class="dropdown-item text-warning" href="#" data-action="report"
+                                        data-comment-id="{{ $comment->id }}" data-bs-toggle="modal"
+                                        data-bs-target="#reportModal">Report</a>
+                                </li>
                             </ul>
                         </div>
                     @endif
