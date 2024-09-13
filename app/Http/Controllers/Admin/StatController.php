@@ -12,10 +12,12 @@ class StatController extends Controller
     {
         $materialsCount = Material::count();
         $usersCount = User::where('role', 'user')->count();
+        $users = User::all();
 
         return view('admin.dashboard', [
             'materialsCount' => $materialsCount,
             'usersCount' => $usersCount,
+            'users' => $users
         ]);
     }
 }

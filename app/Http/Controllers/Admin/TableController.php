@@ -7,11 +7,7 @@ use App\Models\User;
 
 class TableController extends Controller
 {
-    public function index()
-    {
-        $users = User::all();
-        return view('admin.dashboard', ['users' => $users]);
-    }
+
 }
 
 
