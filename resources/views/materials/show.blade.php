@@ -280,6 +280,11 @@
                                                     <li><a class="dropdown-item text-danger" href="#"
                                                             data-action="delete"
                                                             data-comment-id="{{ $comment->id }}">Delete</a></li>
+
+                                                    <li><a class="dropdown-item text-warning" href="#"
+                                                            data-action="report" data-comment-id="{{ $comment->id }}"
+                                                            data-bs-toggle="modal" data-bs-target="#reportModal">Report</a>
+                                                    </li>
                                                 </ul>
                                             </div>
                                         @endif
@@ -349,6 +354,12 @@
                                                                         <li><a class="dropdown-item text-danger"
                                                                                 href="#" data-action="delete"
                                                                                 data-comment-id="{{ $reply->id }}">Delete</a>
+                                                                        </li>
+                                                                        <li><a class="dropdown-item text-warning"
+                                                                                href="#" data-action="report"
+                                                                                data-comment-id="{{ $comment->id }}"
+                                                                                data-bs-toggle="modal"
+                                                                                data-bs-target="#reportModal">Report</a>
                                                                         </li>
                                                                     </ul>
                                                                 </div>
@@ -432,32 +443,52 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal for reporting comment -->
+<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reportModalLabel">Report Comment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to report this comment?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmReport">Report</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @section('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const commentList = document.getElementById('comment-list');
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const commentList = document.getElementById('comment-list');
 
-        // for edit
-        commentList.addEventListener('click', function(event) {
-            const button = event.target.closest('a[data-action="edit"]');
-            if (button) {
-                event.preventDefault();
-                const commentId = button.getAttribute('data-comment-id');
-                const commentElement = document.querySelector(
-                    `.comment[data-comment-id="${commentId}"]`);
-                const commentBodyElement = commentElement.querySelector('.comment-body');
+            // for edit
+            commentList.addEventListener('click', function(event) {
+                const button = event.target.closest('a[data-action="edit"]');
+                if (button) {
+                    event.preventDefault();
+                    const commentId = button.getAttribute('data-comment-id');
+                    const commentElement = document.querySelector(
+                        `.comment[data-comment-id="${commentId}"]`);
+                    const commentBodyElement = commentElement.querySelector('.comment-body');
 
-                const mentionElement = commentBodyElement.querySelector('.reply-mention');
-                const mention = mentionElement ? mentionElement.innerText.trim() : '';
-                const contentElement = mentionElement ? mentionElement.nextElementSibling :
-                    commentBodyElement;
-                const content = contentElement.innerText.trim();
+                    const mentionElement = commentBodyElement.querySelector('.reply-mention');
+                    const mention = mentionElement ? mentionElement.innerText.trim() : '';
+                    const contentElement = mentionElement ? mentionElement.nextElementSibling :
+                        commentBodyElement;
+                    const content = contentElement.innerText.trim();
 
-                commentBodyElement.dataset.originalContent = commentBodyElement.innerHTML;
+                    commentBodyElement.dataset.originalContent = commentBodyElement.innerHTML;
 
-                const editForm = `
+                    const editForm = `
                     <form class="edit-comment-form" data-comment-id="${commentId}">
                         ${mention ? `<span class="reply-mention">${mention}</span>` : ''}
                         <textarea class="form-control">${content}</textarea>
@@ -469,63 +500,67 @@
                     </form>
                 `;
 
-                commentBodyElement.innerHTML = editForm;
-                attachEditFormListeners(commentId);
+                    commentBodyElement.innerHTML = editForm;
+                    attachEditFormListeners(commentId);
+                }
+            });
+
+            function attachEditFormListeners(commentId) {
+                const editForm = document.querySelector(`.edit-comment-form[data-comment-id="${commentId}"]`);
+
+                editForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const textarea = this.querySelector('textarea');
+                    const content = textarea.value.trim();
+                    const errorMessageElement = this.querySelector('.error-message');
+
+                    if (content === '') {
+                        errorMessageElement.textContent = 'Content cannot be empty.';
+                        errorMessageElement.style.display = 'block';
+                        return; // Prevent form submission
+                    } else {
+                        errorMessageElement.style.display = 'none';
+                    }
+
+                    fetch(`/comments/${commentId}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                    .getAttribute('content')
+                            },
+                            body: JSON.stringify({
+                                content
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                const commentBodyElement = document.querySelector(
+                                    `.comment[data-comment-id="${commentId}"] .comment-body`);
+                                const mentionElement = mention ?
+                                    `<a href="#" class="reply-mention">${mention}</a>` : '';
+                                commentBodyElement.innerHTML =
+                                    `${mentionElement} <span class="reply-content">${data.content}</span>`;
+                            } else {
+                                alert('Error updating comment.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                });
+
+                editForm.querySelector('.cancel-edit').addEventListener('click', function() {
+                    const originalContent = document.querySelector(
+                            `.comment[data-comment-id="${commentId}"] .comment-body`).dataset
+                        .originalContent;
+                    document.querySelector(`.comment[data-comment-id="${commentId}"] .comment-body`)
+                        .innerHTML = originalContent;
+                });
             }
         });
-
-        function attachEditFormListeners(commentId) {
-            const editForm = document.querySelector(`.edit-comment-form[data-comment-id="${commentId}"]`);
-
-            editForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const textarea = this.querySelector('textarea');
-                const content = textarea.value.trim();
-                const errorMessageElement = this.querySelector('.error-message');
-
-                if (content === '') {
-                    errorMessageElement.textContent = 'Content cannot be empty.';
-                    errorMessageElement.style.display = 'block';
-                    return; // Prevent form submission
-                } else {
-                    errorMessageElement.style.display = 'none';
-                }
-
-                fetch(`/comments/${commentId}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        },
-                        body: JSON.stringify({ content })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            const commentBodyElement = document.querySelector(
-                                `.comment[data-comment-id="${commentId}"] .comment-body`);
-                            const mentionElement = mention ?
-                                `<a href="#" class="reply-mention">${mention}</a>` : '';
-                            commentBodyElement.innerHTML =
-                                `${mentionElement} <span class="reply-content">${data.content}</span>`;
-                        } else {
-                            alert('Error updating comment.');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-            });
-
-            editForm.querySelector('.cancel-edit').addEventListener('click', function() {
-                const originalContent = document.querySelector(
-                    `.comment[data-comment-id="${commentId}"] .comment-body`).dataset.originalContent;
-                document.querySelector(`.comment[data-comment-id="${commentId}"] .comment-body`)
-                    .innerHTML = originalContent;
-            });
-        }
-    });
-</script>
+    </script>
 
 
     <script>
@@ -567,7 +602,8 @@
                                 }
                             } else {
                                 alert(
-                                    'Error: This comment was deleted because its parent comment was removed');
+                                    'Error: This comment was deleted because its parent comment was removed'
+                                );
                             }
                         })
                         .catch(error => {
@@ -675,6 +711,12 @@
                                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton${data.comment.id}">
                                                     <li><a class="dropdown-item" href="#" data-action="edit" data-comment-id="${data.comment.id}">Edit</a></li>
                                                     <li><a class="dropdown-item text-danger" href="#" data-action="delete" data-comment-id="${data.comment.id}">Delete</a></li>
+                                                                                                                            <li><a class="dropdown-item text-warning"
+                                                                                href="#" data-action="report"
+                                                                                data-comment-id="${data.comment.id}"
+                                                                                data-bs-toggle="modal"
+                                                                                data-bs-target="#reportModal">Report</a>
+                                                                        </li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -770,6 +812,12 @@
                                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton${data.reply.id}">
                                                         <li><a class="dropdown-item" href="#" data-action="edit" data-comment-id="${data.reply.id}">Edit</a></li>
                                                         <li><a class="dropdown-item text-danger" href="#" data-action="delete" data-comment-id="${data.reply.id}">Delete</a></li>
+                                                                                                                                <li><a class="dropdown-item text-warning"
+                                                                                href="#" data-action="report"
+                                                                                data-comment-id="${data.reply.id}"
+                                                                                data-bs-toggle="modal"
+                                                                                data-bs-target="#reportModal">Report</a>
+                                                                        </li>
                                                     </ul>
                                                 </div>
                                             </div>
