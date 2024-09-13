@@ -21,6 +21,8 @@ use App\Http\Controllers\PostsController;
 
 //admin
 use App\Http\Controllers\Admin\HomeController;
+use App\Http\Controllers\Admin\TableController;
+
 
 
 Route::get('/', function () {
@@ -70,7 +72,7 @@ Route::middleware('auth')->group(function () {
 
 
 
-    //For Posts --- EDIT NAME OF Controller !!!!! 
+    //For Posts --- EDIT NAME OF Controller !!!!!
 
     Route::get('/posts', [PostsController::class, 'index'])->name('posts');
     // Store a new created post
@@ -80,6 +82,10 @@ Route::middleware('auth')->group(function () {
 // Only for admin
 Route::middleware(['admin'])->group(function () {
     Route::get('admin/dashboard', [HomeController::class, 'index'])->name('admin.dashboard');
+
+    Route::get('/admin/dashboard.blade.php', [TableController::class, 'index'])->name('admin.users');
+
+
 });
 
 require __DIR__ . '/auth.php';
