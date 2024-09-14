@@ -72,9 +72,6 @@ Route::middleware('auth')->group(function () {
     // report
     Route::post('/report/submit', [UserReportController::class, 'submit'])->name('user_report.submit');
 
-    // web.php
-    Route::post('/report', [CommentController::class, 'submit'])->name('report.submit');
-
 
 
     //For Posts --- EDIT NAME OF Controller !!!!!
