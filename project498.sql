@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 08, 2024 at 06:11 PM
+-- Generation Time: Sep 14, 2024 at 03:22 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -35,6 +35,13 @@ CREATE TABLE `bookmarks` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `bookmarks`
+--
+
+INSERT INTO `bookmarks` (`id`, `user_id`, `file_id`, `created_at`, `updated_at`) VALUES
+(41, 10, 8, '2024-08-10 08:52:29', '2024-08-10 08:52:29');
+
 -- --------------------------------------------------------
 
 --
@@ -46,20 +53,6 @@ CREATE TABLE `cache` (
   `value` mediumtext NOT NULL,
   `expiration` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `cache`
---
-
-INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
-('a@h.com|127.0.0.1', 'i:1;', 1719877435),
-('a@h.com|127.0.0.1:timer', 'i:1719877435;', 1719877435),
-('admin@h.com|127.0.0.1', 'i:2;', 1720686052),
-('admin@h.com|127.0.0.1:timer', 'i:1720686052;', 1720686052),
-('ahmad@a.com|127.0.0.1', 'i:2;', 1719943896),
-('ahmad@a.com|127.0.0.1:timer', 'i:1719943896;', 1719943896),
-('s@a.com|127.0.0.1', 'i:3;', 1719943873),
-('s@a.com|127.0.0.1:timer', 'i:1719943873;', 1719943873);
 
 -- --------------------------------------------------------
 
@@ -112,6 +105,16 @@ CREATE TABLE `comments` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `comments`
+--
+
+INSERT INTO `comments` (`id`, `material_id`, `user_id`, `parent_id`, `content`, `likes`, `dislikes`, `created_at`, `updated_at`) VALUES
+(117, 51, 13, NULL, 'Hello!', 1, 0, '2024-09-06 11:49:22', '2024-09-06 12:35:09'),
+(118, 51, 12, 117, 'jjjjj', 0, 0, '2024-09-06 13:04:36', '2024-09-06 13:04:36'),
+(119, 51, 12, 118, 'hhj', 0, 0, '2024-09-06 13:04:44', '2024-09-06 13:04:44'),
+(120, 51, 12, 117, 'hhgvhg', 0, 0, '2024-09-06 13:04:52', '2024-09-06 13:04:52');
+
 -- --------------------------------------------------------
 
 --
@@ -139,6 +142,13 @@ CREATE TABLE `comment_likes` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `comment_likes`
+--
+
+INSERT INTO `comment_likes` (`id`, `comment_id`, `user_id`, `created_at`, `updated_at`) VALUES
+(107, 117, 12, '2024-09-06 12:35:09', '2024-09-06 12:35:09');
 
 -- --------------------------------------------------------
 
@@ -224,6 +234,18 @@ CREATE TABLE `files` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `files`
+--
+
+INSERT INTO `files` (`id`, `material_id`, `name`, `path`, `file_type`, `downloads`, `created_at`, `updated_at`) VALUES
+(8, 51, 'colleges_report (4).pdf', 'public/files/1723289768_colleges_report (4).pdf', 'pdf', 3, '2024-08-10 08:36:08', '2024-09-02 15:19:29'),
+(9, 52, 'users_report (4).pdf', 'public/files/1723289822_users_report (4).pdf', 'pdf', 1, '2024-08-10 08:37:02', '2024-08-10 08:53:23'),
+(10, 52, 'departments_report (1).pdf', 'public/files/1723289822_departments_report (1).pdf', 'pdf', 1, '2024-08-10 08:37:02', '2024-08-10 08:53:08'),
+(11, 52, 'colleges_report (1).pdf', 'public/files/1723289822_colleges_report (1).pdf', 'pdf', 1, '2024-08-10 08:37:02', '2024-08-10 08:53:23'),
+(12, 52, 'users_report (3).pdf', 'public/files/1723289822_users_report (3).pdf', 'pdf', 1, '2024-08-10 08:37:02', '2024-08-10 08:53:23'),
+(13, 52, 'departments_report (2).pdf', 'public/files/1723289822_departments_report (2).pdf', 'pdf', 1, '2024-08-10 08:37:02', '2024-08-10 08:53:20');
+
 -- --------------------------------------------------------
 
 --
@@ -237,6 +259,20 @@ CREATE TABLE `file_user` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `file_user`
+--
+
+INSERT INTO `file_user` (`id`, `file_id`, `user_id`, `created_at`, `updated_at`) VALUES
+(8, 10, 10, NULL, NULL),
+(9, 13, 10, NULL, NULL),
+(10, 9, 10, NULL, NULL),
+(11, 11, 10, NULL, NULL),
+(12, 12, 10, NULL, NULL),
+(13, 8, 10, NULL, NULL),
+(14, 8, 11, NULL, NULL),
+(15, 8, 12, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -319,6 +355,14 @@ CREATE TABLE `materials` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `materials`
+--
+
+INSERT INTO `materials` (`id`, `title`, `description`, `user_id`, `course_id`, `material_type_id`, `file_count`, `created_at`, `updated_at`) VALUES
+(51, 'Test1', 'ggggg', 10, 1, 2, 1, '2024-08-10 08:36:08', '2024-08-10 08:36:08'),
+(52, 'test4', 'ffff', 10, 3, 3, 5, '2024-08-10 08:37:02', '2024-08-10 08:37:02');
+
 -- --------------------------------------------------------
 
 --
@@ -376,7 +420,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (31, '2024_07_25_221143_create_comment_dislikes_table', 15),
 (34, '2024_07_24_175714_create_comments_table', 16),
 (35, '2024_06_14_070520_create_files_table', 17),
-(37, '2024_08_08_152859_create_file_user_table', 18);
+(37, '2024_08_08_152859_create_file_user_table', 18),
+(38, '2024_09_02_142031_create_user_sessions_table', 19);
 
 -- --------------------------------------------------------
 
@@ -404,6 +449,14 @@ CREATE TABLE `posts` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `posts`
+--
+
+INSERT INTO `posts` (`id`, `title`, `description`, `created_at`, `updated_at`) VALUES
+(1, 'test', 'test', '2024-09-14 07:21:07', '2024-09-14 07:21:07'),
+(2, 'test', 'hhhh', '2024-09-14 07:21:14', '2024-09-14 07:21:14');
+
 -- --------------------------------------------------------
 
 --
@@ -424,7 +477,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('D2zWXByXeBsKu0LwJCQIeFRqi38jdo4raRKXIfzt', 6, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiME1hZHRWN3YyMnc0QU5iMlJMekc2NFdyWEVGQkVSWU15NDZ1MFpFRSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjQ2OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvbWF0ZXJpYWxzLzUwL2Rvd25sb2FkQWxsIjt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6Njt9', 1723133298);
+('8tUY6qDQe8VgBAh3kYcbOWEpXMqS3P4Eads6pCs9', 9, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/128.0.0.0', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiM1FRUlMwbFpTa2tJdGIyRWh6QXk0REJjRWF4ajNmQU5NUUF3REcyRSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czozNzoiaHR0cDovLzEyNy4wLjAuMTo4MDAwL2FkbWluL2Rhc2hib2FyZCI7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjM1OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYWRtaW4vcmVwb3J0cyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjk7fQ==', 1726319775);
 
 -- --------------------------------------------------------
 
@@ -470,7 +523,35 @@ INSERT INTO `users` (`id`, `name`, `role`, `email`, `email_verified_at`, `passwo
 (4, 'Ahmed', 'user', 'ahmad@a.com', NULL, '$2y$12$jxf5Q48OJ2wwx1NFhXxSHewPoQqdHX7TYUaqcheehj31eWJ6j7lc.', NULL, '2024-07-01 20:43:52', '2024-07-01 20:43:52'),
 (5, 'Mohamed', 'user', 'mohamed@h.com', NULL, '$2y$12$VtBTuldyLEdhFvvlHDnBp.9DAwq4hls/lNFRmwArv3B0Hr1mjzmYa', NULL, '2024-07-03 01:15:47', '2024-07-03 01:15:47'),
 (6, 'test', 'user', 't@h.com', NULL, '$2y$12$kJsx3dXG2SxcpkJiex/aIuivja6WVOpGtSy8HBHu4QqcGPVMYFx4y', NULL, '2024-07-11 05:20:53', '2024-07-11 05:20:53'),
-(7, 'q', 'user', 'q@h.com', NULL, '$2y$12$jlazGq5Tw1rk6eFRuK8tL.8uyaLEAjCyJFo4gKmLQjFHGxUeaagb.', NULL, '2024-07-15 11:54:46', '2024-07-15 11:54:46');
+(7, 'q', 'user', 'q@h.com', NULL, '$2y$12$jlazGq5Tw1rk6eFRuK8tL.8uyaLEAjCyJFo4gKmLQjFHGxUeaagb.', NULL, '2024-07-15 11:54:46', '2024-07-15 11:54:46'),
+(9, 'Admin', 'admin', 'admin@gmail.com', NULL, '$2y$12$Q7ifW1VY7Y4jScFtT045guYjsyh3odxEuRXHXirb3d8/MXoxIyXVK', NULL, '2024-08-10 08:33:04', '2024-08-10 08:33:04'),
+(10, 'Elias', 'user', 'elo@gmail.com', NULL, '$2y$12$DJsH/VrUodXi0AdS0vktwOwk17T4ZOqO.ZqzipDDXQ.cvngf0BiqK', NULL, '2024-08-10 08:34:46', '2024-08-10 08:34:46'),
+(11, 'tester', 'user', 'tester@gmail.com', NULL, '$2y$12$u8ZsgqalvoxC8MPmuyrcg.htLZpSd4a7JenKFbohf65h4.We58Imi', NULL, '2024-08-10 09:07:33', '2024-08-10 09:07:33'),
+(12, 'Koko', 'user', 'koko@gmail.com', NULL, '$2y$12$wp/qpe2IWBByDLTE66j6LOaW7.iW6AMH6R9g.lj9MXF7VJnvs50Uu', NULL, '2024-09-02 15:15:37', '2024-09-02 15:15:37'),
+(13, 'code', 'user', 'code@gmail.com', NULL, '$2y$12$WUqxII5oGe4hEZHUm/M/Bu8WoNu2.eTivT.MhfcwXe6sMoV3mrLU.', NULL, '2024-09-03 17:24:03', '2024-09-03 17:24:03');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_sessions`
+--
+
+CREATE TABLE `user_sessions` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `login_time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `ip_address` varchar(255) DEFAULT NULL,
+  `user_agent` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `user_sessions`
+--
+
+INSERT INTO `user_sessions` (`id`, `user_id`, `login_time`, `ip_address`, `user_agent`, `created_at`, `updated_at`) VALUES
+(357, 13, '2024-09-03 20:56:35', '122222.1.5', '44', '2024-09-03 20:55:54', '2024-09-03 20:55:54');
 
 --
 -- Indexes for dumped tables
@@ -645,6 +726,13 @@ ALTER TABLE `users`
   ADD UNIQUE KEY `users_email_unique` (`email`);
 
 --
+-- Indexes for table `user_sessions`
+--
+ALTER TABLE `user_sessions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_sessions_user_id_foreign` (`user_id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -652,7 +740,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `bookmarks`
 --
 ALTER TABLE `bookmarks`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `colleges`
@@ -664,19 +752,19 @@ ALTER TABLE `colleges`
 -- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=117;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=121;
 
 --
 -- AUTO_INCREMENT for table `comment_dislikes`
 --
 ALTER TABLE `comment_dislikes`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
 
 --
 -- AUTO_INCREMENT for table `comment_likes`
 --
 ALTER TABLE `comment_likes`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=108;
 
 --
 -- AUTO_INCREMENT for table `courses`
@@ -700,13 +788,13 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `files`
 --
 ALTER TABLE `files`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `file_user`
 --
 ALTER TABLE `file_user`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `follows`
@@ -730,7 +818,7 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `materials`
 --
 ALTER TABLE `materials`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT for table `material_types`
@@ -742,25 +830,31 @@ ALTER TABLE `material_types`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `temporary_files`
 --
 ALTER TABLE `temporary_files`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=132;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=138;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT for table `user_sessions`
+--
+ALTER TABLE `user_sessions`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=358;
 
 --
 -- Constraints for dumped tables
@@ -834,6 +928,12 @@ ALTER TABLE `materials`
   ADD CONSTRAINT `materials_course_id_foreign` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `materials_material_type_id_foreign` FOREIGN KEY (`material_type_id`) REFERENCES `material_types` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `materials_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `user_sessions`
+--
+ALTER TABLE `user_sessions`
+  ADD CONSTRAINT `user_sessions_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
