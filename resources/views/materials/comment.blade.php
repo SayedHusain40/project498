@@ -5,30 +5,31 @@
             <div class="w-100">
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
-                        <div class="comment-author">{{ $reply->user->name }}</div>
+                        <div class="comment-author">
+                            {{ $reply->user_id === auth()->id() ? 'You' : $reply->user->name }}
+                        </div>
                         <div class="comment-time">{{ $reply->created_at->diffForHumans() }}</div>
                     </div>
-                    @if ($reply->user_id === auth()->id())
-                        <div class="dropdown">
-                            <button class="btn btn-link dropdown-toggle" type="button"
-                                id="dropdownMenuButton{{ $reply->id }}" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                <i class="fa-solid fa-ellipsis-vertical"></i>
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $reply->id }}">
+                    <div class="dropdown">
+                        <button class="btn btn-link dropdown-toggle" type="button"
+                            id="dropdownMenuButton{{ $reply->id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $reply->id }}">
+                            @if ($reply->user_id === auth()->id())
                                 <li><a class="dropdown-item" href="#" data-action="edit"
-                                        data-comment-id="{{ $reply->id }}">Edit</a>
-                                </li>
+                                        data-comment-id="{{ $reply->id }}">Edit</a></li>
                                 <li><a class="dropdown-item text-danger" href="#" data-action="delete"
-                                        data-comment-id="{{ $reply->id }}">Delete</a>
-                                </li>
-                                <li><a class="dropdown-item text-warning" href="#" data-action="report"
-                                        data-comment-id="{{ $comment->id }}" data-bs-toggle="modal"
-                                        data-bs-target="#reportModal">Report</a>
-                                </li>
-                            </ul>
-                        </div>
-                    @endif
+                                        data-comment-id="{{ $reply->id }}">Delete</a></li>
+                            @endif
+                            <li>
+                                <a href="#" class="dropdown-item report-comment"
+                                    data-comment-id="{{ $reply->id }}" data-bs-toggle="modal"
+                                    data-bs-target="#reportModal">Report</a>
+                            </li>
+                        </ul>
+                    </div>
+
                 </div>
                 <div class="comment-body">
                     @if ($reply->parent)

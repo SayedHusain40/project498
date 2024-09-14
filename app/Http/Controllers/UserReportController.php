@@ -2,32 +2,38 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserReport;
+use App\Models\CommentReport;
+use App\Models\MaterialReport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-
 class UserReportController extends Controller
 {
-    //
     public function submit(Request $request)
     {
         $request->validate([
-            'report_id' => 'required|exists:materials,id',
+            'report_id' => 'required|integer',
+            'report_type' => 'required|in:material,comment',
             'reason' => 'nullable|string',
         ]);
 
-        // Create the report
-        UserReport::create([
-            'report_type' => 'material', 
-            'report_id' => $request->report_id,
-            'user_id' => Auth::id(),
-            'reason' => $request->reason,
-        ]);
+        // Determine which table to insert the report into
+        if ($request->report_type === 'comment') {
+            // Create a comment report
+            CommentReport::create([
+                'comment_id' => $request->report_id,
+                'user_id' => Auth::id(),
+                'reason' => $request->reason,
+            ]);
+        } elseif ($request->report_type === 'material') {
+            // Create a material report
+            MaterialReport::create([
+                'material_id' => $request->report_id,
+                'user_id' => Auth::id(),
+                'reason' => $request->reason,
+            ]);
+        }
 
-        return redirect()->back()->with('success', 'Report submitted successfully.');
+        return response()->json(['success' => true]);
     }
-
-
-
 }

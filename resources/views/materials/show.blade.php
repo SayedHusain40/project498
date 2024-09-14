@@ -263,31 +263,34 @@
                                 <div class="w-100">
                                     <div class="d-flex justify-content-between align-items-start">
                                         <div>
-                                            <div class="comment-author">{{ $comment->user->name }}</div>
+                                            <div class="comment-author">
+                                                {{ $comment->user_id === auth()->id() ? 'You' : $comment->user->name }}
+                                            </div>
                                             <div class="comment-time">{{ $comment->created_at->diffForHumans() }}</div>
                                         </div>
-                                        @if ($comment->user_id === auth()->id())
-                                            <div class="dropdown">
-                                                <button class="btn btn-link dropdown-toggle" type="button"
-                                                    id="dropdownMenuButton{{ $comment->id }}" data-bs-toggle="dropdown"
-                                                    aria-expanded="false">
-                                                    <i class="fa-solid fa-ellipsis-vertical"></i>
-                                                </button>
-                                                <ul class="dropdown-menu"
-                                                    aria-labelledby="dropdownMenuButton{{ $comment->id }}">
+                                        <div class="dropdown">
+                                            <button class="btn btn-link dropdown-toggle" type="button"
+                                                id="dropdownMenuButton{{ $comment->id }}" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                                            </button>
+                                            <ul class="dropdown-menu"
+                                                aria-labelledby="dropdownMenuButton{{ $comment->id }}">
+                                                @if ($comment->user_id === auth()->id())
                                                     <li><a class="dropdown-item" href="#" data-action="edit"
                                                             data-comment-id="{{ $comment->id }}">Edit</a></li>
                                                     <li><a class="dropdown-item text-danger" href="#"
                                                             data-action="delete"
                                                             data-comment-id="{{ $comment->id }}">Delete</a></li>
+                                                @endif
+                                                <li>
+                                                    <a href="#" class="dropdown-item report-comment"
+                                                        data-comment-id="{{ $comment->id }}" data-bs-toggle="modal"
+                                                        data-bs-target="#reportModal">Report</a>
+                                                </li>
+                                            </ul>
+                                        </div>
 
-                                                    <li><a class="dropdown-item text-warning" href="#"
-                                                            data-action="report" data-comment-id="{{ $comment->id }}"
-                                                            data-bs-toggle="modal" data-bs-target="#reportModal">Report</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        @endif
                                     </div>
                                     <div class="comment-body">{{ $comment->content }}</div>
                                     <div class="comment-actions">
@@ -333,20 +336,22 @@
                                                     <div class="w-100">
                                                         <div class="d-flex justify-content-between align-items-start">
                                                             <div>
-                                                                <div class="comment-author">{{ $reply->user->name }}</div>
+                                                                <div class="comment-author">
+                                                                    {{ $reply->user_id === auth()->id() ? 'You' : $reply->user->name }}
+                                                                </div>
                                                                 <div class="comment-time">
                                                                     {{ $reply->created_at->diffForHumans() }}</div>
                                                             </div>
-                                                            @if ($reply->user_id === auth()->id())
-                                                                <div class="dropdown">
-                                                                    <button class="btn btn-link dropdown-toggle"
-                                                                        type="button"
-                                                                        id="dropdownMenuButton{{ $reply->id }}"
-                                                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                                                        <i class="fa-solid fa-ellipsis-vertical"></i>
-                                                                    </button>
-                                                                    <ul class="dropdown-menu"
-                                                                        aria-labelledby="dropdownMenuButton{{ $reply->id }}">
+                                                            <div class="dropdown">
+                                                                <button class="btn btn-link dropdown-toggle"
+                                                                    type="button"
+                                                                    id="dropdownMenuButton{{ $reply->id }}"
+                                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                                                                </button>
+                                                                <ul class="dropdown-menu"
+                                                                    aria-labelledby="dropdownMenuButton{{ $reply->id }}">
+                                                                    @if ($reply->user_id === auth()->id())
                                                                         <li><a class="dropdown-item" href="#"
                                                                                 data-action="edit"
                                                                                 data-comment-id="{{ $reply->id }}">Edit</a>
@@ -355,15 +360,17 @@
                                                                                 href="#" data-action="delete"
                                                                                 data-comment-id="{{ $reply->id }}">Delete</a>
                                                                         </li>
-                                                                        <li><a class="dropdown-item text-warning"
-                                                                                href="#" data-action="report"
-                                                                                data-comment-id="{{ $comment->id }}"
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#reportModal">Report</a>
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                            @endif
+                                                                    @endif
+                                                                    <li>
+                                                                        <a href="#"
+                                                                            class="dropdown-item report-comment"
+                                                                            data-comment-id="{{ $reply->id }}"
+                                                                            data-bs-toggle="modal"
+                                                                            data-bs-target="#reportModal">Report</a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+
                                                         </div>
                                                         <div class="comment-body">
                                                             @if ($reply->parent)
@@ -444,119 +451,120 @@
         </div>
     </div>
 
-    <!-- Modal for reporting comment -->
-<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="reportModalLabel">Report Comment</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to report this comment?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" id="confirmReport">Report</button>
+
+    <!-- Report Modal -->
+    <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reportModalLabel">Report Comment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to report this comment?</p>
+                    <textarea id="reportReason" class="form-control" rows="4"
+                        placeholder="Please provide a reason for reporting..."></textarea>
+                    <input type="hidden" id="report_id" name="report_id">
+                    <input type="hidden" id="report_type" name="report_type" value="comment">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmReport">Report</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
 @endsection
 
 @section('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const commentList = document.getElementById('comment-list');
-
-            // for edit
-            commentList.addEventListener('click', function(event) {
-                const button = event.target.closest('a[data-action="edit"]');
-                if (button) {
-                    event.preventDefault();
-                    const commentId = button.getAttribute('data-comment-id');
-                    const commentElement = document.querySelector(
-                        `.comment[data-comment-id="${commentId}"]`);
-                    const commentBodyElement = commentElement.querySelector('.comment-body');
-
-                    const mentionElement = commentBodyElement.querySelector('.reply-mention');
-                    const mention = mentionElement ? mentionElement.innerText.trim() : '';
-                    const contentElement = mentionElement ? mentionElement.nextElementSibling :
-                        commentBodyElement;
-                    const content = contentElement.innerText.trim();
-
-                    commentBodyElement.dataset.originalContent = commentBodyElement.innerHTML;
-
-                    const editForm = `
-                    <form class="edit-comment-form" data-comment-id="${commentId}">
-                        ${mention ? `<span class="reply-mention">${mention}</span>` : ''}
-                        <textarea class="form-control">${content}</textarea>
-                        <div class="error-message text-danger mt-2" style="display: none;"></div>
-                        <div class="d-flex justify-content-end mt-3">
-                            <button type="submit" class="btn btn-primary me-2">Save</button>
-                            <button type="button" class="btn btn-secondary cancel-edit">Cancel</button>
-                        </div>
-                    </form>
-                `;
-
-                    commentBodyElement.innerHTML = editForm;
-                    attachEditFormListeners(commentId);
+            document.body.addEventListener('click', function(event) {
+                if (event.target.classList.contains('report-comment')) {
+                    const commentId = event.target.getAttribute('data-comment-id');
+                    document.getElementById('report_id').value = commentId;
+                    document.getElementById('report_type').value = 'comment';
                 }
             });
 
-            function attachEditFormListeners(commentId) {
-                const editForm = document.querySelector(`.edit-comment-form[data-comment-id="${commentId}"]`);
+            const confirmReportButton = document.getElementById('confirmReport');
+            if (confirmReportButton) {
+                confirmReportButton.addEventListener('click', function() {
+                    const reportForm = new FormData();
+                    reportForm.append('report_id', document.getElementById('report_id').value);
+                    reportForm.append('report_type', document.getElementById('report_type').value);
+                    reportForm.append('reason', document.getElementById('reportReason').value);
 
-                editForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const textarea = this.querySelector('textarea');
-                    const content = textarea.value.trim();
-                    const errorMessageElement = this.querySelector('.error-message');
-
-                    if (content === '') {
-                        errorMessageElement.textContent = 'Content cannot be empty.';
-                        errorMessageElement.style.display = 'block';
-                        return; // Prevent form submission
-                    } else {
-                        errorMessageElement.style.display = 'none';
-                    }
-
-                    fetch(`/comments/${commentId}`, {
-                            method: 'PUT',
+                    fetch('{{ route('user_report.submit') }}', {
+                            method: 'POST',
+                            body: reportForm,
                             headers: {
-                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest',
                                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
                                     .getAttribute('content')
-                            },
-                            body: JSON.stringify({
-                                content
-                            })
+                            }
                         })
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                const commentBodyElement = document.querySelector(
-                                    `.comment[data-comment-id="${commentId}"] .comment-body`);
-                                const mentionElement = mention ?
-                                    `<a href="#" class="reply-mention">${mention}</a>` : '';
-                                commentBodyElement.innerHTML =
-                                    `${mentionElement} <span class="reply-content">${data.content}</span>`;
+                                const modal = bootstrap.Modal.getInstance(document.getElementById(
+                                    'reportModal'));
+                                modal.hide();
                             } else {
-                                alert('Error updating comment.');
+                                console.error('Error:', data.error);
                             }
                         })
                         .catch(error => {
-                            console.error('Error:', error);
+                            console.error('Something went wrong:', error);
                         });
                 });
+            }
+        });
+    </script>
 
-                editForm.querySelector('.cancel-edit').addEventListener('click', function() {
-                    const originalContent = document.querySelector(
-                            `.comment[data-comment-id="${commentId}"] .comment-body`).dataset
-                        .originalContent;
-                    document.querySelector(`.comment[data-comment-id="${commentId}"] .comment-body`)
-                        .innerHTML = originalContent;
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.addEventListener('click', function(event) {
+                if (event.target.classList.contains('report-comment')) {
+                    const commentId = event.target.getAttribute('data-comment-id');
+                    document.getElementById('report_id').value = commentId;
+                    document.getElementById('report_type').value = 'comment';
+                }
+            });
+
+            const confirmReportButton = document.getElementById('confirmReport');
+            if (confirmReportButton) {
+                confirmReportButton.addEventListener('click', function() {
+                    const reportForm = new FormData();
+                    reportForm.append('report_id', document.getElementById('report_id').value);
+                    reportForm.append('report_type', document.getElementById('report_type').value);
+                    reportForm.append('reason', document.getElementById('reportReason').value);
+
+                    fetch('{{ route('user_report.submit') }}', {
+                            method: 'POST',
+                            body: reportForm,
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                    .getAttribute('content')
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // Clear the textarea after successful submission
+                                document.getElementById('reportReason').value = '';
+
+                                const modal = bootstrap.Modal.getInstance(document.getElementById(
+                                    'reportModal'));
+                                modal.hide();
+                            } else {
+                                console.error('Error:', data.error);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Something went wrong:', error);
+                        });
                 });
             }
         });
@@ -699,9 +707,10 @@
                                     <div class="w-100">
                                         <div class="d-flex justify-content-between align-items-start">
                                             <div>
-                                                <div class="comment-author">${data.comment.user_name}</div>
+                                                <div class="comment-author">You</div>
                                                 <div class="comment-time">${data.comment.created_at}</div>
                                             </div>
+
                                             <div class="dropdown">
                                                 <button class="btn btn-link dropdown-toggle" type="button"
                                                     id="dropdownMenuButton${data.comment.id}" data-bs-toggle="dropdown"
@@ -711,14 +720,14 @@
                                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton${data.comment.id}">
                                                     <li><a class="dropdown-item" href="#" data-action="edit" data-comment-id="${data.comment.id}">Edit</a></li>
                                                     <li><a class="dropdown-item text-danger" href="#" data-action="delete" data-comment-id="${data.comment.id}">Delete</a></li>
-                                                                                                                            <li><a class="dropdown-item text-warning"
-                                                                                href="#" data-action="report"
-                                                                                data-comment-id="${data.comment.id}"
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#reportModal">Report</a>
-                                                                        </li>
+                                                    <li>
+                                                        <a href="#" class="dropdown-item report-comment"
+                                                        data-comment-id="${data.comment.id}" data-bs-toggle="modal"
+                                                        data-bs-target="#reportModal">Report</a>
+                                                    </li>
                                                 </ul>
                                             </div>
+
                                         </div>
                                         <div class="comment-body">${data.comment.content}</div>
                                         <div class="comment-actions">
@@ -802,7 +811,7 @@
                                         <div class="w-100">
                                             <div class="d-flex justify-content-between align-items-start">
                                                 <div>
-                                                    <div class="comment-author">${data.reply.user_name}</div>
+                                                    <div class="comment-author">You</div>
                                                     <div class="comment-time">${data.reply.created_at}</div>
                                                 </div>
                                                 <div class="dropdown">
@@ -812,12 +821,13 @@
                                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton${data.reply.id}">
                                                         <li><a class="dropdown-item" href="#" data-action="edit" data-comment-id="${data.reply.id}">Edit</a></li>
                                                         <li><a class="dropdown-item text-danger" href="#" data-action="delete" data-comment-id="${data.reply.id}">Delete</a></li>
-                                                                                                                                <li><a class="dropdown-item text-warning"
-                                                                                href="#" data-action="report"
-                                                                                data-comment-id="${data.reply.id}"
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#reportModal">Report</a>
-                                                                        </li>
+                                                        <li>
+                                                            <a href="#"
+                                                                class="dropdown-item report-comment"
+                                                                data-comment-id="${data.reply.id}"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#reportModal">Report</a>
+                                                        </li>
                                                     </ul>
                                                 </div>
                                             </div>

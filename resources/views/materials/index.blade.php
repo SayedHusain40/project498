@@ -3,6 +3,11 @@
 @section('page_description', 'This is post materials ..')
 @section('styles')
     <style>
+        .btn:focus,
+        .btn:hover {
+            opacity: 1;
+        }
+
         .card {
             position: relative;
             transition: all 0.3s ease-in-out;
@@ -77,7 +82,6 @@
         }
     </style>
 @endsection
-
 @section('content')
 
     <div class="d-flex justify-content-between mb-4">
@@ -119,8 +123,7 @@
                                 <i class="fas fa-ellipsis-v"></i>
                                 <!-- Dropdown Menu -->
                                 <div class="dropdown-menu">
-                                    <div class="dropdown-item" data-material-id="{{ $material->id }}" id="view-report">View
-                                        Report</div>
+                                    <div class="dropdown-item" style="color: red" data-material-id="{{ $material->id }}" id="view-report">Report</div>
                                 </div>
                             </div>
 
@@ -162,41 +165,33 @@
         @endforeach
     </div>
 
-    <!-- Report Modal -->
+
     <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="reportModalLabel">Report Material</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="reportForm" method="POST" action="{{ route('user_report.submit') }}">
-                    @csrf
-                    <div class="modal-body">
-                        <input type="hidden" id="reportMaterialId" name="report_id">
-                        <div class="mb-3">
-                            <label for="reportReason" class="form-label">Reason</label>
-                            <textarea class="form-control" id="reportReason" name="reason" rows="3" required></textarea>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Submit Report</button>
-                    </div>
-                </form>
+                <div class="modal-body">
+                    <p>Are you sure you want to report this material?</p>
+                    <textarea id="reportReason" class="form-control" rows="4" placeholder="Please provide a reason for reporting..."></textarea>
+                    <input type="hidden" id="report_id" name="report_id">
+                    <input type="hidden" id="report_type" name="report_type" value="material">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmReport">Report</button>
+                </div>
             </div>
         </div>
     </div>
-
-
 @endsection
 
 @section('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const followButtons = document.querySelectorAll('.follow-button');
-            const reportDots = document.querySelectorAll('.report-dots');
-            const dropdownMenus = document.querySelectorAll('.dropdown-menu');
 
             followButtons.forEach(button => {
                 button.addEventListener('click', function(event) {
@@ -204,8 +199,6 @@
                     event.preventDefault();
 
                     const materialId = this.getAttribute('data-material-id');
-
-                    this.blur();
 
                     fetch("{{ route('follow.toggle') }}", {
                             method: 'POST',
@@ -232,6 +225,15 @@
                         });
                 });
             });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const reportDots = document.querySelectorAll('.report-dots');
+            const dropdownMenus = document.querySelectorAll('.dropdown-menu');
+            const reportModalElement = document.getElementById('reportModal');
+            const reportModal = new bootstrap.Modal(reportModalElement);
 
             reportDots.forEach(dot => {
                 dot.addEventListener('click', function(event) {
@@ -250,10 +252,20 @@
 
                     const materialId = this.querySelector('.dropdown-item').getAttribute(
                         'data-material-id');
-                    document.getElementById('reportMaterialId').value = materialId;
+                    document.getElementById('report_id').value = materialId;
+                    document.getElementById('report_type').value = 'material';
+                });
+            });
+
+            const reportOptions = document.querySelectorAll('.dropdown-item');
+            reportOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const materialId = this.getAttribute('data-material-id');
+                    document.getElementById('report_id').value = materialId;
+                    document.getElementById('report_type').value = 'material';
 
                     // Show the report modal
-                    new bootstrap.Modal(document.getElementById('reportModal')).show();
+                    reportModal.show();
                 });
             });
 
@@ -264,6 +276,38 @@
                     });
                 }
             });
+
+            document.getElementById('confirmReport').addEventListener('click', function() {
+                const reportId = document.getElementById('report_id').value;
+                const reportType = document.getElementById('report_type').value;
+                const reason = document.getElementById('reportReason').value;
+
+                fetch('{{ route('user_report.submit') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            report_id: reportId,
+                            report_type: reportType,
+                            reason: reason
+                        })
+                    })
+                    .then(() => {
+                        // Clear the textarea after successful submission
+                        document.getElementById('reportReason').value = '';
+
+                        reportModal.hide();
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        reportModal.hide();
+                    });
+            });
         });
     </script>
+
+
+
 @endsection
