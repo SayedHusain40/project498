@@ -118,17 +118,14 @@
                 <div class="card border rounded-5">
                     <a href="{{ route('materials.show', $material->id) }}" class="text-decoration-none card-link">
                         <div class="card-body">
-                            <!-- Report Dots -->
                             <div class="report-dots" title="Report this material">
                                 <i class="fas fa-ellipsis-v"></i>
-                                <!-- Dropdown Menu -->
                                 <div class="dropdown-menu">
                                     <div class="dropdown-item" style="color: red" data-material-id="{{ $material->id }}" id="view-report">Report</div>
                                 </div>
                             </div>
 
                             <div class="d-flex justify-content-between mb-3">
-                                <!-- Folder Icon and Name -->
                                 <span>
                                     <i class="fas fa-folder folder-icon"></i>
                                     <span style="color: #2a2f5b">{{ $material->course->code }}</span>
@@ -152,7 +149,6 @@
                         </div>
                     </a>
                     <div class="card-footer">
-                        <!-- Moved Date to Footer -->
                         <span class="date">{{ $material->created_at->format('Y-m-d') }}</span>
                         <button type="button" class="btn btn-rounded follow-button"
                             style="background-color: #e2eaf7; color:#2a2f5b;" data-material-id="{{ $material->id }}">
@@ -195,7 +191,6 @@
 
             followButtons.forEach(button => {
                 button.addEventListener('click', function(event) {
-                    event.stopPropagation();
                     event.preventDefault();
 
                     const materialId = this.getAttribute('data-material-id');

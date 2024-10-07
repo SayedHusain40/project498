@@ -94,7 +94,7 @@
                                 icon.classList.add('fa-plus');
                                 this.innerHTML = '<i class="fa-solid fa-plus"></i> Save';
                                 // Remove the material card 
-                                card.remove();
+                                // card.remove();
                             }
                         });
                 });

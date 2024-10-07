@@ -10,9 +10,13 @@ class Comment extends Model
     use HasFactory;
     protected $guarded = [];
 
-    public function material()
+    // public function material()
+    // {
+    //     return $this->belongsTo(Material::class);
+    // }
+    public function department()
     {
-        return $this->belongsTo(Material::class);
+        return $this->belongsTo(Department::class);
     }
 
     public function user()
@@ -28,7 +32,7 @@ class Comment extends Model
     {
         return $this->hasMany(Comment::class, 'parent_id')->with('user');
     }
-    
+
     public function likes()
     {
         return $this->hasMany(CommentLike::class);

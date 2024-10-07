@@ -202,6 +202,13 @@
                                 </div>
                             </li>
 
+                            <li class="nav-item {{ request()->routeIs('chats.index') ? 'active' : '' }}">
+                                <a href="{{ route('chats.index') }}">
+                                    <i class="fas fa-comments"></i>
+                                    <p>chats</p>
+                                </a>
+                            </li>
+
                             <li class="nav-item {{ request()->routeIs('followed.materials') ? 'active' : '' }}">
                                 <a href="{{ route('followed.materials') }}">
                                     <i class="fas fa-book"></i>

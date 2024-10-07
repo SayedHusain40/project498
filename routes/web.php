@@ -16,6 +16,7 @@ use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\UserReportController;
+use App\Http\Controllers\ChatsController;
 
 use App\Http\Controllers\PostsController;
 
@@ -61,16 +62,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/followed-materials', [FollowController::class, 'followedMaterials'])->name('followed.materials');
     Route::post('/follow-toggle', [FollowController::class, 'toggleFollow'])->name('follow.toggle');
 
-
-    //for comments
-    Route::post('materials/{material}/comments', [CommentController::class, 'storeComment'])->name('comments.store');
-    Route::post('/comments/{comment}/reply', [CommentController::class, 'storeReply'])->name('replies.store');
-    Route::post('/comments/{comment}/{action}', [CommentController::class, 'likeDislikeComment'])->name('comments.likeDislike');
-    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
-    Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
-
     // report
     Route::post('/report/submit', [UserReportController::class, 'submit'])->name('user_report.submit');
+
+    // chat
+    Route::get('/chats', [ChatsController::class, 'index'])->name('chats.index');
+    Route::get('chats/departments/{department}', [ChatsController::class, 'show'])->name('chats.department');
+    Route::post('/departments/{department}/comments', [ChatsController::class, 'storeComment'])->name('comments.store');
+    Route::post('/comments/{comment}/reply', [ChatsController::class, 'storeReply'])->name('replies.store');
+    Route::post('/comments/{comment}/{action}', [ChatsController::class, 'likeDislikeComment'])->name('comments.likeDislike');
+    Route::delete('/comments/{comment}', [ChatsController::class, 'destroy'])->name('comments.destroy');
+    Route::put('/comments/{comment}', [ChatsController::class, 'update'])->name('comments.update');
+
 
 
 

@@ -17,16 +17,13 @@ class UserReportController extends Controller
             'reason' => 'nullable|string',
         ]);
 
-        // Determine which table to insert the report into
         if ($request->report_type === 'comment') {
-            // Create a comment report
             CommentReport::create([
                 'comment_id' => $request->report_id,
                 'user_id' => Auth::id(),
                 'reason' => $request->reason,
             ]);
         } elseif ($request->report_type === 'material') {
-            // Create a material report
             MaterialReport::create([
                 'material_id' => $request->report_id,
                 'user_id' => Auth::id(),

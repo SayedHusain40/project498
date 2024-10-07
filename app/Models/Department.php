@@ -17,4 +17,16 @@ class Department extends Model
     {
         return $this->hasMany(Course::class);
     }
+
+
+
+    //chat
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

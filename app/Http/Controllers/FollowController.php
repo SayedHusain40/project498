@@ -18,7 +18,7 @@ class FollowController extends Controller
                 ->where('user_id', $userId);
         })->get()
             ->map(function ($material) use ($userId) {
-                $material->is_followed = true; // All materials here are followed
+                $material->is_followed = true; 
                 return $material;
             });
 

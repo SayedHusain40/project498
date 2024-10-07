@@ -36,7 +36,7 @@ class MaterialController extends Controller
             ->orderBy('created_at', 'desc') 
             ->get()
             ->map(function ($material) use ($userId) {
-                $material->is_followed = Follow::where('user_id', $userId)->where('material_id', $material->id)->exists();
+                $material->is_followed = Follow::where('user_id', $userId)->where('material_id', $material->id)->exists(); //true or false
                 return $material;
             });
 
@@ -79,15 +79,7 @@ class MaterialController extends Controller
     {
         $files = $material->files()->get();
 
-        $comments = Comment::where('material_id', $material->id)
-            ->whereNull('parent_id')
-            ->with(['replies' => function ($query) {
-                $query->with('replies');
-            }])
-            ->orderBy('created_at', 'desc') 
-            ->get();
-
-        return view('materials.show', compact('material', 'files', 'comments'));
+        return view('materials.show', compact('material', 'files'));
     }
 
 
