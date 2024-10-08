@@ -156,7 +156,7 @@
             <h2>{{ $department->name }} Chat</h2>
         </div>
         <div class="mt-4 comment-section">
-            <h3>Comments ( {{ $comments->count() }} )</h3>
+            <h3>َQuestions ( {{ $comments->count() }} )</h3>
             <div class="comment-header d-flex justify-content-between align-items-center">
             </div>
             <div class="comment-body">
