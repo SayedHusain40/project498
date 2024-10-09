@@ -149,7 +149,15 @@
         }
     </style>
 @endsection
-
+@php
+    if (auth()->check()) {
+        if (auth()->user()->role === 'user') {
+            $role = 'user';
+        }
+    } else {
+        $role = 'guest';
+    }
+@endphp
 @section('content')
     <div class="container">
         <div class="mt-4">
@@ -167,10 +175,18 @@
                         <form id="comment-form" action="{{ route('comments.store', $department) }}" method="POST">
                             @csrf
                             <div class="d-flex flex-column">
+                                
                                 <textarea name="content" class="form-control comment-input" placeholder="Write a comment..." rows="3"></textarea>
                                 <div class="d-flex justify-content-between mt-2">
                                     <div id="comment-form-error" class="text-danger"></div>
-                                    <button type="submit" class="btn btn-primary">Post Comment</button>
+                                    @if ($role === 'user')
+                                        <button type="submit" class="btn btn-primary">Post Comment</button>
+                                    @else
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                            data-bs-target="#loginModal">
+                                            Post Comment
+                                        </button>
+                                    @endif
                                 </div>
                             </div>
                         </form>
@@ -198,40 +214,75 @@
                                             </button>
                                             <ul class="dropdown-menu"
                                                 aria-labelledby="dropdownMenuButton{{ $comment->id }}">
-                                                @if ($comment->user_id === auth()->id())
-                                                    <li><a class="dropdown-item" href="#" data-action="edit"
-                                                            data-comment-id="{{ $comment->id }}">Edit</a></li>
-                                                    <li><a class="dropdown-item text-danger" href="#"
-                                                            data-action="delete"
-                                                            data-comment-id="{{ $comment->id }}">Delete</a></li>
+                                                @if ($role === 'user')
+                                                    @if ($comment->user_id === auth()->id())
+                                                        <li><a class="dropdown-item" href="#" data-action="edit"
+                                                                data-comment-id="{{ $comment->id }}">Edit</a></li>
+                                                        <li><a class="dropdown-item text-danger" href="#"
+                                                                data-action="delete"
+                                                                data-comment-id="{{ $comment->id }}">Delete</a></li>
+                                                    @endif
+                                                    <li>
+                                                        <a href="#" class="dropdown-item report-comment"
+                                                            data-comment-id="{{ $comment->id }}" data-bs-toggle="modal"
+                                                            data-bs-target="#reportModal">Report</a>
+                                                    </li>
+                                                @else
+                                                    <!-- Report Action -->
+                                                    <li>
+                                                        <a href="#" class="dropdown-item report-comment"
+                                                            data-comment-id="{{ $comment->id }}"
+                                                            {{ auth()->check() ? 'data-bs-toggle=modal data-bs-target=#reportModal' : 'data-bs-toggle=modal data-bs-target=#loginModal' }}>
+                                                            Report
+                                                        </a>
+                                                    </li>
                                                 @endif
-                                                <li>
-                                                    <a href="#" class="dropdown-item report-comment"
-                                                        data-comment-id="{{ $comment->id }}" data-bs-toggle="modal"
-                                                        data-bs-target="#reportModal">Report</a>
-                                                </li>
                                             </ul>
                                         </div>
 
                                     </div>
                                     <div class="comment-body">{{ $comment->content }}</div>
                                     <div class="comment-actions">
-                                        <a href="#"
-                                            class="like-button {{ $comment->likes()->where('user_id', auth()->id())->exists() ? 'active' : '' }}"
-                                            data-action="like" data-comment-id="{{ $comment->id }}">
-                                            <i class="fa-solid fa-thumbs-up"></i>
-                                            <span class="like-dislike-count">{{ $comment->likes }}</span>
-                                        </a>
-                                        <a href="#"
-                                            class="dislike-button {{ $comment->dislikes()->where('user_id', auth()->id())->exists() ? 'active' : '' }}"
-                                            data-action="dislike" data-comment-id="{{ $comment->id }}">
-                                            <i class="fa-solid fa-thumbs-down"></i>
-                                            <span class="like-dislike-count">{{ $comment->dislikes }}</span>
-                                        </a>
-                                        <a href="#" class="reply-link" data-comment-id="{{ $comment->id }}"
-                                            data-author="{{ $comment->user->name }}">
-                                            <i class="fa-solid fa-reply"></i> Reply
-                                        </a>
+                                        @if ($role === 'user')
+                                            <a href="#"
+                                                class="like-button {{ $comment->likes()->where('user_id', auth()->id())->exists() ? 'active' : '' }}"
+                                                data-action="like" data-comment-id="{{ $comment->id }}">
+                                                <i class="fa-solid fa-thumbs-up"></i>
+                                                <span class="like-dislike-count">{{ $comment->likes }}</span>
+                                            </a>
+                                            <a href="#"
+                                                class="dislike-button {{ $comment->dislikes()->where('user_id', auth()->id())->exists() ? 'active' : '' }}"
+                                                data-action="dislike" data-comment-id="{{ $comment->id }}">
+                                                <i class="fa-solid fa-thumbs-down"></i>
+                                                <span class="like-dislike-count">{{ $comment->dislikes }}</span>
+                                            </a>
+                                            <a href="#" class="reply-link" data-comment-id="{{ $comment->id }}"
+                                                data-author="{{ $comment->user->name }}">
+                                                <i class="fa-solid fa-reply"></i> Reply
+                                            </a>
+                                        @else
+                                            <!-- Like Button -->
+                                            <a href="#" data-action="like" data-comment-id="{{ $comment->id }}"
+                                                {{ auth()->check() ? '' : 'data-bs-toggle=modal data-bs-target=#loginModal' }}>
+                                                <i class="fa-solid fa-thumbs-up"></i>
+                                                <span class="like-dislike-count">{{ $comment->likes }}</span>
+                                            </a>
+
+                                            <!-- Dislike Button -->
+                                            <a href="#" data-action="dislike" data-comment-id="{{ $comment->id }}"
+                                                {{ auth()->check() ? '' : 'data-bs-toggle=modal data-bs-target=#loginModal' }}>
+                                                <i class="fa-solid fa-thumbs-down"></i>
+                                                <span class="like-dislike-count">{{ $comment->dislikes }}</span>
+                                            </a>
+
+                                            <!-- Reply Button -->
+                                            <a href="#" data-comment-id="{{ $comment->id }}"
+                                                data-author="{{ $comment->user->name }}"
+                                                {{ auth()->check() ? '' : 'data-bs-toggle=modal data-bs-target=#loginModal' }}>
+                                                <i class="fa-solid fa-reply"></i> Reply
+                                            </a>
+                                        @endif
+
                                     </div>
                                     <div class="reply-toggle" onclick="toggleReplies(this)">View replies</div>
 
@@ -273,23 +324,35 @@
                                                                 </button>
                                                                 <ul class="dropdown-menu"
                                                                     aria-labelledby="dropdownMenuButton{{ $reply->id }}">
-                                                                    @if ($reply->user_id === auth()->id())
-                                                                        <li><a class="dropdown-item" href="#"
-                                                                                data-action="edit"
-                                                                                data-comment-id="{{ $reply->id }}">Edit</a>
+                                                                    @if ($role === 'user')
+                                                                        @if ($reply->user_id === auth()->id())
+                                                                            <li><a class="dropdown-item" href="#"
+                                                                                    data-action="edit"
+                                                                                    data-comment-id="{{ $reply->id }}">Edit</a>
+                                                                            </li>
+                                                                            <li><a class="dropdown-item text-danger"
+                                                                                    href="#" data-action="delete"
+                                                                                    data-comment-id="{{ $reply->id }}">Delete</a>
+                                                                            </li>
+                                                                        @endif
+                                                                        <li>
+                                                                            <a href="#"
+                                                                                class="dropdown-item report-comment"
+                                                                                data-comment-id="{{ $reply->id }}"
+                                                                                data-bs-toggle="modal"
+                                                                                data-bs-target="#reportModal">Report</a>
                                                                         </li>
-                                                                        <li><a class="dropdown-item text-danger"
-                                                                                href="#" data-action="delete"
-                                                                                data-comment-id="{{ $reply->id }}">Delete</a>
+                                                                    @else
+                                                                        <!-- Report Action -->
+                                                                        <li>
+                                                                            <a href="#"
+                                                                                class="dropdown-item report-comment"
+                                                                                data-comment-id="{{ $reply->id }}"
+                                                                                {{ auth()->check() ? 'data-bs-toggle=modal data-bs-target=#reportModal' : 'data-bs-toggle=modal data-bs-target=#loginModal' }}>
+                                                                                Report
+                                                                            </a>
                                                                         </li>
                                                                     @endif
-                                                                    <li>
-                                                                        <a href="#"
-                                                                            class="dropdown-item report-comment"
-                                                                            data-comment-id="{{ $reply->id }}"
-                                                                            data-bs-toggle="modal"
-                                                                            data-bs-target="#reportModal">Report</a>
-                                                                    </li>
                                                                 </ul>
                                                             </div>
 
@@ -302,26 +365,47 @@
                                                             <span class="reply-content">{{ $reply->content }}</span>
                                                         </div>
                                                         <div class="comment-actions">
-                                                            <a href="#"
-                                                                class="like-button {{ $reply->likes()->where('user_id', auth()->id())->exists() ? 'active' : '' }}"
-                                                                data-action="like" data-comment-id="{{ $reply->id }}">
-                                                                <i class="fa-solid fa-thumbs-up"></i>
-                                                                <span
-                                                                    class="like-dislike-count">{{ $reply->likes }}</span>
-                                                            </a>
-                                                            <a href="#"
-                                                                class="dislike-button {{ $reply->dislikes()->where('user_id', auth()->id())->exists() ? 'active' : '' }}"
-                                                                data-action="dislike"
-                                                                data-comment-id="{{ $reply->id }}">
-                                                                <i class="fa-solid fa-thumbs-down"></i>
-                                                                <span
-                                                                    class="like-dislike-count">{{ $reply->dislikes }}</span>
-                                                            </a>
-                                                            {{-- <a href="#" class="reply-link"
+                                                            @if ($role === 'user')
+                                                                <a href="#"
+                                                                    class="like-button {{ $reply->likes()->where('user_id', auth()->id())->exists() ? 'active' : '' }}"
+                                                                    data-action="like"
+                                                                    data-comment-id="{{ $reply->id }}">
+                                                                    <i class="fa-solid fa-thumbs-up"></i>
+                                                                    <span
+                                                                        class="like-dislike-count">{{ $reply->likes }}</span>
+                                                                </a>
+                                                                <a href="#"
+                                                                    class="dislike-button {{ $reply->dislikes()->where('user_id', auth()->id())->exists() ? 'active' : '' }}"
+                                                                    data-action="dislike"
+                                                                    data-comment-id="{{ $reply->id }}">
+                                                                    <i class="fa-solid fa-thumbs-down"></i>
+                                                                    <span
+                                                                        class="like-dislike-count">{{ $reply->dislikes }}</span>
+                                                                </a>
+                                                                {{-- <a href="#" class="reply-link"
                                                                 data-comment-id="{{ $reply->id }}"
                                                                 data-author="{{ $reply->user->name }}">
                                                                 <i class="fa-solid fa-reply"></i> Reply
                                                             </a> --}}
+                                                            @else
+                                                                <!-- Like Button for Reply -->
+                                                                <a href="#" data-action="like"
+                                                                    data-comment-id="{{ $reply->id }}"
+                                                                    {{ auth()->check() ? '' : 'data-bs-toggle=modal data-bs-target=#loginModal' }}>
+                                                                    <i class="fa-solid fa-thumbs-up"></i>
+                                                                    <span
+                                                                        class="like-dislike-count">{{ $reply->likes }}</span>
+                                                                </a>
+
+                                                                <!-- Dislike Button for Reply -->
+                                                                <a href="#" data-action="dislike"
+                                                                    data-comment-id="{{ $reply->id }}"
+                                                                    {{ auth()->check() ? '' : 'data-bs-toggle=modal data-bs-target=#loginModal' }}>
+                                                                    <i class="fa-solid fa-thumbs-down"></i>
+                                                                    <span
+                                                                        class="like-dislike-count">{{ $reply->dislikes }}</span>
+                                                                </a>
+                                                            @endif
                                                         </div>
                                                         <form class="reply-form"
                                                             action="{{ route('replies.store', $reply) }}" method="POST">
@@ -349,6 +433,25 @@
                             </div>
                         </div>
                     @endforeach
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Login Required</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    You need to be logged in to perform this action. Please log in or sign up to continue.
+                </div>
+                <div class="modal-footer">
+                    <a href="{{ route('login') }}" class="btn btn-primary">Log In</a>
+                    <a href="{{ route('register') }}" class="btn btn-secondary">Sign Up</a>
                 </div>
             </div>
         </div>
@@ -444,29 +547,31 @@
         });
     </script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const commentList = document.getElementById('comment-list');
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const commentList = document.getElementById('comment-list');
 
-        // Handle edit button click
-        commentList.addEventListener('click', function(event) {
-            const button = event.target.closest('a[data-action="edit"]');
-            if (button) {
-                event.preventDefault();
-                const commentId = button.getAttribute('data-comment-id');
-                const commentElement = document.querySelector(`.comment[data-comment-id="${commentId}"]`);
-                const commentBodyElement = commentElement.querySelector('.comment-body');
+            // Handle edit button click
+            commentList.addEventListener('click', function(event) {
+                const button = event.target.closest('a[data-action="edit"]');
+                if (button) {
+                    event.preventDefault();
+                    const commentId = button.getAttribute('data-comment-id');
+                    const commentElement = document.querySelector(
+                        `.comment[data-comment-id="${commentId}"]`);
+                    const commentBodyElement = commentElement.querySelector('.comment-body');
 
-                // Extract mention and content
-                const mentionElement = commentBodyElement.querySelector('.reply-mention');
-                const mention = mentionElement ? mentionElement.innerText.trim() : '';
-                const contentElement = mentionElement ? mentionElement.nextElementSibling : commentBodyElement;
-                const content = contentElement.innerText.trim();
+                    // Extract mention and content
+                    const mentionElement = commentBodyElement.querySelector('.reply-mention');
+                    const mention = mentionElement ? mentionElement.innerText.trim() : '';
+                    const contentElement = mentionElement ? mentionElement.nextElementSibling :
+                        commentBodyElement;
+                    const content = contentElement.innerText.trim();
 
-                // Store original content for cancel action
-                commentBodyElement.dataset.originalContent = commentBodyElement.innerHTML;
+                    // Store original content for cancel action
+                    commentBodyElement.dataset.originalContent = commentBodyElement.innerHTML;
 
-                const editForm = `
+                    const editForm = `
                 <form class="edit-comment-form" data-comment-id="${commentId}">
                     ${mention ? `<span class="reply-mention">${mention}</span>` : ''}
                     <textarea class="form-control">${content}</textarea>
@@ -480,62 +585,71 @@
                 </form>
             `;
 
-                commentBodyElement.innerHTML = editForm;
-                attachEditFormListeners(commentId);
+                    commentBodyElement.innerHTML = editForm;
+                    attachEditFormListeners(commentId);
+                }
+            });
+
+            function attachEditFormListeners(commentId) {
+                const editForm = document.querySelector(`.edit-comment-form[data-comment-id="${commentId}"]`);
+
+                editForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const textarea = this.querySelector('textarea');
+                    const content = textarea.value.trim();
+                    const mention = this.querySelector('.reply-mention') ? this.querySelector(
+                        '.reply-mention').innerText.trim() : '';
+
+                    // Check if textarea is empty
+                    if (content === '') {
+                        const errorElement = this.querySelector('#edit-form-error');
+                        errorElement.innerText = 'Error: Comment cannot be empty';
+                        errorElement.style.display = 'block';
+                        return;
+                    } else {
+                        this.querySelector('#edit-form-error').style.display =
+                            'none'; // Hide error if valid
+                    }
+
+                    fetch(`/comments/${commentId}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                    .getAttribute('content')
+                            },
+                            body: JSON.stringify({
+                                content
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                const commentBodyElement = document.querySelector(
+                                    `.comment[data-comment-id="${commentId}"] .comment-body`);
+                                const mentionElement = mention ?
+                                    `<a href="#" class="reply-mention">${mention}</a>` : '';
+                                commentBodyElement.innerHTML =
+                                    `${mentionElement} <span class="reply-content">${data.content}</span>`;
+                            } else {
+                                alert('Error updating comment.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                });
+
+                editForm.querySelector('.cancel-edit').addEventListener('click', function() {
+                    const originalContent = document.querySelector(
+                            `.comment[data-comment-id="${commentId}"] .comment-body`).dataset
+                        .originalContent;
+                    document.querySelector(`.comment[data-comment-id="${commentId}"] .comment-body`)
+                        .innerHTML = originalContent;
+                });
             }
         });
-
-        function attachEditFormListeners(commentId) {
-            const editForm = document.querySelector(`.edit-comment-form[data-comment-id="${commentId}"]`);
-
-            editForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const textarea = this.querySelector('textarea');
-                const content = textarea.value.trim();
-                const mention = this.querySelector('.reply-mention') ? this.querySelector('.reply-mention').innerText.trim() : '';
-
-                // Check if textarea is empty
-                if (content === '') {
-                    const errorElement = this.querySelector('#edit-form-error');
-                    errorElement.innerText = 'Error: Comment cannot be empty';
-                    errorElement.style.display = 'block';
-                    return;
-                } else {
-                    this.querySelector('#edit-form-error').style.display = 'none'; // Hide error if valid
-                }
-
-                fetch(`/comments/${commentId}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        },
-                        body: JSON.stringify({
-                            content
-                        })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            const commentBodyElement = document.querySelector(`.comment[data-comment-id="${commentId}"] .comment-body`);
-                            const mentionElement = mention ? `<a href="#" class="reply-mention">${mention}</a>` : '';
-                            commentBodyElement.innerHTML = `${mentionElement} <span class="reply-content">${data.content}</span>`;
-                        } else {
-                            alert('Error updating comment.');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-            });
-
-            editForm.querySelector('.cancel-edit').addEventListener('click', function() {
-                const originalContent = document.querySelector(`.comment[data-comment-id="${commentId}"] .comment-body`).dataset.originalContent;
-                document.querySelector(`.comment[data-comment-id="${commentId}"] .comment-body`).innerHTML = originalContent;
-            });
-        }
-    });
-</script>
+    </script>
 
 
     <script>
@@ -887,6 +1001,4 @@
             element.textContent = isVisible ? 'View replies' : 'Hide replies';
         }
     </script>
-
-
 @endsection

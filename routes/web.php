@@ -28,20 +28,30 @@ use App\Http\Controllers\Admin\TableController;
 
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('dashboard');
 });
 
 Route::get('/discount', [DiscountController::class, 'index'])->name('discount.index');
 
+Route::get('/dashboard', [DashboardController::class, 'index'])
+->name('dashboard');
+// ->middleware('verified')
+
+//for martials
+Route::get('/materials', [MaterialController::class, 'index'])->name('materials');
+Route::get('/materials/{material}', [MaterialController::class, 'show'])->name('materials.show');
+
+// chat
+Route::get('/chats', [ChatsController::class, 'index'])->name('chats.index');
+Route::get('chats/departments/{department}', [ChatsController::class, 'show'])->name('chats.department');
+
+
+//For upload
+Route::get('/up', UploadController::class)->name('up');
 
 Route::middleware('auth')->group(function () {
 
-    Route::get('/dashboard', [DashboardController::class, 'index'])
-        ->middleware('verified')
-        ->name('dashboard');
 
-    //For upload
-    Route::get('/up', UploadController::class)->name('up');
     Route::post('/upload', UploadTemporaryFileController::class);
     Route::delete('/delete', DeleteTemporaryFileController::class);
     Route::post('/up', StoreMaterialController::class);
@@ -51,10 +61,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     //for martials
-    Route::get('/materials', [MaterialController::class, 'index'])->name('materials');
     Route::get('/my-materials', [MaterialController::class, 'userMaterials'])->name('user.materials');
     Route::delete('/materials/{id}', [MaterialController::class, 'destroy'])->name('materials.delete');
-    Route::get('/materials/{material}', [MaterialController::class, 'show'])->name('materials.show');
     Route::get('/files/{file}', [MaterialController::class, 'download'])->name('files.download');
     Route::get('/materials/{material}/downloadAll', [MaterialController::class, 'downloadAll'])->name('materials.downloadAll');
     Route::post('/bookmark-toggle', [BookmarkController::class, 'toggleBookmark'])->name('bookmark.toggle');
@@ -66,8 +74,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/report/submit', [UserReportController::class, 'submit'])->name('user_report.submit');
 
     // chat
-    Route::get('/chats', [ChatsController::class, 'index'])->name('chats.index');
-    Route::get('chats/departments/{department}', [ChatsController::class, 'show'])->name('chats.department');
     Route::post('/departments/{department}/comments', [ChatsController::class, 'storeComment'])->name('comments.store');
     Route::post('/comments/{comment}/reply', [ChatsController::class, 'storeReply'])->name('replies.store');
     Route::post('/comments/{comment}/{action}', [ChatsController::class, 'likeDislikeComment'])->name('comments.likeDislike');

@@ -82,8 +82,19 @@
         }
     </style>
 @endsection
+@php
+    if (auth()->check()) {
+        // If the user is logged in, check their role
+        if (auth()->user()->role === 'user') {
+            $role = 'user';
+        }
+    } else {
+        $role = 'guest';
+    }
+@endphp
 @section('content')
 
+    <!-- Filter Section -->
     <div class="d-flex justify-content-between mb-4">
         <div class="d-flex">
             <form method="GET" action="{{ route('materials') }}" class="d-flex">
@@ -112,17 +123,25 @@
         </div>
     </div>
 
+    <!-- Materials Grid -->
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3" id="myGrid">
         @foreach ($materials as $material)
             <div class="col">
                 <div class="card border rounded-5">
                     <a href="{{ route('materials.show', $material->id) }}" class="text-decoration-none card-link">
                         <div class="card-body">
+                            <!-- Report Section -->
                             <div class="report-dots" title="Report this material">
                                 <i class="fas fa-ellipsis-v"></i>
-                                <div class="dropdown-menu">
-                                    <div class="dropdown-item" style="color: red" data-material-id="{{ $material->id }}" id="view-report">Report</div>
-                                </div>
+<div class="dropdown-menu">
+    @if ($role === 'guest')
+        <div style="color: red; padding:10px;" data-bs-toggle="modal" data-bs-target="#guestModal">Report</div>
+    @else
+        <div class="dropdown-item" style="color: red" data-bs-toggle="modal" data-bs-target="#reportModal"
+            data-material-id="{{ $material->id }}" id="trigger-report-modal">Report</div>
+    @endif
+</div>
+
                             </div>
 
                             <div class="d-flex justify-content-between mb-3">
@@ -150,16 +169,46 @@
                     </a>
                     <div class="card-footer">
                         <span class="date">{{ $material->created_at->format('Y-m-d') }}</span>
-                        <button type="button" class="btn btn-rounded follow-button"
-                            style="background-color: #e2eaf7; color:#2a2f5b;" data-material-id="{{ $material->id }}">
-                            <i class="fa-solid {{ $material->is_followed ? 'fa-minus' : 'fa-plus' }}"></i>
-                            {{ $material->is_followed ? 'Unsave' : 'Save' }}
-                        </button>
+
+                        @if ($role === 'guest')
+                            <button type="button" class="btn btn-rounded follow-button"
+                                style="background-color: #e2eaf7; color:#2a2f5b;" data-bs-toggle="modal"
+                                data-bs-target="#guestModal">
+                                <i class="fa-solid fa-plus"></i> Save
+                            </button>
+                        @else
+                            <button type="button" class="btn btn-rounded follow-button"
+                                style="background-color: #e2eaf7; color:#2a2f5b;" data-material-id="{{ $material->id }}">
+                                <i class="fa-solid {{ $material->is_followed ? 'fa-minus' : 'fa-plus' }}"></i>
+                                {{ $material->is_followed ? 'Unsave' : 'Save' }}
+                            </button>
+                        @endif
                     </div>
                 </div>
             </div>
         @endforeach
     </div>
+
+    <!-- Guest User Modal -->
+    <div class="modal fade" id="guestModal" tabindex="-1" aria-labelledby="guestModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="guestModalLabel">Login Required</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    You need to be logged in to perform this action. Please log in or sign up to continue.
+                </div>
+                <div class="modal-footer">
+                    <a href="{{ route('login') }}" class="btn btn-primary">Login</a>
+                    <a href="{{ route('register') }}" class="btn btn-secondary">Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
 
     <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
@@ -171,7 +220,8 @@
                 </div>
                 <div class="modal-body">
                     <p>Are you sure you want to report this material?</p>
-                    <textarea id="reportReason" class="form-control" rows="4" placeholder="Please provide a reason for reporting..."></textarea>
+                    <textarea id="reportReason" class="form-control" rows="4"
+                        placeholder="Please provide a reason for reporting..."></textarea>
                     <input type="hidden" id="report_id" name="report_id">
                     <input type="hidden" id="report_type" name="report_type" value="material">
                 </div>
@@ -223,86 +273,82 @@
         });
     </script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const reportDots = document.querySelectorAll('.report-dots');
-            const dropdownMenus = document.querySelectorAll('.dropdown-menu');
-            const reportModalElement = document.getElementById('reportModal');
-            const reportModal = new bootstrap.Modal(reportModalElement);
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const reportDots = document.querySelectorAll('.report-dots');
+        const dropdownMenus = document.querySelectorAll('.dropdown-menu');
+        const reportModalElement = document.getElementById('reportModal');
+        const reportModal = new bootstrap.Modal(reportModalElement);
 
-            reportDots.forEach(dot => {
-                dot.addEventListener('click', function(event) {
-                    event.stopPropagation();
-                    event.preventDefault();
+        reportDots.forEach(dot => {
+            dot.addEventListener('click', function(event) {
+                event.stopPropagation();
+                event.preventDefault();
 
-                    const dropdownMenu = this.querySelector('.dropdown-menu');
-                    dropdownMenu.classList.toggle('show');
+                const dropdownMenu = this.querySelector('.dropdown-menu');
+                dropdownMenu.classList.toggle('show');
 
-                    // Hide other open dropdown menus
-                    dropdownMenus.forEach(menu => {
-                        if (menu !== dropdownMenu) {
-                            menu.classList.remove('show');
-                        }
-                    });
-
-                    const materialId = this.querySelector('.dropdown-item').getAttribute(
-                        'data-material-id');
-                    document.getElementById('report_id').value = materialId;
-                    document.getElementById('report_type').value = 'material';
-                });
-            });
-
-            const reportOptions = document.querySelectorAll('.dropdown-item');
-            reportOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    const materialId = this.getAttribute('data-material-id');
-                    document.getElementById('report_id').value = materialId;
-                    document.getElementById('report_type').value = 'material';
-
-                    // Show the report modal
-                    reportModal.show();
-                });
-            });
-
-            document.addEventListener('click', function(event) {
-                if (!event.target.closest('.report-dots')) {
-                    dropdownMenus.forEach(menu => {
+                // Hide other open dropdown menus
+                dropdownMenus.forEach(menu => {
+                    if (menu !== dropdownMenu) {
                         menu.classList.remove('show');
-                    });
-                }
-            });
-
-            document.getElementById('confirmReport').addEventListener('click', function() {
-                const reportId = document.getElementById('report_id').value;
-                const reportType = document.getElementById('report_type').value;
-                const reason = document.getElementById('reportReason').value;
-
-                fetch('{{ route('user_report.submit') }}', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        body: JSON.stringify({
-                            report_id: reportId,
-                            report_type: reportType,
-                            reason: reason
-                        })
-                    })
-                    .then(() => {
-                        // Clear the textarea after successful submission
-                        document.getElementById('reportReason').value = '';
-
-                        reportModal.hide();
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        reportModal.hide();
-                    });
+                    }
+                });
             });
         });
-    </script>
 
+        const reportOptions = document.querySelectorAll('.dropdown-item');
+        reportOptions.forEach(option => {
+            option.addEventListener('click', function(event) {
+                if (this.textContent.trim() === 'Log Out') {
+                    return; 
+                }
 
+                const materialId = this.getAttribute('data-material-id');
+                document.getElementById('report_id').value = materialId;
+                document.getElementById('report_type').value = 'material';
+
+                reportModal.show();
+            });
+        });
+
+        // document.addEventListener('click', function(event) {
+        //     dropdownMenus.forEach(menu => {
+        //         if (!event.target.closest('.report-dots')) {
+        //             menu.classList.remove('show');
+        //         }
+        //     });
+        // });
+
+        document.getElementById('confirmReport').addEventListener('click', function() {
+            const reportId = document.getElementById('report_id').value;
+            const reportType = document.getElementById('report_type').value;
+            const reason = document.getElementById('reportReason').value;
+
+            fetch('{{ route('user_report.submit') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        report_id: reportId,
+                        report_type: reportType,
+                        reason: reason
+                    })
+                })
+                .then(() => {
+                    // Clear the textarea after successful submission
+                    document.getElementById('reportReason').value = '';
+
+                    reportModal.hide();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    reportModal.hide();
+                });
+        });
+    });
+</script>
 
 @endsection

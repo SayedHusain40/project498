@@ -59,6 +59,20 @@
 
 
 <body>
+    @php
+        if (auth()->check()) {
+            if (auth()->user()->role === 'user') {
+                $role = 'user';
+            } elseif (auth()->user()->role === 'admin') {
+                $role = 'admin';
+            } else {
+                $role = 'guest';
+            }
+        } else {
+            $role = 'guest';
+        }
+    @endphp
+
     <div class="wrapper">
         <!-- Sidebar -->
         <div class="sidebar sidebar-style-2" data-background-color="dark">
@@ -66,12 +80,12 @@
                 <!-- Logo Header -->
                 <div class="logo-header" data-background-color="dark">
 
-                    @if (auth()->user()->role === 'user')
+                    @if ($role === 'user' or $role === 'guest')
                         <a href="{{ route('dashboard') }}" class="logo">
                             <img src="{{ asset('assets/img/kaiadmin/logo_light.svg') }}" alt="navbar brand"
                                 class="navbar-brand" height="20" />
                         </a>
-                    @elseif(auth()->user()->role === 'admin')
+                    @elseif($role === 'admin')
                         <a href="{{ route('admin.dashboard') }}" class="logo">
                             <img src="{{ asset('assets/img/kaiadmin/logo_light.svg') }}" alt="navbar brand"
                                 class="navbar-brand" height="20" />
@@ -100,12 +114,12 @@
                     <ul class="nav nav-secondary">
                         <li
                             class="nav-item {{ request()->routeIs('dashboard') || request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                            @if (auth()->user()->role === 'user')
+                            @if ($role === 'user' or $role === 'guest')
                                 <a href="{{ route('dashboard') }}">
                                     <i class="fas fa-home"></i>
                                     <p>Home Page</p>
                                 </a>
-                            @elseif(auth()->user()->role === 'admin')
+                            @elseif($role === 'admin')
                                 <a href="{{ route('admin.dashboard') }}">
                                     <i class="fas fa-home"></i>
                                     <p>Dashboard</p>
@@ -119,7 +133,7 @@
                             <h4 class="text-section">Components</h4>
                         </li>
 
-                        @if (auth()->user()->role === 'user')
+                        @if ($role === 'user' or $role === 'guest')
                             <!-- Route posts -->
 
                             <li class="nav-item {{ request()->routeIs('posts') ? 'active' : '' }}">
@@ -321,7 +335,7 @@
                         </li>
 
                         <!-- Route Reports -->
-                        @if (auth()->user()->role === 'admin')
+                        @if ($role == 'admin')
                             <li class="nav-item">
                                 <a href="{{ route('admin.reports.index') }}">
                                     <i class="fas fa-file-alt"></i>
@@ -528,7 +542,7 @@
                                 </ul>
                             </li>
 
-                            @if (auth()->user()->role === 'user')
+                            @if ($role === 'user' or $role === 'guest')
                                 <li class="nav-item topbar-icon dropdown hidden-caret">
                                     <a class="nav-link" href="{{ route('bookmarks.index') }}">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -551,10 +565,16 @@
                                     </div>
                                     <span class="profile-username">
                                         <span class="op-7">Hi,</span>
-                                        <span class="fw-bold">{{ Auth::user()->name }}</span>
-
+                                        <span class="fw-bold">
+                                            @if ($role === 'guest')
+                                                Guest
+                                            @else
+                                                {{ Auth::user()->name }}
+                                            @endif
+                                        </span>
                                     </span>
                                 </a>
+
                                 <ul class="dropdown-menu dropdown-user animated fadeIn">
                                     <div class="dropdown-user-scroll scrollbar-outer">
                                         <li>
@@ -564,38 +584,55 @@
                                                         alt="image profile" class="avatar-img rounded" />
                                                 </div>
                                                 <div class="u-text">
-                                                    <h4>{{ Auth::user()->name }}</h4>
-                                                    <p class="text-muted">{{ Auth::user()->email }}</p>
-                                                    <a href="{{ route('profile.edit') }}"
-                                                        class="btn btn-xs btn-secondary btn-sm">View Profile</a>
+                                                    <h4>
+                                                        @if ($role === 'guest')
+                                                            Guest
+                                                        @else
+                                                            {{ Auth::user()->name }}
+                                                        @endif
+                                                    </h4>
+                                                    <p class="text-muted">
+                                                        @if (auth()->check())
+                                                            {{ Auth::user()->email }}
+                                                        @else
+                                                            example@hotmail.com
+                                                        @endif
+                                                    </p>
+                                                    @if ($role === 'guest')
+                                                        <!-- Log In and Sign Up Buttons for Guests -->
+                                                        <a href="{{ route('login') }}"
+                                                            class="btn btn-xs btn-primary btn-sm">Log In</a>
+                                                        <a href="{{ route('register') }}"
+                                                            class="btn btn-xs btn-secondary btn-sm">Sign Up</a>
+                                                    @else
+                                                        <!-- View Profile Button for Logged-in Users -->
+                                                        <a href="{{ route('profile.edit') }}"
+                                                            class="btn btn-xs btn-secondary btn-sm">View Profile</a>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </li>
                                         <li>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="{{ route('profile.edit') }}">My
-                                                Profile</a>
-                                            <a class="dropdown-item" href="#">My Balance</a>
-                                            <a class="dropdown-item" href="#">Inbox</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Account Setting</a>
-                                            <div class="dropdown-divider"></div>
-                                            <!-- Dropdown Item for Log Out -->
-                                            <a class="dropdown-item" href="#"
-                                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                                Log Out
-                                            </a>
-
-                                            <!-- Hidden Form for Logout -->
+                                            @if ($role === 'user')
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item" href="{{ route('profile.edit') }}">My
+                                                    Profile</a>
+                                                <div class="dropdown-divider"></div>
+                                                <!-- Log Out Option -->
+                                                <a class="dropdown-item" href="#"
+                                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                                    Log Out
+                                                </a>
+                                            @endif
+                                            <!-- Hidden Logout Form -->
                                             <form id="logout-form" method="POST" action="{{ route('logout') }}"
                                                 style="display: none;">
                                                 @csrf
                                             </form>
-
-
                                         </li>
                                     </div>
                                 </ul>
+
                             </li>
                         </ul>
                     </div>
