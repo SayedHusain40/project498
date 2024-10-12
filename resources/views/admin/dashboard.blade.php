@@ -56,31 +56,55 @@
 
 <!-- Display user data in Table -->
 
-<div class="container">
-    <h1>User List</h1>
-    <table class="table table-bordered">
-        <thead>
+<div class="container mt-4">
+    <h2>Users List</h2>
+    <table class="table table-striped table-hover table-bordered" style="border-radius: 10px; overflow: hidden; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <thead style="background-color: #4a90e2; color: white;">
             <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Role</th>
-                <th>Email</th>
-                <th>Created At</th>
+                <th style="border-top-left-radius: 10px; padding: 15px;">Name</th>
+                <th style="padding: 15px;">Email</th>
+                <th style="padding: 15px;">Role</th>
+                <th style="border-top-right-radius: 10px; padding: 15px;">Actions</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($users as $user)
-                <tr>
-                    <td>{{ $user->id }}</td>
-                    <td>{{ $user->name }}</td>
-                    <td>{{ $user->role }}</td>
-                    <td>{{ $user->email }}</td>
-                    <td>{{ $user->created_at }}</td>
-                </tr>
+            @foreach($users as $user)
+            <tr style="transition: all 0.3s ease;">
+                <td style="padding: 15px;">{{ $user->name }}</td>
+                <td style="padding: 15px;">{{ $user->email }}</td>
+                <td style="padding: 15px;">{{ $user->role }}</td>
+                <td style="padding: 15px;">
+                    <!-- Edit Button -->
+                    <a href="{{ route('users.edit', $user->id) }}" class="btn btn-outline-primary btn-sm">Edit</a>
+
+                    <!-- Delete Button -->
+                    <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display:inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Are you sure you want to delete this user?');">
+                            Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
             @endforeach
         </tbody>
+        <tfoot style="background-color: #f9f9f9;">
+            <tr>
+                <td colspan="4" class="text-center" style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; padding: 15px;">
+                    <small class="text-muted">Showing {{ count($users) }} users</small>
+                </td>
+            </tr>
+        </tfoot>
     </table>
 </div>
+
+
+
+
+
+
+
 
 
 @endsection
