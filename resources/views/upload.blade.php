@@ -56,6 +56,15 @@
 @endsection
 
 @section('content')
+@php
+    if (auth()->check()) {
+        if (auth()->user()->role === 'user') {
+            $role = 'user';
+        }
+    } else {
+        $role = 'guest';
+    }
+@endphp
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-9">
@@ -136,23 +145,58 @@
                                 @enderror
                             </div>
 
-                            <!-- FilePond input -->
+                            <!-- FilePond for file uploads -->
                             <div class="mb-3">
-                                <input type="file" class="filepond" name="file" multiple credits="false">
+                                @if ($role === 'guest')
+                                    <!-- For guest users, disable file input and show modal trigger -->
+                                    <input type="file" class="filepond" name="file" disabled>
+                                @else
+                                    <!-- Authenticated users can upload files -->
+                                    <input type="file" class="filepond" name="file" multiple credits="false">
+                                @endif
                             </div>
                             @error('file')
                                 <p class="text-danger">{{ $message }}</p>
                             @enderror
 
+                            <!-- Submit Button -->
                             <div class="mt-4">
-                                <button type="submit"
-                                    class="btn btn-primary w-100 py-2 px-4 rounded-lg shadow-md hover:bg-blue-700 transition duration-300">
-                                    Submit
-                                </button>
+                                @if ($role === 'guest')
+                                    <!-- Guest users see modal trigger -->
+                                    <button type="button" class="btn btn-primary w-100 py-2 px-4 rounded-lg shadow-md"
+                                        data-bs-toggle="modal" data-bs-target="#guestModal">
+                                        Submit
+                                    </button>
+                                @else
+                                    <!-- Authenticated users can submit -->
+                                    <button type="submit" class="btn btn-primary w-100 py-2 px-4 rounded-lg shadow-md">
+                                        Submit
+                                    </button>
+                                @endif
                             </div>
+
                         </div>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Guest User Modal -->
+    <div class="modal fade" id="guestModal" tabindex="-1" aria-labelledby="guestModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="guestModalLabel">Login Required</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    You need to be logged in to perform this action. Please log in or sign up to continue.
+                </div>
+                <div class="modal-footer">
+                    <a href="{{ route('login') }}" class="btn btn-primary">Login</a>
+                    <a href="{{ route('register') }}" class="btn btn-secondary">Sign Up</a>
+                </div>
             </div>
         </div>
     </div>
@@ -194,4 +238,3 @@
         });
     </script>
 @endsection
-
