@@ -65,4 +65,8 @@ Route::middleware('auth')->group(function () {
                 Route::get('/admin/reports', [ReportController::class, 'index'])->name('admin.reports.index');
                 Route::post('/admin/reports/generate', [ReportController::class, 'generate'])->name('admin.reports.generate');
                 Route::get('/admin/dashboard', [StatController::class, 'index'])->name('admin.dashboard');
+
+                Route::get('/users/{id}/edit', [StatController::class, 'edit'])->name('users.edit');
+                Route::post('/users/{id}/update', [StatController::class, 'update'])->name('users.update');
+                Route::delete('/users/{id}', [StatController::class, 'destroy'])->name('users.destroy');
 });
