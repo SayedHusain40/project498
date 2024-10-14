@@ -387,7 +387,17 @@
                                 <input type="text" placeholder="Search ..." class="form-control" />
                             </div>
                         </nav>
+                        <ul class="navbar-nav ms-auto align-items-center">
+                            @if ($role === 'guest')
+                                <div class="d-flex">
+                                    <!-- Login Button -->
+                                    <a href="{{ route('login') }}" class="btn btn-primary me-2">Log In</a>
 
+                                    <!-- Register Button -->
+                                    <a href="{{ route('register') }}" class="btn btn-secondary">Sign Up</a>
+                                </div>
+                        </ul>
+                    @else
                         <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
                             <li class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none">
                                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
@@ -598,22 +608,17 @@
                                                             example@hotmail.com
                                                         @endif
                                                     </p>
-                                                    @if ($role === 'guest')
-                                                        <!-- Log In and Sign Up Buttons for Guests -->
-                                                        <a href="{{ route('login') }}"
-                                                            class="btn btn-xs btn-primary btn-sm">Log In</a>
-                                                        <a href="{{ route('register') }}"
-                                                            class="btn btn-xs btn-secondary btn-sm">Sign Up</a>
-                                                    @else
+                                                    @if ($role !== 'guest')
                                                         <!-- View Profile Button for Logged-in Users -->
                                                         <a href="{{ route('profile.edit') }}"
-                                                            class="btn btn-xs btn-secondary btn-sm">View Profile</a>
+                                                            class="btn btn-xs btn-secondary btn-sm">View
+                                                            Profile</a>
                                                     @endif
                                                 </div>
                                             </div>
                                         </li>
                                         <li>
-                                            @if ($role === 'user')
+                                            @if ($role !== 'guest')
                                                 <div class="dropdown-divider"></div>
                                                 <a class="dropdown-item" href="{{ route('profile.edit') }}">My
                                                     Profile</a>
@@ -634,6 +639,8 @@
                                 </ul>
 
                             </li>
+
+                            @endif
                         </ul>
                     </div>
                 </nav>
