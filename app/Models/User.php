@@ -29,6 +29,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'major_id', 
     ];
 
     /**
@@ -52,5 +53,14 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function expertise()
+    {
+        return $this->belongsToMany(Course::class, 'expertise_user', 'user_id', 'expertise_id');
+    }
+    public function major()
+    {
+        return $this->belongsTo(Department::class, 'major_id'); 
     }
 }

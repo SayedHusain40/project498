@@ -17,6 +17,7 @@ use App\Http\Controllers\FollowController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\UserReportController;
 use App\Http\Controllers\ChatsController;
+use App\Http\Controllers\AdditionalInfoController;
 
 use App\Http\Controllers\PostsController;
 
@@ -46,12 +47,10 @@ Route::get('/chats', [ChatsController::class, 'index'])->name('chats.index');
 Route::get('chats/departments/{department}', [ChatsController::class, 'show'])->name('chats.department');
 
 
-//For upload
-Route::get('/up', UploadController::class)->name('up');
 
 Route::middleware('auth')->group(function () {
 
-
+    Route::get('/up', UploadController::class)->name('up');
     Route::post('/upload', UploadTemporaryFileController::class);
     Route::delete('/delete', DeleteTemporaryFileController::class);
     Route::post('/up', StoreMaterialController::class);
@@ -59,6 +58,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/profile/{id}/edit', [AdditionalInfoController::class, 'edit'])->name('profile.info');
+    Route::post('/profile/{id}', [AdditionalInfoController::class, 'update'])->name('additional-info.update');
 
     //for martials
     Route::get('/my-materials', [MaterialController::class, 'userMaterials'])->name('user.materials');

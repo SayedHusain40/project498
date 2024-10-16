@@ -133,14 +133,16 @@
                             <!-- Report Section -->
                             <div class="report-dots" title="Report this material">
                                 <i class="fas fa-ellipsis-v"></i>
-<div class="dropdown-menu">
-    @if ($role === 'guest')
-        <div style="color: red; padding:10px;" data-bs-toggle="modal" data-bs-target="#guestModal">Report</div>
-    @else
-        <div class="dropdown-item" style="color: red" data-bs-toggle="modal" data-bs-target="#reportModal"
-            data-material-id="{{ $material->id }}" id="trigger-report-modal">Report</div>
-    @endif
-</div>
+                                <div class="dropdown-menu">
+                                    @if ($role === 'guest')
+                                        <div style="color: red; padding:10px;" data-bs-toggle="modal"
+                                            data-bs-target="#guestModal">Report</div>
+                                    @else
+                                        <div class="dropdown-item" style="color: red" data-bs-toggle="modal"
+                                            data-bs-target="#reportModal" data-material-id="{{ $material->id }}"
+                                            id="trigger-report-modal">Report</div>
+                                    @endif
+                                </div>
 
                             </div>
 
@@ -273,82 +275,82 @@
         });
     </script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const reportDots = document.querySelectorAll('.report-dots');
-        const dropdownMenus = document.querySelectorAll('.dropdown-menu');
-        const reportModalElement = document.getElementById('reportModal');
-        const reportModal = new bootstrap.Modal(reportModalElement);
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const reportDots = document.querySelectorAll('.report-dots');
+            const dropdownMenus = document.querySelectorAll('.dropdown-menu');
+            const reportModalElement = document.getElementById('reportModal');
+            const reportModal = new bootstrap.Modal(reportModalElement);
 
-        reportDots.forEach(dot => {
-            dot.addEventListener('click', function(event) {
-                event.stopPropagation();
-                event.preventDefault();
+            reportDots.forEach(dot => {
+                dot.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    event.preventDefault();
 
-                const dropdownMenu = this.querySelector('.dropdown-menu');
-                dropdownMenu.classList.toggle('show');
+                    const dropdownMenu = this.querySelector('.dropdown-menu');
+                    dropdownMenu.classList.toggle('show');
 
-                // Hide other open dropdown menus
-                dropdownMenus.forEach(menu => {
-                    if (menu !== dropdownMenu) {
-                        menu.classList.remove('show');
+                    // Hide other open dropdown menus
+                    dropdownMenus.forEach(menu => {
+                        if (menu !== dropdownMenu) {
+                            menu.classList.remove('show');
+                        }
+                    });
+                });
+            });
+
+            const reportOptions = document.querySelectorAll('.dropdown-item');
+            reportOptions.forEach(option => {
+                option.addEventListener('click', function(event) {
+                    if (this.textContent.trim() === 'Log Out') {
+                        return;
                     }
+
+                    const materialId = this.getAttribute('data-material-id');
+                    document.getElementById('report_id').value = materialId;
+                    document.getElementById('report_type').value = 'material';
+
+                    reportModal.show();
                 });
             });
-        });
 
-        const reportOptions = document.querySelectorAll('.dropdown-item');
-        reportOptions.forEach(option => {
-            option.addEventListener('click', function(event) {
-                if (this.textContent.trim() === 'Log Out') {
-                    return; 
-                }
+            // document.addEventListener('click', function(event) {
+            //     dropdownMenus.forEach(menu => {
+            //         if (!event.target.closest('.report-dots')) {
+            //             menu.classList.remove('show');
+            //         }
+            //     });
+            // });
 
-                const materialId = this.getAttribute('data-material-id');
-                document.getElementById('report_id').value = materialId;
-                document.getElementById('report_type').value = 'material';
+            document.getElementById('confirmReport').addEventListener('click', function() {
+                const reportId = document.getElementById('report_id').value;
+                const reportType = document.getElementById('report_type').value;
+                const reason = document.getElementById('reportReason').value;
 
-                reportModal.show();
-            });
-        });
-
-        // document.addEventListener('click', function(event) {
-        //     dropdownMenus.forEach(menu => {
-        //         if (!event.target.closest('.report-dots')) {
-        //             menu.classList.remove('show');
-        //         }
-        //     });
-        // });
-
-        document.getElementById('confirmReport').addEventListener('click', function() {
-            const reportId = document.getElementById('report_id').value;
-            const reportType = document.getElementById('report_type').value;
-            const reason = document.getElementById('reportReason').value;
-
-            fetch('{{ route('user_report.submit') }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({
-                        report_id: reportId,
-                        report_type: reportType,
-                        reason: reason
+                fetch('{{ route('user_report.submit') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            report_id: reportId,
+                            report_type: reportType,
+                            reason: reason
+                        })
                     })
-                })
-                .then(() => {
-                    // Clear the textarea after successful submission
-                    document.getElementById('reportReason').value = '';
+                    .then(() => {
+                        // Clear the textarea after successful submission
+                        document.getElementById('reportReason').value = '';
 
-                    reportModal.hide();
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    reportModal.hide();
-                });
+                        reportModal.hide();
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        reportModal.hide();
+                    });
+            });
         });
-    });
-</script>
+    </script>
 
 @endsection
