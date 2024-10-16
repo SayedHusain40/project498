@@ -94,7 +94,7 @@
 @endphp
 @section('content')
 
-    <!-- Filter Section -->
+    <!-- Filter -->
     <div class="d-flex justify-content-between mb-4">
         <div class="d-flex">
             <form method="GET" action="{{ route('materials') }}" class="d-flex">
@@ -123,7 +123,7 @@
         </div>
     </div>
 
-    <!-- Materials Grid -->
+    <!-- Materials -->
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3" id="myGrid">
         @foreach ($materials as $material)
             <div class="col">
