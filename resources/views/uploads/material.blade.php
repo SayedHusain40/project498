@@ -56,15 +56,15 @@
 @endsection
 
 @section('content')
-@php
-    if (auth()->check()) {
-        if (auth()->user()->role === 'user') {
-            $role = 'user';
+    @php
+        if (auth()->check()) {
+            if (auth()->user()->role === 'user') {
+                $role = 'user';
+            }
+        } else {
+            $role = 'guest';
         }
-    } else {
-        $role = 'guest';
-    }
-@endphp
+    @endphp
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-9">
@@ -148,10 +148,8 @@
                             <!-- FilePond for file uploads -->
                             <div class="mb-3">
                                 @if ($role === 'guest')
-                                    <!-- For guest users, disable file input and show modal trigger -->
                                     <input type="file" class="filepond" name="file" disabled>
                                 @else
-                                    <!-- Authenticated users can upload files -->
                                     <input type="file" class="filepond" name="file" multiple credits="false">
                                 @endif
                             </div>
@@ -162,13 +160,11 @@
                             <!-- Submit Button -->
                             <div class="mt-4">
                                 @if ($role === 'guest')
-                                    <!-- Guest users see modal trigger -->
                                     <button type="button" class="btn btn-primary w-100 py-2 px-4 rounded-lg shadow-md"
                                         data-bs-toggle="modal" data-bs-target="#guestModal">
                                         Submit
                                     </button>
                                 @else
-                                    <!-- Authenticated users can submit -->
                                     <button type="submit" class="btn btn-primary w-100 py-2 px-4 rounded-lg shadow-md">
                                         Submit
                                     </button>
@@ -204,6 +200,22 @@
 
 @section('scripts')
     <script>
+        FilePond.registerPlugin(FilePondPluginImagePreview);
+        const inputElement = document.querySelector('input[type="file"]');
+
+        const pond = FilePond.create(inputElement);
+
+        FilePond.setOptions({
+            server: {
+                process: '/upload',
+                revert: '/delete',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            },
+        });
+    </script>
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             const courseDropdownItems = document.querySelectorAll('.dropdown-menu .dropdown-item');
             const courseDropdown = document.getElementById('courseDropdown');
@@ -211,8 +223,8 @@
 
             courseDropdownItems.forEach(item => {
                 item.addEventListener('click', function(e) {
-                    e.preventDefault(); // Prevent default action
-                    e.stopPropagation(); // Stop event from bubbling up
+                    e.preventDefault();
+                    e.stopPropagation();
 
                     const courseId = this.getAttribute('data-course-id');
                     if (courseId) {
@@ -226,7 +238,6 @@
                 });
             });
 
-            // Optional: Add logic to show/hide submenus on hover
             document.querySelectorAll('.dropdown-submenu .dropdown-toggle').forEach(toggle => {
                 toggle.addEventListener('mouseover', function() {
                     this.nextElementSibling.classList.add('show');

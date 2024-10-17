@@ -18,6 +18,8 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\UserReportController;
 use App\Http\Controllers\ChatsController;
 use App\Http\Controllers\AdditionalInfoController;
+use App\Http\Controllers\UserProfileController;
+use App\Http\Controllers\MarketplaceController;
 
 use App\Http\Controllers\PostsController;
 
@@ -54,6 +56,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/upload', UploadTemporaryFileController::class);
     Route::delete('/delete', DeleteTemporaryFileController::class);
     Route::post('/up', StoreMaterialController::class);
+    Route::get('/marketplace/upload', [MarketplaceController::class, 'index'])->name('marketplace');
+
+    // marketplace
+    Route::post('/marketplace/upload', [MarketplaceController::class, 'store'])->name('marketplace.upload');
+    Route::get('/upload/marketplace', [MarketplaceController::class, 'showUploadForm'])->name('marketplace.show');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -82,6 +89,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/comments/{comment}', [ChatsController::class, 'destroy'])->name('comments.destroy');
     Route::put('/comments/{comment}', [ChatsController::class, 'update'])->name('comments.update');
 
+    //user profile
+    Route::post('/users/profile', [UserProfileController::class, 'profile'])->name('users.profile');
 
 
 

@@ -11,6 +11,6 @@ class UploadController extends Controller
     {
         $materialTypes = MaterialType::all();
 
-        return view('upload', ['materialTypes' => $materialTypes]);
+        return view('uploads.material', ['materialTypes' => $materialTypes]);
     }
 }

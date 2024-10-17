@@ -17,6 +17,7 @@ return new class extends Migration
             $table->enum('role', ['user', 'admin'])->default('user');
             $table->unsignedBigInteger('major_id')->nullable();
             $table->foreign('major_id')->references('id')->on('departments')->onDelete('set null');
+            $table->string('mobile')->nullable(); 
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

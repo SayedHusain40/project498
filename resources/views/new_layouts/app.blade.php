@@ -144,18 +144,27 @@
                             </li>
 
 
-                            <!-- Route Upload -->
-                            <li class="nav-item {{ request()->routeIs('up') ? 'active' : '' }}">
-                                <a href="{{ route('up') }}">
-                                    <i class="fas">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                            fill="currentColor" class="bi bi-cloud-upload-fill" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd"
-                                                d="M8 0a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 4.095 0 5.555 0 7.318 0 9.366 1.708 11 3.781 11H7.5V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11h4.188C14.502 11 16 9.57 16 7.773c0-1.636-1.242-2.969-2.834-3.194C12.923 1.999 10.69 0 8 0m-.5 14.5V11h1v3.5a.5.5 0 0 1-1 0" />
-                                        </svg>
-                                    </i>
+                            <!-- Routes Upload -->
+                            <li class="nav-item">
+                                <a data-bs-toggle="collapse" href="#uploadSubmenu">
+                                    <i class="fas fa-cloud-upload-alt"></i>
                                     <p>Upload</p>
+                                    <span class="caret"></span>
                                 </a>
+                                <div class="collapse" id="uploadSubmenu">
+                                    <ul class="nav nav-collapse">
+                                        <li class="nav-item">
+                                            <a href="{{ route('up') }}">
+                                                <span class="sub-item">Upload Materials</span>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="{{ route('marketplace.show') }}">
+                                                <span class="sub-item">Upload to Marketplace</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </li>
 
                             <!-- Route materials -->
@@ -216,6 +225,14 @@
                                 </div>
                             </li>
 
+                            <!-- Route marketplace -->
+
+                            <li class="nav-item {{ request()->routeIs('marketplace') ? 'active' : '' }}">
+                                <a href="{{ route('marketplace') }}">
+                                    <i class="fas fa-folder-open"></i>
+                                    <p>marketplace</p>
+                                </a>
+                            </li>
                             <li class="nav-item {{ request()->routeIs('chats.index') ? 'active' : '' }}">
                                 <a href="{{ route('chats.index') }}">
                                     <i class="fas fa-comments"></i>
@@ -651,149 +668,127 @@
                 <div class="page-inner">
                     @yield('Rmsg')
 
-                <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
+                    <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
+                        <div>
+
+                            <h3 class="fw-bold mb-3">@yield('page_name')</h3>
+                            <h6 class="op-7 mb-2">@yield('page_description')</h6>
+
+                        </div>
+
+                        <div class="ms-md-auto py-2 py-md-0">
+                            <a href="#" class="btn btn-label-info btn-round me-2">Manage</a>
+                            <a href="#" class="btn btn-primary btn-round">Add Customer</a>
+                        </div>
+
+                    </div>
+
+                    {{-- Content --}}
                     <div>
-
-                        <h3 class="fw-bold mb-3">@yield('page_name')</h3>
-                        <h6 class="op-7 mb-2">@yield('page_description')</h6>
-
-                    </div>
-
-                    <div class="ms-md-auto py-2 py-md-0">
-                        <a href="#" class="btn btn-label-info btn-round me-2">Manage</a>
-                        <a href="#" class="btn btn-primary btn-round">Add Customer</a>
+                        @yield('content')
                     </div>
 
                 </div>
-
-                {{-- Content --}}
-                <div>
-                    @yield('content')
-                </div>
-
             </div>
+
+            <footer class="footer">
+                <div class="container-fluid d-flex justify-content-between">
+                    <nav class="pull-left">
+                        <ul class="nav">
+                            <li class="nav-item">
+                                <a class="nav-link" href="http://www.themekita.com">
+                                    ThemeKita
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#"> Help </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#"> Licenses </a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <div class="copyright">
+                        2024, made with <i class="fa fa-heart heart text-danger"></i> by
+                        <a href="http://www.themekita.com">ThemeKita</a>
+                    </div>
+                    <div>
+                        Distributed by
+                        <a target="_blank" href="https://themewagon.com/">ThemeWagon</a>.
+                    </div>
+                </div>
+            </footer>
         </div>
+        <!-- End Custom template -->
 
-        <footer class="footer">
-            <div class="container-fluid d-flex justify-content-between">
-                <nav class="pull-left">
-                    <ul class="nav">
-                        <li class="nav-item">
-                            <a class="nav-link" href="http://www.themekita.com">
-                                ThemeKita
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#"> Help </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#"> Licenses </a>
-                        </li>
-                    </ul>
-                </nav>
-                <div class="copyright">
-                    2024, made with <i class="fa fa-heart heart text-danger"></i> by
-                    <a href="http://www.themekita.com">ThemeKita</a>
-                </div>
-                <div>
-                    Distributed by
-                    <a target="_blank" href="https://themewagon.com/">ThemeWagon</a>.
-                </div>
-            </div>
-        </footer>
-    </div>
-    <!-- End Custom template -->
-
-    <div class="custom-template">
-        <div class="title">Settings</div>
-        <div class="custom-content">
-            <div class="switcher">
-                <div class="switch-block">
-                    <h4>Logo Header</h4>
-                    <div class="btnSwitch">
-                        <button type="button" class=" selected changeLogoHeaderColor" data-color="dark"><i
-                                class="gg-check"></i></button>
-                        <button type="button" class="changeLogoHeaderColor" data-color="blue"></button>
-                        <button type="button" class="changeLogoHeaderColor" data-color="purple"></button>
-                        <button type="button" class="changeLogoHeaderColor" data-color="light-blue"></button>
-                        <button type="button" class="changeLogoHeaderColor" data-color="green"></button>
-                        <button type="button" class="changeLogoHeaderColor" data-color="orange"></button>
-                        <button type="button" class="changeLogoHeaderColor" data-color="red"></button>
-                        <button type="button" class="changeLogoHeaderColor" data-color="white"></button>
-                        <br>
-                        <button type="button" class="changeLogoHeaderColor" data-color="dark2"></button>
-                        <button type="button" class="changeLogoHeaderColor" data-color="blue2"></button>
-                        <button type="button" class="changeLogoHeaderColor" data-color="purple2"></button>
-                        <button type="button" class="changeLogoHeaderColor" data-color="light-blue2"></button>
-                        <button type="button" class="changeLogoHeaderColor" data-color="green2"></button>
-                        <button type="button" class="changeLogoHeaderColor" data-color="orange2"></button>
-                        <button type="button" class="changeLogoHeaderColor" data-color="red2"></button>
+        <div class="custom-template">
+            <div class="title">Settings</div>
+            <div class="custom-content">
+                <div class="switcher">
+                    <div class="switch-block">
+                        <h4>Logo Header</h4>
+                        <div class="btnSwitch">
+                            <button type="button" class=" selected changeLogoHeaderColor" data-color="dark"><i
+                                    class="gg-check"></i></button>
+                            <button type="button" class="changeLogoHeaderColor" data-color="blue"></button>
+                            <button type="button" class="changeLogoHeaderColor" data-color="purple"></button>
+                            <button type="button" class="changeLogoHeaderColor" data-color="light-blue"></button>
+                            <button type="button" class="changeLogoHeaderColor" data-color="green"></button>
+                            <button type="button" class="changeLogoHeaderColor" data-color="orange"></button>
+                            <button type="button" class="changeLogoHeaderColor" data-color="red"></button>
+                            <button type="button" class="changeLogoHeaderColor" data-color="white"></button>
+                            <br>
+                            <button type="button" class="changeLogoHeaderColor" data-color="dark2"></button>
+                            <button type="button" class="changeLogoHeaderColor" data-color="blue2"></button>
+                            <button type="button" class="changeLogoHeaderColor" data-color="purple2"></button>
+                            <button type="button" class="changeLogoHeaderColor" data-color="light-blue2"></button>
+                            <button type="button" class="changeLogoHeaderColor" data-color="green2"></button>
+                            <button type="button" class="changeLogoHeaderColor" data-color="orange2"></button>
+                            <button type="button" class="changeLogoHeaderColor" data-color="red2"></button>
+                        </div>
                     </div>
-                </div>
-                <div class="switch-block">
-                    <h4>Navbar Header</h4>
-                    <div class="btnSwitch">
-                        <button type="button" class="changeTopBarColor" data-color="dark"></button>
-                        <button type="button" class="changeTopBarColor" data-color="blue"></button>
-                        <button type="button" class="changeTopBarColor" data-color="purple"></button>
-                        <button type="button" class="changeTopBarColor" data-color="light-blue"></button>
-                        <button type="button" class="changeTopBarColor" data-color="green"></button>
-                        <button type="button" class="changeTopBarColor" data-color="orange"></button>
-                        <button type="button" class="changeTopBarColor" data-color="red"></button>
-                        <button type="button" class="selected changeTopBarColor" data-color="white"><i
-                                class="gg-check"></i></button>
-                        <br>
-                        <button type="button" class="changeTopBarColor" data-color="dark2"></button>
-                        <button type="button" class="changeTopBarColor" data-color="blue2"></button>
-                        <button type="button" class="changeTopBarColor" data-color="purple2"></button>
-                        <button type="button" class="changeTopBarColor" data-color="light-blue2"></button>
-                        <button type="button" class="changeTopBarColor" data-color="green2"></button>
-                        <button type="button" class="changeTopBarColor" data-color="orange2"></button>
-                        <button type="button" class="changeTopBarColor" data-color="red2"></button>
+                    <div class="switch-block">
+                        <h4>Navbar Header</h4>
+                        <div class="btnSwitch">
+                            <button type="button" class="changeTopBarColor" data-color="dark"></button>
+                            <button type="button" class="changeTopBarColor" data-color="blue"></button>
+                            <button type="button" class="changeTopBarColor" data-color="purple"></button>
+                            <button type="button" class="changeTopBarColor" data-color="light-blue"></button>
+                            <button type="button" class="changeTopBarColor" data-color="green"></button>
+                            <button type="button" class="changeTopBarColor" data-color="orange"></button>
+                            <button type="button" class="changeTopBarColor" data-color="red"></button>
+                            <button type="button" class="selected changeTopBarColor" data-color="white"><i
+                                    class="gg-check"></i></button>
+                            <br>
+                            <button type="button" class="changeTopBarColor" data-color="dark2"></button>
+                            <button type="button" class="changeTopBarColor" data-color="blue2"></button>
+                            <button type="button" class="changeTopBarColor" data-color="purple2"></button>
+                            <button type="button" class="changeTopBarColor" data-color="light-blue2"></button>
+                            <button type="button" class="changeTopBarColor" data-color="green2"></button>
+                            <button type="button" class="changeTopBarColor" data-color="orange2"></button>
+                            <button type="button" class="changeTopBarColor" data-color="red2"></button>
+                        </div>
                     </div>
-                </div>
-                <div class="switch-block">
-                    <h4>Sidebar</h4>
-                    <div class="btnSwitch">
-                        <button type="button" class="changeSideBarColor" data-color="white"></button>
-                        <button type="button" class="selected changeSideBarColor" data-color="dark"><i
-                                class="gg-check"></i></button>
-                        <button type="button" class="changeSideBarColor" data-color="dark2"></button>
+                    <div class="switch-block">
+                        <h4>Sidebar</h4>
+                        <div class="btnSwitch">
+                            <button type="button" class="changeSideBarColor" data-color="white"></button>
+                            <button type="button" class="selected changeSideBarColor" data-color="dark"><i
+                                    class="gg-check"></i></button>
+                            <button type="button" class="changeSideBarColor" data-color="dark2"></button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="custom-toggle">
-            <i class="icon-settings"></i>
+            <div class="custom-toggle">
+                <i class="icon-settings"></i>
+            </div>
         </div>
     </div>
-    </div>
-
 
     <!-- Load FilePond library -->
     <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
     <script src="https://unpkg.com/filepond@^4/dist/filepond.js"></script>
-
-    <!-- Turn all file input elements into ponds -->
-    <script>
-        // Register the plugin
-        FilePond.registerPlugin(FilePondPluginImagePreview);
-        // Get a reference to the file input element
-        const inputElement = document.querySelector('input[type="file"]');
-
-        // Create a FilePond instance
-        const pond = FilePond.create(inputElement);
-
-        FilePond.setOptions({
-            server: {
-                process: '/upload',
-                revert: '/delete',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                }
-            },
-        });
-    </script>
 
     <!-- Core JS Files -->
     <script src="{{ asset('assets/js/core/jquery-3.7.1.min.js') }}"></script>

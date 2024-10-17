@@ -3,6 +3,10 @@
 @section('page_description', 'This is post materials ..')
 @section('styles')
     <style>
+        button.btn-link:hover span {
+            text-decoration: underline !important;
+        }
+
         .btn:focus,
         .btn:hover {
             opacity: 1;
@@ -143,7 +147,6 @@
                                             id="trigger-report-modal">Report</div>
                                     @endif
                                 </div>
-
                             </div>
 
                             <div class="d-flex justify-content-between mb-3">
@@ -165,13 +168,30 @@
                                 </span>
                             </p>
 
-                            <div style="color: #253c60; margin-bottom:0;"><i class="fa fa-user me-2"></i> <span>By,
-                                    {{ $material->user->name }}</span></div>
+                            <!-- Date in the body now -->
+                            <div class="date" style="color: #888;">
+                                <i class="fa-solid fa-calendar me-2"></i>{{ $material->created_at->format('Y-m-d') }}
+                            </div>
                         </div>
                     </a>
                     <div class="card-footer">
-                        <span class="date">{{ $material->created_at->format('Y-m-d') }}</span>
+                        <div style="color: #253c60; display: flex; align-items: center;">
+                            <form action="{{ route('users.profile') }}" method="POST" class="d-inline">
+                                @csrf
+                                <input type="hidden" name="user_id" value="{{ $material->user->id }}">
+                                <button type="submit" class="btn btn-link p-0"
+                                    style="text-decoration: none !important; color: inherit; display: flex; align-items: center;">
+                                    <i class="fa-solid fa-user-circle me-2"
+                                        style="font-size: 24px; text-decoration: none !important;"></i>
+                                    <span class="user-name">By, {{ $material->user->name }}</span>
+                                </button>
+                            </form>
+                        </div>
 
+
+
+
+                        <!-- Follow/Save Button -->
                         @if ($role === 'guest')
                             <button type="button" class="btn btn-rounded follow-button"
                                 style="background-color: #e2eaf7; color:#2a2f5b;" data-bs-toggle="modal"
@@ -190,6 +210,7 @@
             </div>
         @endforeach
     </div>
+
 
     <!-- Guest User Modal -->
     <div class="modal fade" id="guestModal" tabindex="-1" aria-labelledby="guestModalLabel" aria-hidden="true">
