@@ -93,7 +93,6 @@
                     @endif
 
 
-
                     <div class="nav-toggle">
                         <button class="btn btn-toggle toggle-sidebar">
                             <i class="gg-menu-right"></i>
@@ -134,17 +133,8 @@
                         </li>
 
                         @if ($role === 'user' or $role === 'guest')
-                            <!-- Route posts -->
 
-                            <li class="nav-item {{ request()->routeIs('posts') ? 'active' : '' }}">
-                                <a href="{{ route('posts') }}">
-                                    <i class="fas fa-upload"></i>
-                                    <p>Posts</p>
-                                </a>
-                            </li>
-
-
-                            <!-- Routes Upload -->
+                            <!-- Routes All Uploads -->
                             <li class="nav-item">
                                 <a data-bs-toggle="collapse" href="#uploadSubmenu">
                                     <i class="fas fa-cloud-upload-alt"></i>
@@ -163,19 +153,21 @@
                                                 <span class="sub-item">Upload to Marketplace</span>
                                             </a>
                                         </li>
+                                        <li class="nav-item">
+                                            <a href="{{ route('study-sessions.create') }}">
+                                                <span class="sub-item">Post Study Session</span>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="{{ route('restaurants.create') }}">
+                                                <span class="sub-item">Add New Restaurant</span>
+                                            </a>
+                                        </li>
                                     </ul>
                                 </div>
                             </li>
 
-                            <!-- Route materials -->
-                            <li class="nav-item {{ request()->routeIs('materials') ? 'active' : '' }}">
-                                <a href="{{ route('materials') }}">
-                                    <i class="fas fa-folder-open"></i>
-                                    <p>Materials</p>
-                                </a>
-                            </li>
-
-
+                            <!-- Colleges -->
                             <li class="nav-item">
                                 <a data-bs-toggle="collapse" href="#collegesSubmenu">
                                     <i class="fas fa-bars"></i>
@@ -225,14 +217,39 @@
                                 </div>
                             </li>
 
-                            <!-- Route marketplace -->
+                            <!-- Route materials -->
+                            <li class="nav-item {{ request()->routeIs('materials') ? 'active' : '' }}">
+                                <a href="{{ route('materials') }}">
+                                    <i class="fas fa-folder-open"></i>
+                                    <p>Materials</p>
+                                </a>
+                            </li>
 
+                            <!-- Route marketplace -->
                             <li class="nav-item {{ request()->routeIs('marketplace') ? 'active' : '' }}">
                                 <a href="{{ route('marketplace') }}">
                                     <i class="fas fa-folder-open"></i>
                                     <p>marketplace</p>
                                 </a>
                             </li>
+
+                            <!-- Route marketplace -->
+                            <li class="nav-item {{ request()->routeIs('study-sessions.index') ? 'active' : '' }}">
+                                <a href="{{ route('study-sessions.index') }}">
+                                    <i class="fas fa-folder-open"></i>
+                                    <p>Study Sessions</p>
+                                </a>
+                            </li>
+
+                            <!-- Route restaurants -->
+                            <li class="nav-item {{ request()->routeIs('restaurants.index') ? 'active' : '' }}">
+                                <a href="{{ route('restaurants.index') }}">
+                                    <i class="fas fa-folder-open"></i>
+                                    <p>Restaurants</p>
+                                </a>
+                            </li>
+
+                            <!-- Route chats -->
                             <li class="nav-item {{ request()->routeIs('chats.index') ? 'active' : '' }}">
                                 <a href="{{ route('chats.index') }}">
                                     <i class="fas fa-comments"></i>
@@ -240,6 +257,7 @@
                                 </a>
                             </li>
 
+                            <!-- My Library -->
                             <li class="nav-item {{ request()->routeIs('followed.materials') ? 'active' : '' }}">
                                 <a href="{{ route('followed.materials') }}">
                                     <i class="fas fa-book"></i>
@@ -247,6 +265,7 @@
                                 </a>
                             </li>
 
+                            <!-- My Uploaded Materials -->
                             <li class="nav-item {{ request()->routeIs('user.materials') ? 'active' : '' }}">
                                 <a href="{{ route('user.materials') }}">
                                     <i class="fas fa-book"></i>
@@ -254,105 +273,11 @@
                                 </a>
                             </li>
 
-
-                            <li class="nav-item {{ request()->routeIs('menu.levels') ? 'active' : '' }}">
-                                <a data-bs-toggle="collapse" href="#menuLevelsSubmenu">
-                                    <i class="fas fa-bars"></i>
-                                    <p>Menu Levels</p>
-                                    <span class="caret"></span>
-                                </a>
-                                <div class="collapse" id="menuLevelsSubmenu">
-                                    <ul class="nav nav-collapse">
-                                        <li>
-                                            <a data-bs-toggle="collapse" href="#subnavMenu1">
-                                                <span class="sub-item">Level 1</span>
-                                                <span class="caret"></span>
-                                            </a>
-                                            <div class="collapse" id="subnavMenu1">
-                                                <ul class="nav nav-collapse subnav">
-                                                    <li>
-                                                        <a href="#">
-                                                            <span class="sub-item">Level 2</span>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="#">
-                                                            <span class="sub-item">Level 2</span>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <a data-bs-toggle="collapse" href="#subnavMenu2">
-                                                <span class="sub-item">Level 1</span>
-                                                <span class="caret"></span>
-                                            </a>
-                                            <div class="collapse" id="subnavMenu2">
-                                                <ul class="nav nav-collapse subnav">
-                                                    <li>
-                                                        <a href="#">
-                                                            <span class="sub-item">Level 2</span>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <span class="sub-item">Level 1</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
                         @endif
 
-                        <li class="nav-item {{ request()->routeIs('base') ? 'active' : '' }}">
-                            <a data-bs-toggle="collapse" href="#base">
-                                <i class="fas fa-layer-group"></i>
-                                <p>Base</p>
-                                <span class="caret"></span>
-                            </a>
-                            <div class="collapse" id="base">
-                                <ul class="nav nav-collapse">
-                                    <li>
-                                        <a href="#">
-                                            <span class="sub-item">Avatars</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <span class="sub-item">Buttons</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <span class="sub-item">Grid System</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-
-                        <li class="nav-item {{ request()->routeIs('widgets') ? 'active' : '' }}">
-                            <a href="#">
-                                <i class="fas fa-desktop"></i>
-                                <p>Widgets</p>
-                                <span class="badge badge-success">4</span>
-                            </a>
-                        </li>
-
-                        <!-- Route Discounts -->
-                        <li class="nav-item">
-                            <a href="{{ route('discount.index') }}">
-                                <i class="fa-solid fa-tag"></i>
-                                <p>Student Discounts</p>
-                            </a>
-                        </li>
-
+                        <!-- for admin -->
                         <!-- Route Reports -->
-                        @if ($role == 'admin')
+                        @if ($role === 'admin')
                             <li class="nav-item">
                                 <a href="{{ route('admin.reports.index') }}">
                                     <i class="fas fa-file-alt"></i>
@@ -361,12 +286,23 @@
                             </li>
                         @endif
 
+
+                        <!-- For All users -->
+
+                        <!-- Route Discounts -->
+                        <li class="nav-item">
+                            <a href="{{ route('discount.index') }}">
+                                <i class="fa-solid fa-tag"></i>
+                                <p>Student Discounts</p>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
 
         </div>
         <!-- End Sidebar -->
+
 
         <div class="main-panel">
             <div class="main-header">
@@ -677,8 +613,11 @@
                         </div>
 
                         <div class="ms-md-auto py-2 py-md-0">
-                            <a href="#" class="btn btn-label-info btn-round me-2">Manage</a>
-                            <a href="#" class="btn btn-primary btn-round">Add Customer</a>
+                            {{-- <a href="#" class="btn btn-label-info btn-round me-2">Manage</a> --}}
+
+                            @if (View::hasSection('button_url') && View::hasSection('button_label'))
+                                <a href="@yield('button_url')" class="btn btn-primary btn-round">@yield('button_label')</a>
+                            @endif
                         </div>
 
                     </div>

@@ -41,7 +41,7 @@
                                     <p class="mb-0">Mobile</p>
                                 </div>
                                 <div class="col-sm-9">
-                                    <p class="text-muted mb-0">{{ $user->mobile ?? 'Not Specified' }}</p>
+                                    <p class="text-muted mb-0">{{ $user->phone ?? 'Not Specified' }}</p>
                                 </div>
                             </div>
                             <hr>

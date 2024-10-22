@@ -46,7 +46,13 @@
                 </select>
             </div>
 
-
+            <div class="mb-3">
+                <label for="phone" class="form-label">Phone Number</label>
+                <input type="text" class="form-control" id="phone" name="phone" value="{{ $user->phone }}" style="width: fit-content;">
+                                @error('phone')
+                    <p class="text-danger">{{ $message }}</p>
+                @enderror
+            </div>
 
             <div class="mt-4">
                 <label class="form-label">Select Courses You Are Expertise At:</label>
@@ -72,3 +78,4 @@
         </form>
     </div>
 @endsection
+

@@ -13,16 +13,14 @@ return new class extends Migration
     {
         Schema::create('marketplaces', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedBigInteger('user_id')->index();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); 
             $table->string('title');
             $table->text('description');
-            $table->decimal('price', 10, 3);
+            $table->decimal('price', 10, 3)->nullable();  
             $table->string('category');
             $table->enum('condition', ['new', 'used']);
             $table->string('image_path')->nullable();
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

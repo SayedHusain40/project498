@@ -1,6 +1,13 @@
 @extends('new_layouts.app')
 @section('page_name', 'Materials')
-@section('page_description', 'This is post materials ..')
+@section('button_url')
+    {{ route('marketplace.show') }}  
+@endsection
+
+@section('button_label')
+    Upload Material
+@endsection
+
 @section('styles')
     <style>
         button.btn-link:hover span {
@@ -88,7 +95,6 @@
 @endsection
 @php
     if (auth()->check()) {
-        // If the user is logged in, check their role
         if (auth()->user()->role === 'user') {
             $role = 'user';
         }
@@ -98,163 +104,173 @@
 @endphp
 @section('content')
 
-    <!-- Filter -->
-    <div class="d-flex justify-content-between mb-4">
-        <div class="d-flex">
-            <form method="GET" action="{{ route('materials') }}" class="d-flex">
-                <div class="input-group">
-                    <select class="form-select me-2" name="course_code" id="course_code">
-                        <option value="">All courses</option>
-                        @foreach ($courses as $course)
-                            <option value="{{ $course->code }}"
-                                {{ request('course_code') == $course->code ? 'selected' : '' }}>
-                                {{ $course->name }}-{{ $course->code }}
-                            </option>
-                        @endforeach
-                    </select>
-                    <select class="form-select me-2" name="material_type_id" id="material_type_id">
-                        <option value="">All types</option>
-                        @foreach ($materialTypes as $materialType)
-                            <option value="{{ $materialType->id }}"
-                                {{ request('material_type_id') == $materialType->id ? 'selected' : '' }}>
-                                {{ $materialType->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                    <button class="btn btn-primary" type="submit">Filter</button>
-                </div>
-            </form>
+    <!-- if there are not porducts-->
+    @if ($materials->isEmpty())
+        <div class="text-center">
+            {{-- <img src="{{ asset('images/') }}" alt="No products available" style="max-width: 50%; height: auto;"> --}}
+            <p>No materials available at the moment. Please check back later.</p>
         </div>
-    </div>
+    @else
+        <!-- Filter -->
+        <div class="d-flex justify-content-between mb-4">
+            <div class="d-flex">
+                <form method="GET" action="{{ route('materials') }}" class="d-flex">
+                    <div class="input-group">
+                        <select class="form-select me-2" name="course_code" id="course_code">
+                            <option value="">All courses</option>
+                            @foreach ($courses as $course)
+                                <option value="{{ $course->code }}"
+                                    {{ request('course_code') == $course->code ? 'selected' : '' }}>
+                                    {{ $course->name }}-{{ $course->code }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <select class="form-select me-2" name="material_type_id" id="material_type_id">
+                            <option value="">All types</option>
+                            @foreach ($materialTypes as $materialType)
+                                <option value="{{ $materialType->id }}"
+                                    {{ request('material_type_id') == $materialType->id ? 'selected' : '' }}>
+                                    {{ $materialType->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <button class="btn btn-primary" type="submit">Filter</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
-    <!-- Materials -->
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3" id="myGrid">
-        @foreach ($materials as $material)
-            <div class="col">
-                <div class="card border rounded-5">
-                    <a href="{{ route('materials.show', $material->id) }}" class="text-decoration-none card-link">
-                        <div class="card-body">
-                            <!-- Report Section -->
-                            <div class="report-dots" title="Report this material">
-                                <i class="fas fa-ellipsis-v"></i>
-                                <div class="dropdown-menu">
-                                    @if ($role === 'guest')
-                                        <div style="color: red; padding:10px;" data-bs-toggle="modal"
-                                            data-bs-target="#guestModal">Report</div>
-                                    @else
-                                        <div class="dropdown-item" style="color: red" data-bs-toggle="modal"
-                                            data-bs-target="#reportModal" data-material-id="{{ $material->id }}"
-                                            id="trigger-report-modal">Report</div>
-                                    @endif
+        <!-- Materials -->
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3" id="myGrid">
+            @foreach ($materials as $material)
+                <div class="col">
+                    <div class="card border rounded-5">
+                        <a href="{{ route('materials.show', $material->id) }}" class="text-decoration-none card-link">
+                            <div class="card-body">
+                                <!-- Report Section -->
+                                <div class="report-dots" title="Report this material">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                    <div class="dropdown-menu">
+                                        @if ($role === 'guest')
+                                            <div style="color: red; padding:10px;" data-bs-toggle="modal"
+                                                data-bs-target="#guestModal">Report</div>
+                                        @else
+                                            <div class="dropdown-item" style="color: red" data-bs-toggle="modal"
+                                                data-bs-target="#reportModal" data-material-id="{{ $material->id }}"
+                                                id="trigger-report-modal">Report</div>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-between mb-3">
+                                    <span>
+                                        <i class="fas fa-folder folder-icon"></i>
+                                        <span style="color: #2a2f5b">{{ $material->course->code }}</span>
+                                    </span>
+                                </div>
+
+                                <h4 class="card-title">{{ $material->title }}</h4>
+                                <p>
+                                    <span class="badge rounded-pill" style="background-color:#cfe2ff; color:black;">
+                                        <i class="fa-solid fa-file-lines" style="color: #3092fa;"></i>
+                                        <span>{{ $material->file_count }}</span>
+                                    </span>
+                                    <span class="badge rounded-pill"
+                                        style="background-color: {{ $material->materialType->color ?? '#ccc' }}">
+                                        {{ $material->materialType->name ?? 'Unknown Type' }}
+                                    </span>
+                                </p>
+
+                                <!-- Date in the body now -->
+                                <div class="date" style="color: #888;">
+                                    <i class="fa-solid fa-calendar me-2"></i>{{ $material->created_at->format('Y-m-d') }}
                                 </div>
                             </div>
-
-                            <div class="d-flex justify-content-between mb-3">
-                                <span>
-                                    <i class="fas fa-folder folder-icon"></i>
-                                    <span style="color: #2a2f5b">{{ $material->course->code }}</span>
-                                </span>
+                        </a>
+                        <div class="card-footer">
+                            <div style="color: #253c60; display: flex; align-items: center;">
+                                <form action="{{ route('users.profile') }}" method="POST" class="d-inline">
+                                    @csrf
+                                    <input type="hidden" name="user_id" value="{{ $material->user->id }}">
+                                    <button type="submit" class="btn btn-link p-0"
+                                        style="text-decoration: none !important; color: inherit; display: flex; align-items: center;">
+                                        <i class="fa-solid fa-user-circle me-2"
+                                            style="font-size: 24px; text-decoration: none !important;"></i>
+                                        <span class="user-name">By, {{ $material->user->name }}</span>
+                                    </button>
+                                </form>
                             </div>
 
-                            <h4 class="card-title">{{ $material->title }}</h4>
-                            <p>
-                                <span class="badge rounded-pill" style="background-color:#cfe2ff; color:black;">
-                                    <i class="fa-solid fa-file-lines" style="color: #3092fa;"></i>
-                                    <span>{{ $material->file_count }}</span>
-                                </span>
-                                <span class="badge rounded-pill"
-                                    style="background-color: {{ $material->materialType->color ?? '#ccc' }}">
-                                    {{ $material->materialType->name ?? 'Unknown Type' }}
-                                </span>
-                            </p>
 
-                            <!-- Date in the body now -->
-                            <div class="date" style="color: #888;">
-                                <i class="fa-solid fa-calendar me-2"></i>{{ $material->created_at->format('Y-m-d') }}
-                            </div>
-                        </div>
-                    </a>
-                    <div class="card-footer">
-                        <div style="color: #253c60; display: flex; align-items: center;">
-                            <form action="{{ route('users.profile') }}" method="POST" class="d-inline">
-                                @csrf
-                                <input type="hidden" name="user_id" value="{{ $material->user->id }}">
-                                <button type="submit" class="btn btn-link p-0"
-                                    style="text-decoration: none !important; color: inherit; display: flex; align-items: center;">
-                                    <i class="fa-solid fa-user-circle me-2"
-                                        style="font-size: 24px; text-decoration: none !important;"></i>
-                                    <span class="user-name">By, {{ $material->user->name }}</span>
+
+
+                            <!-- Follow/Save Button -->
+                            @if ($role === 'guest')
+                                <button type="button" class="btn btn-rounded follow-button"
+                                    style="background-color: #e2eaf7; color:#2a2f5b;" data-bs-toggle="modal"
+                                    data-bs-target="#guestModal">
+                                    <i class="fa-solid fa-plus"></i> Save
                                 </button>
-                            </form>
+                            @else
+                                <button type="button" class="btn btn-rounded follow-button"
+                                    style="background-color: #e2eaf7; color:#2a2f5b;"
+                                    data-material-id="{{ $material->id }}">
+                                    <i class="fa-solid {{ $material->is_followed ? 'fa-minus' : 'fa-plus' }}"></i>
+                                    {{ $material->is_followed ? 'Unsave' : 'Save' }}
+                                </button>
+                            @endif
                         </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
 
 
-
-
-                        <!-- Follow/Save Button -->
-                        @if ($role === 'guest')
-                            <button type="button" class="btn btn-rounded follow-button"
-                                style="background-color: #e2eaf7; color:#2a2f5b;" data-bs-toggle="modal"
-                                data-bs-target="#guestModal">
-                                <i class="fa-solid fa-plus"></i> Save
-                            </button>
-                        @else
-                            <button type="button" class="btn btn-rounded follow-button"
-                                style="background-color: #e2eaf7; color:#2a2f5b;" data-material-id="{{ $material->id }}">
-                                <i class="fa-solid {{ $material->is_followed ? 'fa-minus' : 'fa-plus' }}"></i>
-                                {{ $material->is_followed ? 'Unsave' : 'Save' }}
-                            </button>
-                        @endif
+        <!-- Guest User Modal -->
+        <div class="modal fade" id="guestModal" tabindex="-1" aria-labelledby="guestModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="guestModalLabel">Login Required</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        You need to be logged in to perform this action. Please log in or sign up to continue.
+                    </div>
+                    <div class="modal-footer">
+                        <a href="{{ route('login') }}" class="btn btn-primary">Login</a>
+                        <a href="{{ route('register') }}" class="btn btn-secondary">Sign Up</a>
                     </div>
                 </div>
             </div>
-        @endforeach
-    </div>
+        </div>
 
 
-    <!-- Guest User Modal -->
-    <div class="modal fade" id="guestModal" tabindex="-1" aria-labelledby="guestModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="guestModalLabel">Login Required</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    You need to be logged in to perform this action. Please log in or sign up to continue.
-                </div>
-                <div class="modal-footer">
-                    <a href="{{ route('login') }}" class="btn btn-primary">Login</a>
-                    <a href="{{ route('register') }}" class="btn btn-secondary">Sign Up</a>
+
+        <!-- report Modal -->
+        <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="reportModalLabel">Report Material</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to report this material?</p>
+                        <textarea id="reportReason" class="form-control" rows="4"
+                            placeholder="Please provide a reason for reporting..."></textarea>
+                        <input type="hidden" id="report_id" name="report_id">
+                        <input type="hidden" id="report_type" name="report_type" value="material">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-danger" id="confirmReport">Report</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-
-
-
-    <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="reportModalLabel">Report Material</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Are you sure you want to report this material?</p>
-                    <textarea id="reportReason" class="form-control" rows="4"
-                        placeholder="Please provide a reason for reporting..."></textarea>
-                    <input type="hidden" id="report_id" name="report_id">
-                    <input type="hidden" id="report_type" name="report_type" value="material">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger" id="confirmReport">Report</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    @endif
 @endsection
 
 @section('scripts')

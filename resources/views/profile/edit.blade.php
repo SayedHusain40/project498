@@ -64,51 +64,61 @@
             </section>
         </div>
 
+
         <div class="card p-4">
             <section>
                 <header>
                     <h2 class="text-lg font-medium text-gray-900">
-                        Your Academic Profile
+                        Academic Information
                     </h2>
-
                 </header>
 
-<div class="container">
-    <h2 class="text-lg font-medium text-gray-900"></h2>
+                <div class="container">
+                    <h2 class="text-lg font-medium text-gray-900"></h2>
 
-    <div class="mt-4">
-        <div class="mb-3">
-            <strong style="font-size: 1.2rem;">Major:</strong>
-            @if ($user->major)
-                <span class="badge" style="font-size: 1rem; background-color: #ede7f6; color:rgb(0, 0, 0)">{{ $user->major->name }}</span>
-            @else
-                <span class="badge bg-secondary" style="font-size: 1rem;">Not specified</span>
-            @endif
-        </div>
+                    <div class="mt-4">
+                        <div class="mb-3">
+                            <strong style="font-size: 1.2rem;">Phone Number:</strong>
+                            @if ($user->phone)
+                                <span class="badge"
+                                    style="font-size: 1rem; background-color: #ede7f6; color:rgb(0, 0, 0)">{{ $user->phone }}</span>
+                            @else
+                                <span style="font-size: 1rem;">Not specified</span>
+                            @endif
+                        </div>
+                        <div class="mb-3">
+                            <strong style="font-size: 1.2rem;">Major:</strong>
+                            @if ($user->major)
+                                <span class="badge"
+                                    style="font-size: 1rem; background-color: #ede7f6; color:rgb(0, 0, 0)">{{ $user->major->name }}</span>
+                            @else
+                                <span style="font-size: 1rem;">Not specified</span>
+                            @endif
+                        </div>
 
-        <div>
-            <strong style="font-size: 1.2rem;">Expertise At:</strong>
-            @if ($user->expertise->isNotEmpty())
-                @foreach ($user->expertise as $course)
-                    <span class="badge"
-                        style="background-color: #e8f0fe; color: rgb(0, 0, 0); font-size: 1rem; padding: 0.5rem 1rem; margin-right: 0.5rem;border-radius: 20px; border-color:#e8f0fe;">
-                        {{ $course->code }} | {{ $course->name }}
-                    </span>
-                @endforeach
-            @else
-                <span class="badge bg-secondary" style="font-size: 1rem;">Not specified</span>
-            @endif
-        </div>
+                        <div>
+                            <strong style="font-size: 1.2rem;">Expertise At:</strong>
+                            @if ($user->expertise->isNotEmpty())
+                                @foreach ($user->expertise as $course)
+                                    <span class="badge"
+                                        style="background-color: #e8f0fe; color: rgb(0, 0, 0); font-size: 1rem; padding: 0.5rem 1rem; margin-right: 0.5rem;border-radius: 20px; border-color:#e8f0fe;">
+                                        {{ $course->code }} | {{ $course->name }}
+                                    </span>
+                                @endforeach
+                            @else
+                                <span style="font-size: 1rem;">Not specified</span>
+                            @endif
+                        </div>
 
-        <div class="mt-3">
-            <a href="{{ route('profile.info', $user->id) }}" class="btn btn-primary">Edit</a>
-        </div>
-    </div>
-</div>
-
-
+                        <div class="mt-3">
+                            <a href="{{ route('profile.info', $user->id) }}" class="btn btn-primary">Edit</a>
+                        </div>
+                    </div>
+                </div>
             </section>
         </div>
+
+
 
         <div class="card p-4 mt-4">
             <section>

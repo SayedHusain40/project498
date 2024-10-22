@@ -176,15 +176,15 @@
                             @csrf
                             <div class="d-flex flex-column">
                                 
-                                <textarea name="content" class="form-control comment-input" placeholder="Write a comment..." rows="3"></textarea>
+                                <textarea name="content" class="form-control comment-input" placeholder="Write a question..." rows="3"></textarea>
                                 <div class="d-flex justify-content-between mt-2">
                                     <div id="comment-form-error" class="text-danger"></div>
                                     @if ($role === 'user')
-                                        <button type="submit" class="btn btn-primary">Post Comment</button>
+                                        <button type="submit" class="btn btn-primary">Post Your Question</button>
                                     @else
                                         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                             data-bs-target="#loginModal">
-                                            Post Comment
+                                            Post Your َQuestion
                                         </button>
                                     @endif
                                 </div>
@@ -561,14 +561,12 @@
                         `.comment[data-comment-id="${commentId}"]`);
                     const commentBodyElement = commentElement.querySelector('.comment-body');
 
-                    // Extract mention and content
                     const mentionElement = commentBodyElement.querySelector('.reply-mention');
                     const mention = mentionElement ? mentionElement.innerText.trim() : '';
                     const contentElement = mentionElement ? mentionElement.nextElementSibling :
                         commentBodyElement;
                     const content = contentElement.innerText.trim();
 
-                    // Store original content for cancel action
                     commentBodyElement.dataset.originalContent = commentBodyElement.innerHTML;
 
                     const editForm = `
@@ -608,7 +606,7 @@
                         return;
                     } else {
                         this.querySelector('#edit-form-error').style.display =
-                            'none'; // Hide error if valid
+                            'none'; 
                     }
 
                     fetch(`/comments/${commentId}`, {
@@ -849,7 +847,7 @@
                             }
                         } else {
                             // Display error messages
-                            errorDiv.textContent = data.error || 'Your comment is empty';
+                            errorDiv.textContent = data.error || 'Your question is empty';
                         }
                     })
                     .catch(error => {
@@ -858,7 +856,6 @@
                     });
             });
 
-            // For submission of reply forms
             document.getElementById('comment-list')?.addEventListener('submit', function(event) {
                 if (event.target.closest('.reply-form')) {
                     event.preventDefault();
@@ -946,7 +943,7 @@
                                     replyList.insertAdjacentHTML('beforeend', newReplyHtml);
                                     form.reset();
                                     form.style.display =
-                                        'none'; // Hide the reply form after successful submission
+                                        'none'; 
 
                                     const replyToggle = form.closest('.comment').querySelector(
                                         '.reply-toggle');
@@ -960,21 +957,18 @@
                                     initializeDropdowns();
                                 }
                             } else {
-                                // Display error message
                                 errorDiv.textContent = data.message || 'Error posting reply';
                                 errorDiv.style.display = 'block';
                             }
                         })
                         .catch(error => {
                             console.error('Error:', error);
-                            // Display error message
                             errorDiv.textContent = 'Something went wrong';
                             errorDiv.style.display = 'block';
                         });
                 }
             });
 
-            // For reply link click to show reply form
             document.getElementById('comment-list')?.addEventListener('click', function(event) {
                 if (event.target.closest('.reply-link')) {
                     event.preventDefault();

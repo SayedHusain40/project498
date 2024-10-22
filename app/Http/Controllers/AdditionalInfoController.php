@@ -23,12 +23,14 @@ class AdditionalInfoController extends Controller
     {
         $request->validate([
             'major_id' => 'nullable|exists:departments,id',
-            'course_ids' => 'array', 
+            'phone' => 'nullable|regex:/^\+?[0-9]*$/|max:15',
+            'course_ids' => 'array',
             'course_ids.*' => 'exists:courses,id',
         ]);
 
         $user = User::findOrFail($id);
         $user->major_id = $request->major_id;
+        $user->phone = $request->phone;
         $user->save();
 
         $user->expertise()->sync($request->course_ids);

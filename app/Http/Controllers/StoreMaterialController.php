@@ -43,10 +43,8 @@ class StoreMaterialController extends Controller
         ]);
 
         foreach ($temporaryFiles as $temporaryFile) {
-            // Store the original file name
             $originalFileName = $temporaryFile->file;
 
-            // Generate a unique file name using a timestamp or unique ID
             $uniqueFileName = time() . '_' . $originalFileName;
 
             $finalPath = "public/files/{$uniqueFileName}";
@@ -55,7 +53,7 @@ class StoreMaterialController extends Controller
 
             File::create([
                 'material_id' => $material->id,
-                'name' => $originalFileName, // Store the original file name here
+                'name' => $originalFileName, 
                 'path' => $finalPath,
                 'file_type' => $temporaryFile->file_type,
             ]);
@@ -63,7 +61,7 @@ class StoreMaterialController extends Controller
             $this->deleteTemporaryFiles($temporaryFile);
         }
 
-        return redirect('/up');
+        return redirect()->route('materials');
     }
 
     private function deleteTemporaryFiles($temporaryFile)

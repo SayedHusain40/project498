@@ -2,10 +2,7 @@
 
 @section('title', 'Upload Page')
 
-@section('page_name', 'Upload')
-
-@section('page_description', 'This is the Upload page.')
-
+@section('page_name', 'Upload Materials')
 
 @section('styles')
     <style>
@@ -56,6 +53,7 @@
 @endsection
 
 @section('content')
+<br>
     @php
         if (auth()->check()) {
             if (auth()->user()->role === 'user') {

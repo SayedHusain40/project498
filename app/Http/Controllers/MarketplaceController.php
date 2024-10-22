@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -18,42 +17,42 @@ class MarketplaceController extends Controller
 
     public function showUploadForm()
     {
-        return view('uploads.marketplace');
+        return view('marketplaces.create');
     }
-
 
     public function store(Request $request)
     {
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'price' => 'required|numeric|min:0',
+            'price_option' => 'required',
             'category' => 'required|string',
             'condition' => 'required|in:new,used',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $marketplaceItem = new Marketplace();
-        $marketplaceItem->user_id = Auth::id();
-        $marketplaceItem->title = $request->input('title');
-        $marketplaceItem->description = $request->input('description');
-        $marketplaceItem->price = $request->input('price');
-        $marketplaceItem->category = $request->input('category');
-        $marketplaceItem->condition = $request->input('condition');
+        $price = null;
+        if ($request->input('price_option') === 'price') {
+            $price = $request->input('price'); 
+        } 
 
+        $path = null;
         if ($request->hasFile('image')) {
             $imageName = time() . '_' . $request->file('image')->getClientOriginalName();
-
             $request->file('image')->move(public_path('storage/marketplace'), $imageName);
-
-            $marketplaceItem->image_path = 'marketplace/' . $imageName;
+            $path = 'marketplace/' . $imageName;
         }
 
-        $marketplaceItem->save();
+        Marketplace::create([
+            'user_id' => Auth::id(),
+            'title' => $request->input('title'),
+            'description' => $request->input('description'),
+            'price' => $price,
+            'category' => $request->input('category'),
+            'condition' => $request->input('condition'),
+            'image_path' => $path,
+        ]);
 
-        return redirect()->route('marketplace.show')->with('success', 'Marketplace item uploaded successfully!');
+        return redirect()->route('marketplace')->with('success', 'Marketplace item uploaded successfully!');
     }
-
-
-
 }

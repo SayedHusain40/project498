@@ -14,21 +14,17 @@ use App\Http\Controllers\DiscountController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\FollowController;
-use App\Http\Controllers\CommentController;
 use App\Http\Controllers\UserReportController;
 use App\Http\Controllers\ChatsController;
 use App\Http\Controllers\AdditionalInfoController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\MarketplaceController;
-
-use App\Http\Controllers\PostsController;
-
+use App\Http\Controllers\StudySessionController;
+use App\Http\Controllers\RestaurantController;
 
 //admin
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\TableController;
-
-
 
 Route::get('/', function () {
     return view('dashboard');
@@ -47,8 +43,6 @@ Route::get('/materials/{material}', [MaterialController::class, 'show'])->name('
 // chat
 Route::get('/chats', [ChatsController::class, 'index'])->name('chats.index');
 Route::get('chats/departments/{department}', [ChatsController::class, 'show'])->name('chats.department');
-
-
 
 Route::middleware('auth')->group(function () {
 
@@ -92,13 +86,15 @@ Route::middleware('auth')->group(function () {
     //user profile
     Route::post('/users/profile', [UserProfileController::class, 'profile'])->name('users.profile');
 
+    //study session
+    Route::get('/study-sessions', [StudySessionController::class, 'index'])->name('study-sessions.index'); 
+    Route::get('/study-sessions/create', [StudySessionController::class, 'create'])->name('study-sessions.create'); 
+    Route::post('/study-sessions', [StudySessionController::class, 'store'])->name('study-sessions.store');
 
 
-    //For Posts --- EDIT NAME OF Controller !!!!!
+    //restaurants
+    Route::resource('restaurants', RestaurantController::class);
 
-    Route::get('/posts', [PostsController::class, 'index'])->name('posts');
-    // Store a new created post
-    Route::post('/posts', [PostsController::class, 'store'])->name('posts.store');
 });
 
 // Only for admin
