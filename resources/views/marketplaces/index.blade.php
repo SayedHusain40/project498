@@ -1,7 +1,7 @@
 @extends('new_layouts.app')
 @section('page_name', 'All Marketplace')
 @section('button_url')
-    {{ route('up') }}
+    {{ route('marketplace.show') }}
 @endsection
 
 @section('button_label')
