@@ -1,5 +1,5 @@
 @extends('new_layouts.app')
-@section('page_name', 'All Study Sessions')
+@section('page_name', 'All Upcoming Study Sessions')
 
 @section('button_url')
     {{ route('study-sessions.create') }}
@@ -17,7 +17,6 @@
         </div>
     @else
         <div class="container mt-4">
-            <h1 class="mb-4">Upcoming Study Sessions</h1>
 
             <div class="row">
                 @foreach ($studySessions as $session)

@@ -21,6 +21,7 @@ use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\MarketplaceController;
 use App\Http\Controllers\StudySessionController;
 use App\Http\Controllers\RestaurantController;
+use App\Http\Controllers\UserUploadsController;
 
 //admin
 use App\Http\Controllers\Admin\HomeController;
@@ -63,8 +64,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile/{id}/edit', [AdditionalInfoController::class, 'edit'])->name('profile.info');
     Route::post('/profile/{id}', [AdditionalInfoController::class, 'update'])->name('additional-info.update');
 
+    //user uploads
+    Route::get('/my-uploads', [UserUploadsController::class, 'index'])->name('user.materials');
+    Route::delete('my-uploads/materials/{id}', [UserUploadsController::class, 'destroyMaterial'])->name('materials.destroy');
+    Route::delete('my-uploads/marketplace/{id}', [UserUploadsController::class, 'destroyMarketplaceItem'])->name('marketplace.destroy');
+    Route::delete('my-uploads/study-sessions/{id}', [UserUploadsController::class, 'destroyStudySession'])->name('study-sessions.destroy');
+    Route::delete('my-uploads/restaurants/{id}', [UserUploadsController::class, 'destroyRestaurant'])->name('restaurants.destroy');
+
     //for martials
-    Route::get('/my-materials', [MaterialController::class, 'userMaterials'])->name('user.materials');
     Route::delete('/materials/{id}', [MaterialController::class, 'destroy'])->name('materials.delete');
     Route::get('/files/{file}', [MaterialController::class, 'download'])->name('files.download');
     Route::get('/materials/{material}/downloadAll', [MaterialController::class, 'downloadAll'])->name('materials.downloadAll');

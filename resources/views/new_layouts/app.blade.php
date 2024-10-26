@@ -265,11 +265,11 @@
                                 </a>
                             </li>
 
-                            <!-- My Uploaded Materials -->
+                            <!-- My Uploadeds -->
                             <li class="nav-item {{ request()->routeIs('user.materials') ? 'active' : '' }}">
                                 <a href="{{ route('user.materials') }}">
                                     <i class="fas fa-book"></i>
-                                    <p>My Uploaded Materials</p>
+                                    <p>My Uploadeds</p>
                                 </a>
                             </li>
 

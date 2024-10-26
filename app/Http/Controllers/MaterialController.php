@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Material;
 use App\Models\Course;
 use App\Models\File;
-use App\Models\Comment;
 use App\Models\Follow;
 use App\Models\MaterialType;
 use Illuminate\Http\Request;
@@ -43,23 +42,6 @@ class MaterialController extends Controller
         return view('materials.index', compact('courses', 'materialTypes', 'materials'));
     }
 
-    public function userMaterials(Request $request)
-    {
-        $courses = Course::all();
-        $materialTypes = MaterialType::all();
-        $userId = Auth::id();
-
-        $materials = Material::with('course', 'materialType', 'user')
-        ->where('user_id', $userId) 
-            ->orderBy('created_at', 'desc')
-            ->get()
-            ->map(function ($material) use ($userId) {
-                $material->is_followed = Follow::where('user_id', $userId)->where('material_id', $material->id)->exists();
-                return $material;
-            });
-
-        return view('materials.user-materials', compact('courses', 'materialTypes', 'materials'));
-    }
     public function destroy($id)
     {
         $material = Material::find($id);
@@ -71,8 +53,6 @@ class MaterialController extends Controller
 
         return response()->json(['status' => 'error'], 403); 
     }
-
-
 
 
     public function show(Material $material)
@@ -92,12 +72,10 @@ class MaterialController extends Controller
         $hasDownloaded = $file->users()->where('user_id', $userId)->exists();
 
         if (!$hasDownloaded) {
-            // Increment the download count for this file
             $file->increment('downloads');
             $file->users()->attach($userId);
         }
 
-        // Remove unique number from filename
         $originalName = preg_replace('/^\d+_/', '', basename($file->path));
 
         return response()->download(storage_path('app/' . $file->path), $originalName);
@@ -133,7 +111,5 @@ class MaterialController extends Controller
 
         return response()->download(storage_path($fileName))->deleteFileAfterSend(true);
     }
-
-
 
 }

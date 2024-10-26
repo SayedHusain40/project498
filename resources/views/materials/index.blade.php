@@ -225,7 +225,6 @@
             @endforeach
         </div>
 
-
         <!-- Guest User Modal -->
         <div class="modal fade" id="guestModal" tabindex="-1" aria-labelledby="guestModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -244,8 +243,6 @@
                 </div>
             </div>
         </div>
-
-
 
         <!-- report Modal -->
         <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
