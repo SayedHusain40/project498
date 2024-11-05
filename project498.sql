@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 14, 2024 at 03:22 PM
+-- Generation Time: Nov 05, 2024 at 01:17 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -35,13 +35,6 @@ CREATE TABLE `bookmarks` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `bookmarks`
---
-
-INSERT INTO `bookmarks` (`id`, `user_id`, `file_id`, `created_at`, `updated_at`) VALUES
-(41, 10, 8, '2024-08-10 08:52:29', '2024-08-10 08:52:29');
-
 -- --------------------------------------------------------
 
 --
@@ -53,6 +46,18 @@ CREATE TABLE `cache` (
   `value` mediumtext NOT NULL,
   `expiration` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `cache`
+--
+
+INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
+('a@a.com|127.0.0.1', 'i:1;', 1728466637),
+('a@a.com|127.0.0.1:timer', 'i:1728466637;', 1728466637),
+('a@admin2.com|127.0.0.1', 'i:1;', 1728466622),
+('a@admin2.com|127.0.0.1:timer', 'i:1728466622;', 1728466622),
+('admin2@a.com|127.0.0.1', 'i:1;', 1726239197),
+('admin2@a.com|127.0.0.1:timer', 'i:1726239197;', 1726239197);
 
 -- --------------------------------------------------------
 
@@ -86,69 +91,6 @@ CREATE TABLE `colleges` (
 INSERT INTO `colleges` (`id`, `name`, `created_at`, `updated_at`) VALUES
 (7, 'College of Information Technology', '2024-06-27 15:55:58', '2024-06-27 15:55:58'),
 (9, 'College of Science', '2024-06-27 15:55:58', '2024-06-27 15:55:58');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `comments`
---
-
-CREATE TABLE `comments` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `material_id` bigint(20) UNSIGNED NOT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
-  `parent_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `content` text NOT NULL,
-  `likes` int(10) UNSIGNED NOT NULL DEFAULT 0,
-  `dislikes` int(10) UNSIGNED NOT NULL DEFAULT 0,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `comments`
---
-
-INSERT INTO `comments` (`id`, `material_id`, `user_id`, `parent_id`, `content`, `likes`, `dislikes`, `created_at`, `updated_at`) VALUES
-(117, 51, 13, NULL, 'Hello!', 1, 0, '2024-09-06 11:49:22', '2024-09-06 12:35:09'),
-(118, 51, 12, 117, 'jjjjj', 0, 0, '2024-09-06 13:04:36', '2024-09-06 13:04:36'),
-(119, 51, 12, 118, 'hhj', 0, 0, '2024-09-06 13:04:44', '2024-09-06 13:04:44'),
-(120, 51, 12, 117, 'hhgvhg', 0, 0, '2024-09-06 13:04:52', '2024-09-06 13:04:52');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `comment_dislikes`
---
-
-CREATE TABLE `comment_dislikes` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `comment_id` bigint(20) UNSIGNED NOT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `comment_likes`
---
-
-CREATE TABLE `comment_likes` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `comment_id` bigint(20) UNSIGNED NOT NULL,
-  `user_id` bigint(20) UNSIGNED NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `comment_likes`
---
-
-INSERT INTO `comment_likes` (`id`, `comment_id`, `user_id`, `created_at`, `updated_at`) VALUES
-(107, 117, 12, '2024-09-06 12:35:09', '2024-09-06 12:35:09');
 
 -- --------------------------------------------------------
 
@@ -204,6 +146,31 @@ INSERT INTO `departments` (`id`, `name`, `college_id`, `created_at`, `updated_at
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `expertise_user`
+--
+
+CREATE TABLE `expertise_user` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `expertise_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `expertise_user`
+--
+
+INSERT INTO `expertise_user` (`id`, `user_id`, `expertise_id`, `created_at`, `updated_at`) VALUES
+(16, 2, 1, NULL, NULL),
+(17, 2, 2, NULL, NULL),
+(18, 1, 1, NULL, NULL),
+(19, 1, 2, NULL, NULL),
+(20, 3, 1, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `failed_jobs`
 --
 
@@ -234,18 +201,6 @@ CREATE TABLE `files` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `files`
---
-
-INSERT INTO `files` (`id`, `material_id`, `name`, `path`, `file_type`, `downloads`, `created_at`, `updated_at`) VALUES
-(8, 51, 'colleges_report (4).pdf', 'public/files/1723289768_colleges_report (4).pdf', 'pdf', 3, '2024-08-10 08:36:08', '2024-09-02 15:19:29'),
-(9, 52, 'users_report (4).pdf', 'public/files/1723289822_users_report (4).pdf', 'pdf', 1, '2024-08-10 08:37:02', '2024-08-10 08:53:23'),
-(10, 52, 'departments_report (1).pdf', 'public/files/1723289822_departments_report (1).pdf', 'pdf', 1, '2024-08-10 08:37:02', '2024-08-10 08:53:08'),
-(11, 52, 'colleges_report (1).pdf', 'public/files/1723289822_colleges_report (1).pdf', 'pdf', 1, '2024-08-10 08:37:02', '2024-08-10 08:53:23'),
-(12, 52, 'users_report (3).pdf', 'public/files/1723289822_users_report (3).pdf', 'pdf', 1, '2024-08-10 08:37:02', '2024-08-10 08:53:23'),
-(13, 52, 'departments_report (2).pdf', 'public/files/1723289822_departments_report (2).pdf', 'pdf', 1, '2024-08-10 08:37:02', '2024-08-10 08:53:20');
-
 -- --------------------------------------------------------
 
 --
@@ -260,20 +215,6 @@ CREATE TABLE `file_user` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `file_user`
---
-
-INSERT INTO `file_user` (`id`, `file_id`, `user_id`, `created_at`, `updated_at`) VALUES
-(8, 10, 10, NULL, NULL),
-(9, 13, 10, NULL, NULL),
-(10, 9, 10, NULL, NULL),
-(11, 11, 10, NULL, NULL),
-(12, 12, 10, NULL, NULL),
-(13, 8, 10, NULL, NULL),
-(14, 8, 11, NULL, NULL),
-(15, 8, 12, NULL, NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -284,20 +225,6 @@ CREATE TABLE `follows` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
   `material_id` bigint(20) UNSIGNED NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `ideas`
---
-
-CREATE TABLE `ideas` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `description` text NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -340,6 +267,33 @@ CREATE TABLE `job_batches` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `marketplaces`
+--
+
+CREATE TABLE `marketplaces` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `price` decimal(10,3) DEFAULT NULL,
+  `category` varchar(255) NOT NULL,
+  `condition` enum('new','used') NOT NULL,
+  `image_path` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `marketplaces`
+--
+
+INSERT INTO `marketplaces` (`id`, `user_id`, `title`, `description`, `price`, `category`, `condition`, `image_path`, `created_at`, `updated_at`) VALUES
+(12, 1, 'adwdaw', 'guo', NULL, 'books', 'used', 'marketplace/1729974385_Screenshot 2024-10-21 164256.png', '2024-10-26 17:26:25', '2024-10-26 17:26:25'),
+(14, 1, 'yes', 'ad', NULL, 'electronics', 'used', 'marketplace/1729977608_Screenshot 2024-10-21 152707.png', '2024-10-26 18:20:08', '2024-10-26 18:20:08');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `materials`
 --
 
@@ -355,13 +309,20 @@ CREATE TABLE `materials` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `materials`
+-- Table structure for table `material_reports`
 --
 
-INSERT INTO `materials` (`id`, `title`, `description`, `user_id`, `course_id`, `material_type_id`, `file_count`, `created_at`, `updated_at`) VALUES
-(51, 'Test1', 'ggggg', 10, 1, 2, 1, '2024-08-10 08:36:08', '2024-08-10 08:36:08'),
-(52, 'test4', 'ffff', 10, 3, 3, 5, '2024-08-10 08:37:02', '2024-08-10 08:37:02');
+CREATE TABLE `material_reports` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `material_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `reason` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -403,7 +364,6 @@ CREATE TABLE `migrations` (
 --
 
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
-(1, '0001_01_01_000000_create_users_table', 1),
 (2, '0001_01_01_000001_create_cache_table', 1),
 (3, '0001_01_01_000002_create_jobs_table', 1),
 (4, '2024_06_12_082424_create_temporary_files_table', 2),
@@ -416,12 +376,21 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (20, '2024_07_10_205219_create_bookmarks_table', 10),
 (23, '2024_07_18_171745_create_follows_table', 11),
 (27, '2024_06_26_073028_create_posts_table', 12),
-(30, '2024_07_25_221142_create_comment_likes_table', 15),
-(31, '2024_07_25_221143_create_comment_dislikes_table', 15),
-(34, '2024_07_24_175714_create_comments_table', 16),
 (35, '2024_06_14_070520_create_files_table', 17),
 (37, '2024_08_08_152859_create_file_user_table', 18),
-(38, '2024_09_02_142031_create_user_sessions_table', 19);
+(39, '2024_09_02_142031_create_user_sessions_table', 19),
+(46, '2024_09_14_115729_create_material_reports_table', 21),
+(52, '2024_10_14_194448_create_expertise_user_table', 24),
+(58, '2024_10_17_173842_create_study_sessions_table', 27),
+(59, '0001_01_01_000000_create_users_table', 28),
+(61, '2024_10_18_072404_create_restaurants_table', 29),
+(63, '2024_10_16_122011_create_marketplace_table', 30),
+(64, '2024_10_31_073401_create_questions_table', 31),
+(65, '2024_10_31_073551_create_replies_table', 31),
+(69, '2024_11_03_061609_create_question_user_like_dislikes_table', 32),
+(70, '2024_11_04_112414_create_reply_user_like_dislikes_table', 33),
+(71, '2024_11_04_145412_create_report_questions_table', 34),
+(72, '2024_11_04_145412_create_report_replies_table', 34);
 
 -- --------------------------------------------------------
 
@@ -438,24 +407,114 @@ CREATE TABLE `password_reset_tokens` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `posts`
+-- Table structure for table `questions`
 --
 
-CREATE TABLE `posts` (
+CREATE TABLE `questions` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `description` text NOT NULL,
+  `department_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `content` text NOT NULL,
+  `likes` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `dislikes` int(10) UNSIGNED NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `posts`
+-- Table structure for table `question_user_like_dislike`
 --
 
-INSERT INTO `posts` (`id`, `title`, `description`, `created_at`, `updated_at`) VALUES
-(1, 'test', 'test', '2024-09-14 07:21:07', '2024-09-14 07:21:07'),
-(2, 'test', 'hhhh', '2024-09-14 07:21:14', '2024-09-14 07:21:14');
+CREATE TABLE `question_user_like_dislike` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `question_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `type` enum('like','dislike') NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `replies`
+--
+
+CREATE TABLE `replies` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `question_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `content` text NOT NULL,
+  `likes` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `dislikes` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reply_user_like_dislike`
+--
+
+CREATE TABLE `reply_user_like_dislike` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `reply_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `type` enum('like','dislike') NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `report_questions`
+--
+
+CREATE TABLE `report_questions` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `question_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `reason` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `report_replies`
+--
+
+CREATE TABLE `report_replies` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `reply_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `reason` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `restaurants`
+--
+
+CREATE TABLE `restaurants` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `description` text DEFAULT NULL,
+  `menu_image` varchar(255) DEFAULT NULL,
+  `operating_hours` varchar(255) DEFAULT NULL,
+  `location` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -477,7 +536,27 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('8tUY6qDQe8VgBAh3kYcbOWEpXMqS3P4Eads6pCs9', 9, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/128.0.0.0', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiM1FRUlMwbFpTa2tJdGIyRWh6QXk0REJjRWF4ajNmQU5NUUF3REcyRSI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czozNzoiaHR0cDovLzEyNy4wLjAuMTo4MDAwL2FkbWluL2Rhc2hib2FyZCI7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjM1OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYWRtaW4vcmVwb3J0cyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjk7fQ==', 1726319775);
+('RMaBUdHoljpvRFS1lHs15JWERE4dtB6QXNzJkXa8', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiYXVicEpwaVI3UTd0Zlh4MGU4WkZwMFR4cTNseXFYMzVTRTFYeGNMOCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MzE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9kYXNoYm9hcmQiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjM6InVybCI7YToxOntzOjg6ImludGVuZGVkIjtzOjMyOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvbXktdXBsb2FkcyI7fX0=', 1730809039);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `study_sessions`
+--
+
+CREATE TABLE `study_sessions` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `topic` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `session_date` datetime NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `course_id` bigint(20) UNSIGNED NOT NULL,
+  `location` varchar(255) NOT NULL,
+  `price_or_volunteer` enum('price','volunteer') NOT NULL,
+  `price` decimal(8,2) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -504,6 +583,8 @@ CREATE TABLE `users` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `name` varchar(255) NOT NULL,
   `role` enum('user','admin') NOT NULL DEFAULT 'user',
+  `major_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `phone` varchar(255) DEFAULT NULL,
   `email` varchar(255) NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(255) NOT NULL,
@@ -516,19 +597,10 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `role`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Sayed', 'user', 's@h.com', NULL, '$2y$12$6TNjgRZ6oXvIcJvynPozo.lPrgvVxVmpug2TIn9O6OF6GfZ5p2XPm', 'hATodbIesoZc9yA29zsSrEpZo0VjgBhIgqwKaX5gnWgMn0KAICbEzairlghc', '2024-06-28 18:06:33', '2024-06-28 18:06:33'),
-(2, 'Ali', 'user', 'a1@h.com', NULL, '$2y$12$sKfr.OAXAG6rEv4wslCbKO77KCZ7IqvCaZTNgGnwVMPLpMnsaxZzW', NULL, '2024-06-30 00:07:53', '2024-06-30 00:07:53'),
-(3, 'Admin', 'admin', 'admin@a.com', NULL, '$2y$12$PGCwWVfd3WIiAtCIj/oQqOoH.bh/ugTJkf/H/Nx/P27CEjyccpqJS', NULL, '2024-06-30 13:29:23', '2024-06-30 13:29:23'),
-(4, 'Ahmed', 'user', 'ahmad@a.com', NULL, '$2y$12$jxf5Q48OJ2wwx1NFhXxSHewPoQqdHX7TYUaqcheehj31eWJ6j7lc.', NULL, '2024-07-01 20:43:52', '2024-07-01 20:43:52'),
-(5, 'Mohamed', 'user', 'mohamed@h.com', NULL, '$2y$12$VtBTuldyLEdhFvvlHDnBp.9DAwq4hls/lNFRmwArv3B0Hr1mjzmYa', NULL, '2024-07-03 01:15:47', '2024-07-03 01:15:47'),
-(6, 'test', 'user', 't@h.com', NULL, '$2y$12$kJsx3dXG2SxcpkJiex/aIuivja6WVOpGtSy8HBHu4QqcGPVMYFx4y', NULL, '2024-07-11 05:20:53', '2024-07-11 05:20:53'),
-(7, 'q', 'user', 'q@h.com', NULL, '$2y$12$jlazGq5Tw1rk6eFRuK8tL.8uyaLEAjCyJFo4gKmLQjFHGxUeaagb.', NULL, '2024-07-15 11:54:46', '2024-07-15 11:54:46'),
-(9, 'Admin', 'admin', 'admin@gmail.com', NULL, '$2y$12$Q7ifW1VY7Y4jScFtT045guYjsyh3odxEuRXHXirb3d8/MXoxIyXVK', NULL, '2024-08-10 08:33:04', '2024-08-10 08:33:04'),
-(10, 'Elias', 'user', 'elo@gmail.com', NULL, '$2y$12$DJsH/VrUodXi0AdS0vktwOwk17T4ZOqO.ZqzipDDXQ.cvngf0BiqK', NULL, '2024-08-10 08:34:46', '2024-08-10 08:34:46'),
-(11, 'tester', 'user', 'tester@gmail.com', NULL, '$2y$12$u8ZsgqalvoxC8MPmuyrcg.htLZpSd4a7JenKFbohf65h4.We58Imi', NULL, '2024-08-10 09:07:33', '2024-08-10 09:07:33'),
-(12, 'Koko', 'user', 'koko@gmail.com', NULL, '$2y$12$wp/qpe2IWBByDLTE66j6LOaW7.iW6AMH6R9g.lj9MXF7VJnvs50Uu', NULL, '2024-09-02 15:15:37', '2024-09-02 15:15:37'),
-(13, 'code', 'user', 'code@gmail.com', NULL, '$2y$12$WUqxII5oGe4hEZHUm/M/Bu8WoNu2.eTivT.MhfcwXe6sMoV3mrLU.', NULL, '2024-09-03 17:24:03', '2024-09-03 17:24:03');
+INSERT INTO `users` (`id`, `name`, `role`, `major_id`, `phone`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
+(1, 'test', 'user', 25, '+375155644', 't@h.com', NULL, '$2y$12$mZD9fXlBdZEBtUmh8sfkteu7tYN1Azco4mzPD3UZUh/FroNMHfAT6', NULL, '2024-10-18 05:01:56', '2024-10-18 05:02:27'),
+(2, 'AliYEs', 'user', 25, '+964848484', 'a@h.com', NULL, '$2y$12$4N3AHFUVBDoIU0uwVHDRU.bCfPVrrX4Q0FoN38c5u.ucpWFreYKrq', NULL, '2024-10-18 16:24:17', '2024-10-22 06:41:39'),
+(3, 'Sayed', 'user', 26, NULL, 's@h.com', NULL, '$2y$12$FZVd9UVohudzP.lF6EtEF.LLeaOxH1x6s3K1Js03w5BfUMwDFvrPC', NULL, '2024-10-25 19:24:06', '2024-10-25 19:24:44');
 
 -- --------------------------------------------------------
 
@@ -540,18 +612,12 @@ CREATE TABLE `user_sessions` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
   `login_time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `logout_time` timestamp NULL DEFAULT NULL,
   `ip_address` varchar(255) DEFAULT NULL,
   `user_agent` text DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `user_sessions`
---
-
-INSERT INTO `user_sessions` (`id`, `user_id`, `login_time`, `ip_address`, `user_agent`, `created_at`, `updated_at`) VALUES
-(357, 13, '2024-09-03 20:56:35', '122222.1.5', '44', '2024-09-03 20:55:54', '2024-09-03 20:55:54');
 
 --
 -- Indexes for dumped tables
@@ -584,31 +650,6 @@ ALTER TABLE `colleges`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `comments`
---
-ALTER TABLE `comments`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `comments_material_id_foreign` (`material_id`),
-  ADD KEY `comments_user_id_foreign` (`user_id`),
-  ADD KEY `comments_parent_id_foreign` (`parent_id`);
-
---
--- Indexes for table `comment_dislikes`
---
-ALTER TABLE `comment_dislikes`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `comment_dislikes_comment_id_user_id_unique` (`comment_id`,`user_id`),
-  ADD KEY `comment_dislikes_user_id_foreign` (`user_id`);
-
---
--- Indexes for table `comment_likes`
---
-ALTER TABLE `comment_likes`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `comment_likes_comment_id_user_id_unique` (`comment_id`,`user_id`),
-  ADD KEY `comment_likes_user_id_foreign` (`user_id`);
-
---
 -- Indexes for table `courses`
 --
 ALTER TABLE `courses`
@@ -621,6 +662,14 @@ ALTER TABLE `courses`
 ALTER TABLE `departments`
   ADD PRIMARY KEY (`id`),
   ADD KEY `departments_college_id_foreign` (`college_id`);
+
+--
+-- Indexes for table `expertise_user`
+--
+ALTER TABLE `expertise_user`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `expertise_user_user_id_foreign` (`user_id`),
+  ADD KEY `expertise_user_expertise_id_foreign` (`expertise_id`);
 
 --
 -- Indexes for table `failed_jobs`
@@ -653,12 +702,6 @@ ALTER TABLE `follows`
   ADD KEY `follows_material_id_foreign` (`material_id`);
 
 --
--- Indexes for table `ideas`
---
-ALTER TABLE `ideas`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `jobs`
 --
 ALTER TABLE `jobs`
@@ -672,6 +715,13 @@ ALTER TABLE `job_batches`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `marketplaces`
+--
+ALTER TABLE `marketplaces`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `marketplaces_user_id_foreign` (`user_id`);
+
+--
 -- Indexes for table `materials`
 --
 ALTER TABLE `materials`
@@ -679,6 +729,14 @@ ALTER TABLE `materials`
   ADD KEY `materials_user_id_foreign` (`user_id`),
   ADD KEY `materials_course_id_foreign` (`course_id`),
   ADD KEY `materials_material_type_id_foreign` (`material_type_id`);
+
+--
+-- Indexes for table `material_reports`
+--
+ALTER TABLE `material_reports`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `material_reports_material_id_foreign` (`material_id`),
+  ADD KEY `material_reports_user_id_foreign` (`user_id`);
 
 --
 -- Indexes for table `material_types`
@@ -699,10 +757,59 @@ ALTER TABLE `password_reset_tokens`
   ADD PRIMARY KEY (`email`);
 
 --
--- Indexes for table `posts`
+-- Indexes for table `questions`
 --
-ALTER TABLE `posts`
-  ADD PRIMARY KEY (`id`);
+ALTER TABLE `questions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `questions_department_id_foreign` (`department_id`),
+  ADD KEY `questions_user_id_foreign` (`user_id`);
+
+--
+-- Indexes for table `question_user_like_dislike`
+--
+ALTER TABLE `question_user_like_dislike`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `question_user_like_dislike_question_id_foreign` (`question_id`),
+  ADD KEY `question_user_like_dislike_user_id_foreign` (`user_id`);
+
+--
+-- Indexes for table `replies`
+--
+ALTER TABLE `replies`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `replies_question_id_foreign` (`question_id`),
+  ADD KEY `replies_user_id_foreign` (`user_id`);
+
+--
+-- Indexes for table `reply_user_like_dislike`
+--
+ALTER TABLE `reply_user_like_dislike`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `reply_user_like_dislike_reply_id_foreign` (`reply_id`),
+  ADD KEY `reply_user_like_dislike_user_id_foreign` (`user_id`);
+
+--
+-- Indexes for table `report_questions`
+--
+ALTER TABLE `report_questions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `report_questions_question_id_foreign` (`question_id`),
+  ADD KEY `report_questions_user_id_foreign` (`user_id`);
+
+--
+-- Indexes for table `report_replies`
+--
+ALTER TABLE `report_replies`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `report_replies_reply_id_foreign` (`reply_id`),
+  ADD KEY `report_replies_user_id_foreign` (`user_id`);
+
+--
+-- Indexes for table `restaurants`
+--
+ALTER TABLE `restaurants`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `restaurants_user_id_foreign` (`user_id`);
 
 --
 -- Indexes for table `sessions`
@@ -711,6 +818,14 @@ ALTER TABLE `sessions`
   ADD PRIMARY KEY (`id`),
   ADD KEY `sessions_user_id_index` (`user_id`),
   ADD KEY `sessions_last_activity_index` (`last_activity`);
+
+--
+-- Indexes for table `study_sessions`
+--
+ALTER TABLE `study_sessions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `study_sessions_user_id_foreign` (`user_id`),
+  ADD KEY `study_sessions_course_id_foreign` (`course_id`);
 
 --
 -- Indexes for table `temporary_files`
@@ -723,7 +838,8 @@ ALTER TABLE `temporary_files`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `users_email_unique` (`email`);
+  ADD UNIQUE KEY `users_email_unique` (`email`),
+  ADD KEY `users_major_id_foreign` (`major_id`);
 
 --
 -- Indexes for table `user_sessions`
@@ -740,31 +856,13 @@ ALTER TABLE `user_sessions`
 -- AUTO_INCREMENT for table `bookmarks`
 --
 ALTER TABLE `bookmarks`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT for table `colleges`
 --
 ALTER TABLE `colleges`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
-
---
--- AUTO_INCREMENT for table `comments`
---
-ALTER TABLE `comments`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=121;
-
---
--- AUTO_INCREMENT for table `comment_dislikes`
---
-ALTER TABLE `comment_dislikes`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
-
---
--- AUTO_INCREMENT for table `comment_likes`
---
-ALTER TABLE `comment_likes`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=108;
 
 --
 -- AUTO_INCREMENT for table `courses`
@@ -779,6 +877,12 @@ ALTER TABLE `departments`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
+-- AUTO_INCREMENT for table `expertise_user`
+--
+ALTER TABLE `expertise_user`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
+--
 -- AUTO_INCREMENT for table `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
@@ -788,25 +892,19 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `files`
 --
 ALTER TABLE `files`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT for table `file_user`
 --
 ALTER TABLE `file_user`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `follows`
 --
 ALTER TABLE `follows`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
-
---
--- AUTO_INCREMENT for table `ideas`
---
-ALTER TABLE `ideas`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
 
 --
 -- AUTO_INCREMENT for table `jobs`
@@ -815,10 +913,22 @@ ALTER TABLE `jobs`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `marketplaces`
+--
+ALTER TABLE `marketplaces`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
 -- AUTO_INCREMENT for table `materials`
 --
 ALTER TABLE `materials`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=90;
+
+--
+-- AUTO_INCREMENT for table `material_reports`
+--
+ALTER TABLE `material_reports`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `material_types`
@@ -830,31 +940,73 @@ ALTER TABLE `material_types`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
 
 --
--- AUTO_INCREMENT for table `posts`
+-- AUTO_INCREMENT for table `questions`
 --
-ALTER TABLE `posts`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+ALTER TABLE `questions`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
+
+--
+-- AUTO_INCREMENT for table `question_user_like_dislike`
+--
+ALTER TABLE `question_user_like_dislike`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `replies`
+--
+ALTER TABLE `replies`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+
+--
+-- AUTO_INCREMENT for table `reply_user_like_dislike`
+--
+ALTER TABLE `reply_user_like_dislike`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `report_questions`
+--
+ALTER TABLE `report_questions`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT for table `report_replies`
+--
+ALTER TABLE `report_replies`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `restaurants`
+--
+ALTER TABLE `restaurants`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `study_sessions`
+--
+ALTER TABLE `study_sessions`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `temporary_files`
 --
 ALTER TABLE `temporary_files`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=138;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=190;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `user_sessions`
 --
 ALTER TABLE `user_sessions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=358;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
@@ -868,28 +1020,6 @@ ALTER TABLE `bookmarks`
   ADD CONSTRAINT `bookmarks_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `comments`
---
-ALTER TABLE `comments`
-  ADD CONSTRAINT `comments_material_id_foreign` FOREIGN KEY (`material_id`) REFERENCES `materials` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `comments_parent_id_foreign` FOREIGN KEY (`parent_id`) REFERENCES `comments` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `comments_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
-
---
--- Constraints for table `comment_dislikes`
---
-ALTER TABLE `comment_dislikes`
-  ADD CONSTRAINT `comment_dislikes_comment_id_foreign` FOREIGN KEY (`comment_id`) REFERENCES `comments` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `comment_dislikes_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
-
---
--- Constraints for table `comment_likes`
---
-ALTER TABLE `comment_likes`
-  ADD CONSTRAINT `comment_likes_comment_id_foreign` FOREIGN KEY (`comment_id`) REFERENCES `comments` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `comment_likes_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
-
---
 -- Constraints for table `courses`
 --
 ALTER TABLE `courses`
@@ -900,6 +1030,13 @@ ALTER TABLE `courses`
 --
 ALTER TABLE `departments`
   ADD CONSTRAINT `departments_college_id_foreign` FOREIGN KEY (`college_id`) REFERENCES `colleges` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `expertise_user`
+--
+ALTER TABLE `expertise_user`
+  ADD CONSTRAINT `expertise_user_expertise_id_foreign` FOREIGN KEY (`expertise_id`) REFERENCES `courses` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `expertise_user_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `files`
@@ -922,12 +1059,86 @@ ALTER TABLE `follows`
   ADD CONSTRAINT `follows_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
+-- Constraints for table `marketplaces`
+--
+ALTER TABLE `marketplaces`
+  ADD CONSTRAINT `marketplaces_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `materials`
 --
 ALTER TABLE `materials`
   ADD CONSTRAINT `materials_course_id_foreign` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `materials_material_type_id_foreign` FOREIGN KEY (`material_type_id`) REFERENCES `material_types` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `materials_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `material_reports`
+--
+ALTER TABLE `material_reports`
+  ADD CONSTRAINT `material_reports_material_id_foreign` FOREIGN KEY (`material_id`) REFERENCES `materials` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `material_reports_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `questions`
+--
+ALTER TABLE `questions`
+  ADD CONSTRAINT `questions_department_id_foreign` FOREIGN KEY (`department_id`) REFERENCES `departments` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `questions_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `question_user_like_dislike`
+--
+ALTER TABLE `question_user_like_dislike`
+  ADD CONSTRAINT `question_user_like_dislike_question_id_foreign` FOREIGN KEY (`question_id`) REFERENCES `questions` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `question_user_like_dislike_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `replies`
+--
+ALTER TABLE `replies`
+  ADD CONSTRAINT `replies_question_id_foreign` FOREIGN KEY (`question_id`) REFERENCES `questions` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `replies_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `reply_user_like_dislike`
+--
+ALTER TABLE `reply_user_like_dislike`
+  ADD CONSTRAINT `reply_user_like_dislike_reply_id_foreign` FOREIGN KEY (`reply_id`) REFERENCES `replies` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `reply_user_like_dislike_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `report_questions`
+--
+ALTER TABLE `report_questions`
+  ADD CONSTRAINT `report_questions_question_id_foreign` FOREIGN KEY (`question_id`) REFERENCES `questions` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `report_questions_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `report_replies`
+--
+ALTER TABLE `report_replies`
+  ADD CONSTRAINT `report_replies_reply_id_foreign` FOREIGN KEY (`reply_id`) REFERENCES `replies` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `report_replies_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `restaurants`
+--
+ALTER TABLE `restaurants`
+  ADD CONSTRAINT `restaurants_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `study_sessions`
+--
+ALTER TABLE `study_sessions`
+  ADD CONSTRAINT `study_sessions_course_id_foreign` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `study_sessions_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `users`
+--
+ALTER TABLE `users`
+  ADD CONSTRAINT `users_major_id_foreign` FOREIGN KEY (`major_id`) REFERENCES `departments` (`id`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `user_sessions`
