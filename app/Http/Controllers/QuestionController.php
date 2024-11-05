@@ -121,7 +121,7 @@ class QuestionController extends Controller
     {
         $user = Auth::user();
 
-        // Check if the user already has a like or dislike for the question
+        // Check if the user already like or dislike for the question
         $Action = QuestionUserLikeDislike::where('question_id', $question->id)
             ->where('user_id', $user->id)
             ->first();
@@ -153,7 +153,7 @@ class QuestionController extends Controller
     {
         $user = Auth::user();
 
-        // Check if the user already has a like or dislike for the question
+        // Check if the user already like or dislike for the question
         $action = QuestionUserLikeDislike::where('question_id', $question->id)
             ->where('user_id', $user->id)
             ->first();
@@ -186,7 +186,7 @@ class QuestionController extends Controller
     {
         $user = Auth::user();
 
-        // Check if the user already has a like or dislike for the reply
+        // Check if the user already like or dislike for the reply
         $action = ReplyUserLikeDislike::where('reply_id', $replyId)
             ->where('user_id', $user->id)
             ->first();
@@ -220,7 +220,7 @@ class QuestionController extends Controller
     {
         $user = Auth::user();
 
-        // Check if the user already has a like or dislike for the reply
+        // Check if the user already like or dislike for the reply
         $action = ReplyUserLikeDislike::where('reply_id', $replyId)
             ->where('user_id', $user->id)
             ->first();
@@ -233,7 +233,7 @@ class QuestionController extends Controller
                 $reply->decrement('dislikes');
                 $action->delete();
             } else {
-                // If user liked, change like to dislike
+                // If user liked change like to dislike
                 $reply->increment('dislikes');
                 $reply->decrement('likes');
                 $action->update(['type' => 'dislike']);
