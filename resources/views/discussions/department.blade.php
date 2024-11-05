@@ -160,7 +160,7 @@
 @section('content')
     <div class="container">
         <div class="mt-4">
-            <h2>{{ $department->name }} Chat</h2>
+            <h2>{{ $department->name }} Discussions</h2>
         </div>
         <div class="mt-4 question-section">
             <h3>Questions ( {{ $questions->count() }} )</h3>

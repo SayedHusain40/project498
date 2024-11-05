@@ -19,7 +19,7 @@ class QuestionController extends Controller
     {
         $departments = Department::all();
 
-        return view('chats.index', compact('departments'));
+        return view('Discussions.index', compact('departments'));
     }
     public function show(Department $department)
     {
@@ -28,7 +28,7 @@ class QuestionController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('chats.department', compact('department', 'questions'));
+        return view('Discussions.department', compact('department', 'questions'));
     }
 
     public function store(Request $request)
