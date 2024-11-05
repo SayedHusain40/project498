@@ -22,6 +22,7 @@ use App\Http\Controllers\MarketplaceController;
 use App\Http\Controllers\StudySessionController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\UserUploadsController;
+use App\Http\Controllers\QuestionController;
 
 //admin
 use App\Http\Controllers\Admin\HomeController;
@@ -41,9 +42,9 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 Route::get('/materials', [MaterialController::class, 'index'])->name('materials');
 Route::get('/materials/{material}', [MaterialController::class, 'show'])->name('materials.show');
 
-// chat
-Route::get('/chats', [ChatsController::class, 'index'])->name('chats.index');
-Route::get('chats/departments/{department}', [ChatsController::class, 'show'])->name('chats.department');
+// Dissections
+Route::get('/departments/questions', [QuestionController::class, 'index'])->name('chats.index');
+Route::get('/departments/{department}/questions', [QuestionController::class, 'show'])->name('chats.department');
 
 Route::middleware('auth')->group(function () {
 
@@ -83,12 +84,19 @@ Route::middleware('auth')->group(function () {
     // report
     Route::post('/report/submit', [UserReportController::class, 'submit'])->name('user_report.submit');
 
-    // chat
-    Route::post('/departments/{department}/comments', [ChatsController::class, 'storeComment'])->name('comments.store');
-    Route::post('/comments/{comment}/reply', [ChatsController::class, 'storeReply'])->name('replies.store');
-    Route::post('/comments/{comment}/{action}', [ChatsController::class, 'likeDislikeComment'])->name('comments.likeDislike');
-    Route::delete('/comments/{comment}', [ChatsController::class, 'destroy'])->name('comments.destroy');
-    Route::put('/comments/{comment}', [ChatsController::class, 'update'])->name('comments.update');
+    // Dissections
+    Route::post('/departments/questions', [QuestionController::class, 'store'])->name('questions.store');
+    Route::post('/departments/questions/{question}/replies', [QuestionController::class, 'storeReply']);
+    Route::put('/departments/questions/{question}', [QuestionController::class, 'update'])->name('questions.update');
+    Route::put('/departments/questions/{question}/replies/{reply}', [QuestionController::class, 'updateReply'])->name('replies.update');
+    Route::post('/questions/{question}/like', [QuestionController::class, 'like']);
+    Route::post('/questions/{question}/dislike', [QuestionController::class, 'dislike']);
+    Route::post('/replies/{reply}/like', [QuestionController::class, 'likeReply']);
+    Route::post('/replies/{reply}/dislike', [QuestionController::class, 'dislikeReply']);
+    Route::delete('/questions/{question}', [QuestionController::class, 'destroyQuestion'])->name('questions.destroy');
+    Route::delete('/replies/{reply}', [QuestionController::class, 'destroyReply'])->name('replies.destroy');
+    Route::post('/report', [QuestionController::class, 'reportContent']);
+
 
     //user profile
     Route::post('/users/profile', [UserProfileController::class, 'profile'])->name('users.profile');

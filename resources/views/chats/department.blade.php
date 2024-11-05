@@ -1,6 +1,12 @@
 @extends('new_layouts.app')
+
 @section('styles')
     <style>
+        .btn.active {
+            background-color: #007bff;
+            color: white;
+        }
+
         .modal-icon {
             font-size: 3rem;
             color: #dc3545;
@@ -49,67 +55,68 @@
             margin-top: 0.5rem;
         }
 
-        .comment {
+        .question {
             margin-top: 1rem;
             margin-bottom: 1rem;
         }
 
-        .comment-section {
+        .question-section {
             border: 1px solid #e9ebee;
             border-radius: 1rem;
             padding: 1.5rem;
             background-color: #ffffff;
-            /* box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1); */
         }
 
-        .comment-header {
+        .question-header {
             border-bottom: 1px solid #e9ebee;
             padding-bottom: 0.75rem;
             margin-bottom: 1rem;
         }
 
-        .comment-avatar {
+        .question-avatar {
             height: 48px;
             width: 48px;
             border-radius: 50%;
             margin-right: 1rem;
         }
 
-        .comment-author {
+        .question-author {
             font-size: 1rem;
             font-weight: 600;
         }
 
-        .comment-time {
+        .question-time {
             font-size: 0.875rem;
             color: #90949c;
         }
 
-        .comment-body {
+        .question-body {
             margin: 0.75rem 0;
             font-size: 1rem;
         }
 
-        .comment-actions a {
+        .question-actions a {
             font-size: 0.875rem;
             color: #4267b2;
             text-decoration: none;
             margin-right: 1rem;
+            []
         }
 
-        .comment-actions i {
+        .question-actions i {
             margin-right: 0.5rem;
+        }
+
+        .reply {
+            border-left: 1px solid #8080806b;
+            padding-left: 1rem;
+            margin-top: 1rem;
         }
 
         .reply-list {
             margin-top: 1rem;
             padding-left: 2rem;
-        }
-
-        .reply-list .comment {
-            border-left: 1px dotted #d3d6db;
-            padding-left: 1rem;
-            margin-top: 1rem;
+            display: none;
         }
 
         .reply-toggle {
@@ -127,7 +134,7 @@
             z-index: 10;
         }
 
-        .comment-input {
+        .question-input {
             border-radius: 0.5rem;
         }
 
@@ -149,285 +156,197 @@
         }
     </style>
 @endsection
-@php
-    if (auth()->check()) {
-        if (auth()->user()->role === 'user') {
-            $role = 'user';
-        }
-    } else {
-        $role = 'guest';
-    }
-@endphp
+
 @section('content')
     <div class="container">
         <div class="mt-4">
             <h2>{{ $department->name }} Chat</h2>
         </div>
-        <div class="mt-4 comment-section">
-            <h3>َQuestions ( {{ $comments->count() }} )</h3>
-            <div class="comment-header d-flex justify-content-between align-items-center">
-            </div>
-            <div class="comment-body">
+        <div class="mt-4 question-section">
+            <h3>Questions ( {{ $questions->count() }} )</h3>
+            <div class="question-body">
                 <div class="d-flex mb-3">
                     <img src="https://static.xx.fbcdn.net/rsrc.php/v1/yi/r/odA9sNLrE86.jpg" alt="avatar"
-                        class="comment-avatar">
+                        class="question-avatar">
                     <div class="w-100">
-                        <form id="comment-form" action="{{ route('comments.store', $department) }}" method="POST">
-                            @csrf
-                            <div class="d-flex flex-column">
-                                
-                                <textarea name="content" class="form-control comment-input" placeholder="Write a question..." rows="3"></textarea>
-                                <div class="d-flex justify-content-between mt-2">
-                                    <div id="comment-form-error" class="text-danger"></div>
-                                    @if ($role === 'user')
-                                        <button type="submit" class="btn btn-primary">Post Your Question</button>
-                                    @else
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                            data-bs-target="#loginModal">
-                                            Post Your َQuestion
-                                        </button>
-                                    @endif
-                                </div>
-                            </div>
-                        </form>
+                        <textarea id="question-input" class="form-control question-input" placeholder="Write a question..." rows="3"></textarea>
+                        <div class="d-flex justify-content-between mt-2">
+                            <div class="text-danger" id="error-message"></div>
+                            @if (auth()->check())
+                                <button type="button" onclick="postQuestion()" id="post-question-btn"
+                                    class="btn btn-primary">Post Your Question</button>
+                            @else
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#loginSignupModal">Post Your Question</button>
+                            @endif
+                        </div>
                     </div>
                 </div>
-                <div id="comment-list" class="comment-list">
-                    @foreach ($comments as $comment)
-                        <div class="comment" data-comment-id="{{ $comment->id }}">
+
+                <div id="question-list" class="question-list">
+                    @foreach ($questions as $question)
+                        <div class="question" data-question-id="{{ $question->id }}">
                             <div class="d-flex">
                                 <img src="https://static.xx.fbcdn.net/rsrc.php/v1/yi/r/odA9sNLrE86.jpg" alt="avatar"
-                                    class="comment-avatar">
+                                    class="question-avatar">
                                 <div class="w-100">
                                     <div class="d-flex justify-content-between align-items-start">
                                         <div>
-                                            <div class="comment-author">
-                                                {{ $comment->user_id === auth()->id() ? 'You' : $comment->user->name }}
-                                            </div>
-                                            <div class="comment-time">{{ $comment->created_at->diffForHumans() }}</div>
+                                            <div class="question-author">{{ $question->user->name }}</div>
+                                            <div class="question-time">{{ $question->created_at->diffForHumans() }}</div>
                                         </div>
-                                        <div class="dropdown">
-                                            <button class="btn btn-link dropdown-toggle" type="button"
-                                                id="dropdownMenuButton{{ $comment->id }}" data-bs-toggle="dropdown"
-                                                aria-expanded="false">
-                                                <i class="fa-solid fa-ellipsis-vertical"></i>
-                                            </button>
-                                            <ul class="dropdown-menu"
-                                                aria-labelledby="dropdownMenuButton{{ $comment->id }}">
-                                                @if ($role === 'user')
-                                                    @if ($comment->user_id === auth()->id())
-                                                        <li><a class="dropdown-item" href="#" data-action="edit"
-                                                                data-comment-id="{{ $comment->id }}">Edit</a></li>
-                                                        <li><a class="dropdown-item text-danger" href="#"
-                                                                data-action="delete"
-                                                                data-comment-id="{{ $comment->id }}">Delete</a></li>
+                                        <div class="question-actions">
+                                            <div class="dropdown">
+                                                <button class="btn btn-light dropdown-toggle" type="button"
+                                                    id="dropdownMenuButton{{ $question->id }}" data-bs-toggle="dropdown"
+                                                    aria-expanded="false">...</button>
+                                                <ul class="dropdown-menu"
+                                                    aria-labelledby="dropdownMenuButton{{ $question->id }}">
+                                                    @if (Auth::check() && Auth::user()->id === $question->user_id)
+                                                        <li>
+                                                            <button class="dropdown-item"
+                                                                onclick="editQuestion({{ $question->id }})">Edit</button>
+                                                        </li>
+                                                        <li>
+                                                            <button class="dropdown-item"
+                                                                onclick="confirmDeleteQuestion({{ $question->id }})">Delete</button>
+                                                        </li>
                                                     @endif
-                                                    <li>
-                                                        <a href="#" class="dropdown-item report-comment"
-                                                            data-comment-id="{{ $comment->id }}" data-bs-toggle="modal"
-                                                            data-bs-target="#reportModal">Report</a>
-                                                    </li>
-                                                @else
-                                                    <!-- Report Action -->
-                                                    <li>
-                                                        <a href="#" class="dropdown-item report-comment"
-                                                            data-comment-id="{{ $comment->id }}"
-                                                            {{ auth()->check() ? 'data-bs-toggle=modal data-bs-target=#reportModal' : 'data-bs-toggle=modal data-bs-target=#loginModal' }}>
-                                                            Report
-                                                        </a>
-                                                    </li>
-                                                @endif
-                                            </ul>
+                                                    @if (auth()->check())
+                                                        <button class="dropdown-item" data-bs-toggle="modal"
+                                                            data-bs-target="#reportModal"
+                                                            onclick="setReportData('question', {{ $question->id }})">Report</button>
+                                                    @else
+                                                        <button class="dropdown-item" data-bs-toggle="modal"
+                                                            data-bs-target="#loginSignupModal"
+                                                            onclick="setReportData('question', {{ $question->id }})">Report</button>
+                                                    @endif
+
+                                                </ul>
+                                            </div>
                                         </div>
-
                                     </div>
-                                    <div class="comment-body">{{ $comment->content }}</div>
-                                    <div class="comment-actions">
-                                        @if ($role === 'user')
-                                            <a href="#"
-                                                class="like-button {{ $comment->likes()->where('user_id', auth()->id())->exists() ? 'active' : '' }}"
-                                                data-action="like" data-comment-id="{{ $comment->id }}">
-                                                <i class="fa-solid fa-thumbs-up"></i>
-                                                <span class="like-dislike-count">{{ $comment->likes }}</span>
-                                            </a>
-                                            <a href="#"
-                                                class="dislike-button {{ $comment->dislikes()->where('user_id', auth()->id())->exists() ? 'active' : '' }}"
-                                                data-action="dislike" data-comment-id="{{ $comment->id }}">
-                                                <i class="fa-solid fa-thumbs-down"></i>
-                                                <span class="like-dislike-count">{{ $comment->dislikes }}</span>
-                                            </a>
-                                            <a href="#" class="reply-link" data-comment-id="{{ $comment->id }}"
-                                                data-author="{{ $comment->user->name }}">
-                                                <i class="fa-solid fa-reply"></i> Reply
-                                            </a>
+                                    <div class="question-body">{{ $question->content }}</div>
+                                    <div class="question-actions d-flex align-items-center mt-2">
+                                        @if (auth()->check())
+                                            <button href="#" class="btn btn-light me-2"
+                                                onclick="toggleLike({{ $question->id }})">👍 <span
+                                                    class="like-count">{{ $question->likes }}</span></button>
+                                            <button href="#" class="btn btn-light me-2"
+                                                onclick="toggleDislike({{ $question->id }})">👎 <span
+                                                    class="dislike-count">{{ $question->dislikes }}</span></button>
                                         @else
-                                            <!-- Like Button -->
-                                            <a href="#" data-action="like" data-comment-id="{{ $comment->id }}"
-                                                {{ auth()->check() ? '' : 'data-bs-toggle=modal data-bs-target=#loginModal' }}>
-                                                <i class="fa-solid fa-thumbs-up"></i>
-                                                <span class="like-dislike-count">{{ $comment->likes }}</span>
-                                            </a>
-
-                                            <!-- Dislike Button -->
-                                            <a href="#" data-action="dislike" data-comment-id="{{ $comment->id }}"
-                                                {{ auth()->check() ? '' : 'data-bs-toggle=modal data-bs-target=#loginModal' }}>
-                                                <i class="fa-solid fa-thumbs-down"></i>
-                                                <span class="like-dislike-count">{{ $comment->dislikes }}</span>
-                                            </a>
-
-                                            <!-- Reply Button -->
-                                            <a href="#" data-comment-id="{{ $comment->id }}"
-                                                data-author="{{ $comment->user->name }}"
-                                                {{ auth()->check() ? '' : 'data-bs-toggle=modal data-bs-target=#loginModal' }}>
-                                                <i class="fa-solid fa-reply"></i> Reply
-                                            </a>
+                                            <button class="btn btn-light me-2" data-bs-toggle="modal"
+                                                data-bs-target="#loginSignupModal">👍 <span
+                                                    class="like-count">{{ $question->likes }}</span></button>
+                                            <button class="btn btn-light me-2" data-bs-toggle="modal"
+                                                data-bs-target="#loginSignupModal">👎 <span
+                                                    class="dislike-count">{{ $question->dislikes }}</span></button>
+                                        @endif
+                                        @if (auth()->check())
+                                            <button class="btn btn-light"
+                                                onclick="toggleReplyForm({{ $question->id }})">Reply<i
+                                                    class="fa-solid fa-reply ms-2"></i></button>
+                                        @else
+                                            <button class="btn btn-light" data-bs-toggle="modal"
+                                                data-bs-target="#loginSignupModal">Reply<i
+                                                    class="fa-solid fa-reply ms-2"></i></button>
                                         @endif
 
                                     </div>
-                                    <div class="reply-toggle" onclick="toggleReplies(this)">View replies</div>
-
-                                    <form class="reply-form" action="{{ route('replies.store', $comment) }}"
-                                        method="POST">
-                                        @csrf
-                                        <div class="d-flex flex-column">
-                                            <textarea name="content" class="form-control comment-input" placeholder="Write a reply..." rows="2"></textarea>
-                                            <div class="d-flex justify-content-between mt-2">
-                                                <div id="comment-form-error" class="text-danger" style="display: none;">
-                                                    Error: Reply cannot be empty
-                                                </div>
-                                                <button type="submit" class="btn btn-primary ms-auto">Post Reply</button>
-                                            </div>
-                                        </div>
-
-                                    </form>
-                                    <div class="reply-list" style="display: none;">
-                                        @foreach ($comment->replies as $reply)
-                                            <div class="comment reply" data-comment-id="{{ $reply->id }}">
+                                    <div class="reply-toggle" onclick="toggleReplyList({{ $question->id }})">View
+                                        {{ $question->replyCount() }} Replies</div>
+                                    <div class="reply-list" id="reply-list-{{ $question->id }}">
+                                        @foreach ($question->replies as $reply)
+                                            <div class="question reply" data-question-id="{{ $reply->id }}">
                                                 <div class="d-flex">
                                                     <img src="https://static.xx.fbcdn.net/rsrc.php/v1/yi/r/odA9sNLrE86.jpg"
-                                                        alt="avatar" class="comment-avatar">
+                                                        alt="avatar" class="question-avatar">
                                                     <div class="w-100">
                                                         <div class="d-flex justify-content-between align-items-start">
                                                             <div>
-                                                                <div class="comment-author">
-                                                                    {{ $reply->user_id === auth()->id() ? 'You' : $reply->user->name }}
-                                                                </div>
-                                                                <div class="comment-time">
+                                                                <div class="question-author">{{ $reply->user->name }}</div>
+                                                                <div class="question-time">
                                                                     {{ $reply->created_at->diffForHumans() }}</div>
                                                             </div>
-                                                            <div class="dropdown">
-                                                                <button class="btn btn-link dropdown-toggle"
-                                                                    type="button"
-                                                                    id="dropdownMenuButton{{ $reply->id }}"
-                                                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                                                    <i class="fa-solid fa-ellipsis-vertical"></i>
-                                                                </button>
-                                                                <ul class="dropdown-menu"
-                                                                    aria-labelledby="dropdownMenuButton{{ $reply->id }}">
-                                                                    @if ($role === 'user')
-                                                                        @if ($reply->user_id === auth()->id())
-                                                                            <li><a class="dropdown-item" href="#"
-                                                                                    data-action="edit"
-                                                                                    data-comment-id="{{ $reply->id }}">Edit</a>
+                                                            <div class="question-actions">
+                                                                <div class="dropdown">
+                                                                    <button class="btn btn-light dropdown-toggle"
+                                                                        type="button"
+                                                                        id="dropdownMenuButtonReply{{ $reply->id }}"
+                                                                        data-bs-toggle="dropdown"
+                                                                        aria-expanded="false">...</button>
+                                                                    <ul class="dropdown-menu"
+                                                                        aria-labelledby="dropdownMenuButtonReply{{ $reply->id }}">
+                                                                        @if (Auth::check() && Auth::user()->id === $reply->user_id)
+                                                                            <li>
+                                                                                <button class="dropdown-item"
+                                                                                    onclick="editReply({{ $question->id }}, {{ $reply->id }})">Edit</button>
                                                                             </li>
-                                                                            <li><a class="dropdown-item text-danger"
-                                                                                    href="#" data-action="delete"
-                                                                                    data-comment-id="{{ $reply->id }}">Delete</a>
+                                                                            <li>
+                                                                                <button class="dropdown-item"
+                                                                                    onclick="confirmDeleteReply({{ $reply->id }})">Delete</button>
                                                                             </li>
                                                                         @endif
                                                                         <li>
-                                                                            <a href="#"
-                                                                                class="dropdown-item report-comment"
-                                                                                data-comment-id="{{ $reply->id }}"
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#reportModal">Report</a>
-                                                                        </li>
-                                                                    @else
-                                                                        <!-- Report Action -->
-                                                                        <li>
-                                                                            <a href="#"
-                                                                                class="dropdown-item report-comment"
-                                                                                data-comment-id="{{ $reply->id }}"
-                                                                                {{ auth()->check() ? 'data-bs-toggle=modal data-bs-target=#reportModal' : 'data-bs-toggle=modal data-bs-target=#loginModal' }}>
-                                                                                Report
-                                                                            </a>
-                                                                        </li>
-                                                                    @endif
-                                                                </ul>
-                                                            </div>
+                                                                            @if (auth()->check())
+                                                                                <button class="dropdown-item"
+                                                                                    data-bs-toggle="modal"
+                                                                                    data-bs-target="#reportModal"
+                                                                                    onclick="setReportData('reply', {{ $reply->id }})">Report</button>
+                                                                            @else
+                                                                                <button class="dropdown-item"
+                                                                                    data-bs-toggle="modal"
+                                                                                    data-bs-target="#loginSignupModal">Report</button>
+                                                                            @endif
 
-                                                        </div>
-                                                        <div class="comment-body">
-                                                            {{-- @if ($reply->parent)
-                                                                <a href="#"
-                                                                    class="reply-mention">{{ '@' . $reply->parent->user->name }}</a>
-                                                            @endif --}}
-                                                            <span class="reply-content">{{ $reply->content }}</span>
-                                                        </div>
-                                                        <div class="comment-actions">
-                                                            @if ($role === 'user')
-                                                                <a href="#"
-                                                                    class="like-button {{ $reply->likes()->where('user_id', auth()->id())->exists() ? 'active' : '' }}"
-                                                                    data-action="like"
-                                                                    data-comment-id="{{ $reply->id }}">
-                                                                    <i class="fa-solid fa-thumbs-up"></i>
-                                                                    <span
-                                                                        class="like-dislike-count">{{ $reply->likes }}</span>
-                                                                </a>
-                                                                <a href="#"
-                                                                    class="dislike-button {{ $reply->dislikes()->where('user_id', auth()->id())->exists() ? 'active' : '' }}"
-                                                                    data-action="dislike"
-                                                                    data-comment-id="{{ $reply->id }}">
-                                                                    <i class="fa-solid fa-thumbs-down"></i>
-                                                                    <span
-                                                                        class="like-dislike-count">{{ $reply->dislikes }}</span>
-                                                                </a>
-                                                                {{-- <a href="#" class="reply-link"
-                                                                data-comment-id="{{ $reply->id }}"
-                                                                data-author="{{ $reply->user->name }}">
-                                                                <i class="fa-solid fa-reply"></i> Reply
-                                                            </a> --}}
-                                                            @else
-                                                                <!-- Like Button for Reply -->
-                                                                <a href="#" data-action="like"
-                                                                    data-comment-id="{{ $reply->id }}"
-                                                                    {{ auth()->check() ? '' : 'data-bs-toggle=modal data-bs-target=#loginModal' }}>
-                                                                    <i class="fa-solid fa-thumbs-up"></i>
-                                                                    <span
-                                                                        class="like-dislike-count">{{ $reply->likes }}</span>
-                                                                </a>
+                                                                        </li>
 
-                                                                <!-- Dislike Button for Reply -->
-                                                                <a href="#" data-action="dislike"
-                                                                    data-comment-id="{{ $reply->id }}"
-                                                                    {{ auth()->check() ? '' : 'data-bs-toggle=modal data-bs-target=#loginModal' }}>
-                                                                    <i class="fa-solid fa-thumbs-down"></i>
-                                                                    <span
-                                                                        class="like-dislike-count">{{ $reply->dislikes }}</span>
-                                                                </a>
-                                                            @endif
-                                                        </div>
-                                                        <form class="reply-form"
-                                                            action="{{ route('replies.store', $reply) }}" method="POST">
-                                                            @csrf
-                                                            <div class="d-flex flex-column">
-                                                                <textarea name="content" class="form-control comment-input" placeholder="Write a reply..." rows="2"></textarea>
-                                                                <div class="d-flex justify-content-between mt-2">
-                                                                    <div id="comment-form-error" class="text-danger"
-                                                                        style="display: none;">
-                                                                        Error: Reply cannot be empty
-                                                                    </div>
-                                                                    <button type="submit"
-                                                                        class="btn btn-primary ms-auto">Post Reply</button>
+                                                                    </ul>
                                                                 </div>
                                                             </div>
-
-                                                        </form>
+                                                        </div>
+                                                        <div class="question-body">{{ $reply->content }}</div>
+                                                        <div class="question-actions d-flex align-items-center mt-2">
+                                                            @if (auth()->check())
+                                                                <button href="#" class="btn btn-light me-2"
+                                                                    onclick="toggleReplyLike({{ $reply->id }})">👍
+                                                                    <span
+                                                                        class="like-count">{{ $reply->likes }}</span></button>
+                                                                <button href="#" class="btn btn-light me-2"
+                                                                    onclick="toggleReplyDislike({{ $reply->id }})">👎
+                                                                    <span
+                                                                        class="dislike-count">{{ $reply->dislikes }}</span></button>
+                                                            @else
+                                                                <button class="btn btn-light me-2" data-bs-toggle="modal"
+                                                                    data-bs-target="#loginSignupModal">👍 <span
+                                                                        class="like-count">{{ $reply->likes }}</span></button>
+                                                                <button class="btn btn-light me-2" data-bs-toggle="modal"
+                                                                    data-bs-target="#loginSignupModal">👎 <span
+                                                                        class="dislike-count">{{ $reply->dislikes }}</span></button>
+                                                            @endif
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            {{-- @include('materials.comment', ['replies' => $reply->replies]) --}}
                                         @endforeach
+                                    </div>
+                                    <div class="reply-form" id="reply-form-{{ $question->id }}" style="display: none;">
+                                        <div class="d-flex">
+                                            <img src="https://static.xx.fbcdn.net/rsrc.php/v1/yi/r/odA9sNLrE86.jpg"
+                                                alt="avatar" class="question-avatar">
+                                            <div class="w-100">
+                                                <textarea class="form-control question-input" placeholder="Write a reply..." rows="2"></textarea>
+                                                @if (auth()->check())
+                                                    <button type="button" class="btn btn-primary mt-2"
+                                                        onclick="postReply({{ $question->id }})">Post Reply</button>
+                                                @else
+                                                    <button type="button" class="btn btn-primary mt-2"
+                                                        data-bs-toggle="modal" data-bs-target="#loginSignupModal">Post
+                                                        Reply</button>
+                                                @endif
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -438,63 +357,82 @@
         </div>
     </div>
 
-    <!-- Login Modal -->
-    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="loginModalLabel">Login Required</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    You need to be logged in to perform this action. Please log in or sign up to continue.
-                </div>
-                <div class="modal-footer">
-                    <a href="{{ route('login') }}" class="btn btn-primary">Log In</a>
-                    <a href="{{ route('register') }}" class="btn btn-secondary">Sign Up</a>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Modal for delete confirmation -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+
+    <!-- Delete Question Confirmation Modal -->
+    <div class="modal fade" id="deleteQuestionModal" tabindex="-1" aria-labelledby="deleteQuestionModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-body text-center">
                     <div class="mb-3">
                         <i class="fa-solid fa-triangle-exclamation modal-icon"></i>
                     </div>
-                    <h5 class="modal-title" id="deleteModalLabel">Delete Comment</h5>
-                    <p>Are you sure you want to delete this comment?</p>
+                    <h5 class="modal-title" id="deleteQuestionModalLabel">Delete Question</h5>
+                    <p>Are you sure you want to delete this question?</p>
                 </div>
                 <div class="modal-footer d-flex justify-content-center">
-                    <button type="button" class="btn btn-danger ms-2" id="confirmDelete">Delete</button>
+                    <button type="button" class="btn btn-danger ms-2" id="confirmDeleteQuestionButton">Delete</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Delete Reply Confirmation Modal -->
+    <div class="modal fade" id="deleteReplyModal" tabindex="-1" aria-labelledby="deleteReplyModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <div class="mb-3">
+                        <i class="fa-solid fa-triangle-exclamation modal-icon"></i>
+                    </div>
+                    <h5 class="modal-title" id="deleteReplyModalLabel">Delete Reply</h5>
+                    <p>Are you sure you want to delete this reply?</p>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button type="button" class="btn btn-danger ms-2" id="confirmDeleteReplyButton">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Report Modal -->
     <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
+                <div class="modal-body text-center">
+                    <div class="mb-3">
+                        <i class="fa-solid fa-flag modal-icon"></i>
+                    </div>
+                    <h5 class="modal-title" id="reportModalLabel">Report Content</h5>
+                    <p>Please enter your reason for reporting this content:</p>
+                    <textarea id="reportReason" class="form-control mt-3" placeholder="Enter your reason here..." rows="3"></textarea>
+                    <div id="reportError" class="text-danger mt-2" style="display: none;"></div>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button type="button" class="btn btn-primary" id="submitReportButton">Submit Report</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login/Signup Modal -->
+    <div class="modal fade" id="loginSignupModal" tabindex="-1" aria-labelledby="loginSignupModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="reportModalLabel">Report Comment</h5>
+                    <h5 class="modal-title" id="loginSignupModalLabel">Login or Sign Up</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <p>Are you sure you want to report this comment?</p>
-                    <textarea id="reportReason" class="form-control" rows="4"
-                        placeholder="Please provide a reason for reporting..."></textarea>
-                    <input type="hidden" id="report_id" name="report_id">
-                    <input type="hidden" id="report_type" name="report_type" value="comment">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger" id="confirmReport">Report</button>
+                <div class="modal-body text-center">
+                    <p>You need to be logged in to perform this action.</p>
+                    <a href="{{ route('login') }}" class="btn btn-primary">Login</a>
+                    <a href="{{ route('register') }}" class="btn btn-secondary">Sign Up</a>
                 </div>
             </div>
         </div>
@@ -503,496 +441,479 @@
 
 @section('scripts')
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.body.addEventListener('click', function(event) {
-                if (event.target.classList.contains('report-comment')) {
-                    const commentId = event.target.getAttribute('data-comment-id');
-                    document.getElementById('report_id').value = commentId;
-                    document.getElementById('report_type').value = 'comment';
-                }
-            });
+        function toggleReplyList(questionId) {
+            const replyList = document.getElementById(`reply-list-${questionId}`);
+            replyList.style.display = replyList.style.display === 'none' || replyList.style.display === '' ? 'block' :
+                'none';
+        }
 
-            const confirmReportButton = document.getElementById('confirmReport');
-            if (confirmReportButton) {
-                confirmReportButton.addEventListener('click', function() {
-                    const reportForm = new FormData();
-                    reportForm.append('report_id', document.getElementById('report_id').value);
-                    reportForm.append('report_type', document.getElementById('report_type').value);
-                    reportForm.append('reason', document.getElementById('reportReason').value);
+        function postQuestion() {
+            const content = document.getElementById('question-input').value.trim();
+            const departmentId = {{ $department->id }};
 
-                    fetch('{{ route('user_report.submit') }}', {
-                            method: 'POST',
-                            body: reportForm,
-                            headers: {
-                                'X-Requested-With': 'XMLHttpRequest',
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                    .getAttribute('content')
-                            }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                const modal = bootstrap.Modal.getInstance(document.getElementById(
-                                    'reportModal'));
-                                modal.hide();
-                            } else {
-                                console.error('Error:', data.error);
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Something went wrong:', error);
-                        });
-                });
+            // Clear previous error message
+            const errorMessageElem = document.getElementById('error-message');
+            errorMessageElem.textContent = '';
+
+            if (!content) {
+                errorMessageElem.textContent = 'Question content cannot be empty.';
+                return; // exit
             }
-        });
-    </script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const commentList = document.getElementById('comment-list');
+            fetch('/departments/questions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    },
+                    body: JSON.stringify({
+                        content: content,
+                        department_id: departmentId
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('question-input').value = '';
 
-            // Handle edit button click
-            commentList.addEventListener('click', function(event) {
-                const button = event.target.closest('a[data-action="edit"]');
-                if (button) {
-                    event.preventDefault();
-                    const commentId = button.getAttribute('data-comment-id');
-                    const commentElement = document.querySelector(
-                        `.comment[data-comment-id="${commentId}"]`);
-                    const commentBodyElement = commentElement.querySelector('.comment-body');
-
-                    const mentionElement = commentBodyElement.querySelector('.reply-mention');
-                    const mention = mentionElement ? mentionElement.innerText.trim() : '';
-                    const contentElement = mentionElement ? mentionElement.nextElementSibling :
-                        commentBodyElement;
-                    const content = contentElement.innerText.trim();
-
-                    commentBodyElement.dataset.originalContent = commentBodyElement.innerHTML;
-
-                    const editForm = `
-                <form class="edit-comment-form" data-comment-id="${commentId}">
-                    ${mention ? `<span class="reply-mention">${mention}</span>` : ''}
-                    <textarea class="form-control">${content}</textarea>
-                    <div class="d-flex justify-content-between align-items-center mt-2">
-                        <div id="edit-form-error" class="text-danger" style="display: none;"></div>
-                        <div class="ms-auto">
-                            <button type="submit" class="btn btn-primary me-2">Save</button>
-                            <button type="button" class="btn btn-secondary cancel-edit">Cancel</button>
-                        </div>
-                    </div>
-                </form>
-            `;
-
-                    commentBodyElement.innerHTML = editForm;
-                    attachEditFormListeners(commentId);
-                }
-            });
-
-            function attachEditFormListeners(commentId) {
-                const editForm = document.querySelector(`.edit-comment-form[data-comment-id="${commentId}"]`);
-
-                editForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const textarea = this.querySelector('textarea');
-                    const content = textarea.value.trim();
-                    const mention = this.querySelector('.reply-mention') ? this.querySelector(
-                        '.reply-mention').innerText.trim() : '';
-
-                    // Check if textarea is empty
-                    if (content === '') {
-                        const errorElement = this.querySelector('#edit-form-error');
-                        errorElement.innerText = 'Error: Comment cannot be empty';
-                        errorElement.style.display = 'block';
-                        return;
-                    } else {
-                        this.querySelector('#edit-form-error').style.display =
-                            'none'; 
-                    }
-
-                    fetch(`/comments/${commentId}`, {
-                            method: 'PUT',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                    .getAttribute('content')
-                            },
-                            body: JSON.stringify({
-                                content
-                            })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                const commentBodyElement = document.querySelector(
-                                    `.comment[data-comment-id="${commentId}"] .comment-body`);
-                                const mentionElement = mention ?
-                                    `<a href="#" class="reply-mention">${mention}</a>` : '';
-                                commentBodyElement.innerHTML =
-                                    `${mentionElement} <span class="reply-content">${data.content}</span>`;
-                            } else {
-                                alert('Error updating comment.');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                        });
-                });
-
-                editForm.querySelector('.cancel-edit').addEventListener('click', function() {
-                    const originalContent = document.querySelector(
-                            `.comment[data-comment-id="${commentId}"] .comment-body`).dataset
-                        .originalContent;
-                    document.querySelector(`.comment[data-comment-id="${commentId}"] .comment-body`)
-                        .innerHTML = originalContent;
-                });
-            }
-        });
-    </script>
-
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-
-            // for delete 
-            let commentIdToDelete = null;
-
-            document.getElementById('comment-list').addEventListener('click', function(event) {
-                const button = event.target.closest('a[data-action="delete"]');
-                if (button) {
-                    event.preventDefault();
-                    commentIdToDelete = button.getAttribute('data-comment-id');
-
-                    // Show the delete confirmation modal
-                    const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-                    deleteModal.show();
-                }
-            });
-
-            document.getElementById('confirmDelete').addEventListener('click', function() {
-                if (commentIdToDelete) {
-                    fetch(`/comments/${commentIdToDelete}`, {
-                            method: 'DELETE',
-                            headers: {
-                                'X-Requested-With': 'XMLHttpRequest',
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                    .getAttribute('content'),
-                                'Content-Type': 'application/json',
-                            }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                const commentElement = document.querySelector(
-                                    `.comment[data-comment-id="${commentIdToDelete}"]`);
-                                if (commentElement) {
-                                    commentElement.remove();
-                                }
-                            } else {
-                                alert(
-                                    'Error: This comment was deleted because its parent comment was removed'
-                                );
-                            }
-                        })
-                        .catch(error => {
-                            // console.error('Error:', error);
-                            // alert('Something went wrong');
-                        });
-
-                    const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
-                    deleteModal.hide();
-                }
-            });
-
-            // for like and dislike
-            document.getElementById('comment-list').addEventListener('click', function(event) {
-                const button = event.target.closest('a');
-                if (button && (button.classList.contains('like-button') || button.classList.contains(
-                        'dislike-button'))) {
-                    event.preventDefault();
-
-                    const commentId = button.getAttribute('data-comment-id');
-                    const action = button.getAttribute('data-action');
-
-                    fetch(`/comments/${commentId}/${action}`, {
-                            method: 'POST',
-                            headers: {
-                                'X-Requested-With': 'XMLHttpRequest',
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                    .getAttribute('content'),
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                                _method: 'POST'
-                            })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                const commentElement = document.querySelector(
-                                    `.comment[data-comment-id="${commentId}"]`);
-                                const likeCount = commentElement.querySelector(
-                                    '.like-button .like-dislike-count');
-                                const dislikeCount = commentElement.querySelector(
-                                    '.dislike-button .like-dislike-count');
-
-                                likeCount.textContent = data.comment.likes;
-                                dislikeCount.textContent = data.comment.dislikes;
-
-                                if (action === 'like') {
-                                    button.classList.toggle('active');
-                                    commentElement.querySelector('.dislike-button').classList.remove(
-                                        'active');
-                                } else {
-                                    button.classList.toggle('active');
-                                    commentElement.querySelector('.like-button').classList.remove(
-                                        'active');
-                                }
-                            } else {
-                                alert(data.message || 'Error updating like/dislike');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            alert('Something went wrong');
-                        });
-                }
-            });
-
-            // For submission of the main comment form
-            document.getElementById('comment-form')?.addEventListener('submit', function(event) {
-                event.preventDefault();
-                const formData = new FormData(this);
-                const errorDiv = document.getElementById('comment-form-error');
-                errorDiv.textContent = ''; // Clear previous errors
-
-                fetch(this.action, {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                .getAttribute('content')
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            const commentList = document.getElementById('comment-list');
-                            if (commentList) {
-                                const newCommentHtml = `
-                            <div class="comment" data-comment-id="${data.comment.id}">
+                        const newQuestionElement = document.createElement('div');
+                        newQuestionElement.innerHTML = `
+                            <div class="question" data-question-id="${data.question.id}">
                                 <div class="d-flex">
-                                    <img src="https://static.xx.fbcdn.net/rsrc.php/v1/yi/r/odA9sNLrE86.jpg" alt="avatar" class="comment-avatar">
+                                    <img src="https://static.xx.fbcdn.net/rsrc.php/v1/yi/r/odA9sNLrE86.jpg" alt="avatar" class="question-avatar">
                                     <div class="w-100">
                                         <div class="d-flex justify-content-between align-items-start">
                                             <div>
-                                                <div class="comment-author">You</div>
-                                                <div class="comment-time">${data.comment.created_at}</div>
+                                                <div class="question-author">${data.question.user.name}</div>
+                                                <div class="question-time">Just Now</div>
                                             </div>
-
-                                            <div class="dropdown">
-                                                <button class="btn btn-link dropdown-toggle" type="button"
-                                                    id="dropdownMenuButton${data.comment.id}" data-bs-toggle="dropdown"
-                                                    aria-expanded="false">
-                                                    <i class="fa-solid fa-ellipsis-vertical"></i>
-                                                </button>
-                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton${data.comment.id}">
-                                                    <li><a class="dropdown-item" href="#" data-action="edit" data-comment-id="${data.comment.id}">Edit</a></li>
-                                                    <li><a class="dropdown-item text-danger" href="#" data-action="delete" data-comment-id="${data.comment.id}">Delete</a></li>
-                                                    <li>
-                                                        <a href="#" class="dropdown-item report-comment"
-                                                        data-comment-id="${data.comment.id}" data-bs-toggle="modal"
-                                                        data-bs-target="#reportModal">Report</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-
-                                        </div>
-                                        <div class="comment-body">${data.comment.content}</div>
-                                        <div class="comment-actions">
-                                            <a href="#" class="like-button" data-action="like" data-comment-id="${data.comment.id}">
-                                                <i class="fa-solid fa-thumbs-up"></i>
-                                                <span class="like-dislike-count">0</span>
-                                            </a>
-                                            <a href="#" class="dislike-button" data-action="dislike" data-comment-id="${data.comment.id}">
-                                                <i class="fa-solid fa-thumbs-down"></i>
-                                                <span class="like-dislike-count">0</span>
-                                            </a>
-                                            <a href="#" class="reply-link" data-comment-id="${data.comment.id}" data-author="${data.comment.user_name}">
-                                                <i class="fa-solid fa-reply"></i> Reply
-                                            </a>
-                                        </div>
-                                        <div class="reply-toggle" onclick="toggleReplies(this)">View replies</div>
-                                        <form class="reply-form" action="{{ route('replies.store', ':commentId') }}" method="POST" style="display: none;">
-                                            @csrf
-                                            <div class="d-flex flex-column">
-                                                <textarea name="content" class="form-control comment-input" placeholder="Write a reply..." rows="2"></textarea>
-                                                <div class="d-flex justify-content-between  mt-2">
-                                                    <div id="comment-form-error" class="text-danger" style="display: none;">
-                                                        Error: Reply cannot be empty
-                                                    </div>
-                                                    <button type="submit" class="btn btn-primary ms-auto">Post Reply</button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                        <div class="reply-list" style="display: none;"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        `.replace(':commentId', data.comment.id);
-
-                                commentList.insertAdjacentHTML('afterbegin', newCommentHtml);
-                                this.reset();
-                                initializeDropdowns();
-                            }
-                        } else {
-                            // Display error messages
-                            errorDiv.textContent = data.error || 'Your question is empty';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        errorDiv.textContent = 'Something went wrong';
-                    });
-            });
-
-            document.getElementById('comment-list')?.addEventListener('submit', function(event) {
-                if (event.target.closest('.reply-form')) {
-                    event.preventDefault();
-                    const form = event.target;
-                    const formData = new FormData(form);
-                    const parentId = form.closest('.comment').dataset.commentId;
-                    const errorDiv = form.querySelector('#comment-form-error');
-
-                    errorDiv.style.display = 'none';
-                    errorDiv.textContent = '';
-
-                    fetch(form.action.replace(':commentId', parentId), {
-                            method: 'POST',
-                            body: formData,
-                            headers: {
-                                'X-Requested-With': 'XMLHttpRequest',
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                    .getAttribute('content')
-                            }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                const replyList = form.closest('.reply-list') || form.closest(
-                                    '.comment').querySelector('.reply-list');
-                                if (replyList) {
-                                    const newReplyHtml = `
-                                <div class="comment reply" data-comment-id="${data.reply.id}">
-                                    <div class="d-flex">
-                                        <img src="https://static.xx.fbcdn.net/rsrc.php/v1/yi/r/odA9sNLrE86.jpg" alt="avatar" class="comment-avatar">
-                                        <div class="w-100">
-                                            <div class="d-flex justify-content-between align-items-start">
-                                                <div>
-                                                    <div class="comment-author">You</div>
-                                                    <div class="comment-time">${data.reply.created_at}</div>
-                                                </div>
+                                            <div class="question-actions">
                                                 <div class="dropdown">
-                                                    <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton${data.reply.id}" data-bs-toggle="dropdown" aria-expanded="false">
-                                                        <i class="fa-solid fa-ellipsis-vertical"></i>
-                                                    </button>
-                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton${data.reply.id}">
-                                                        <li><a class="dropdown-item" href="#" data-action="edit" data-comment-id="${data.reply.id}">Edit</a></li>
-                                                        <li><a class="dropdown-item text-danger" href="#" data-action="delete" data-comment-id="${data.reply.id}">Delete</a></li>
-                                                        <li>
-                                                            <a href="#"
-                                                                class="dropdown-item report-comment"
-                                                                data-comment-id="${data.reply.id}"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#reportModal">Report</a>
-                                                        </li>
+                                                    <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton${data.question.id}" data-bs-toggle="dropdown" aria-expanded="false">...</button>
+                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton${data.question.id}">
+                                                        <li><button class="dropdown-item" href="#" onclick="editQuestion(${data.question.id}, '${data.question.content}')">Edit</button></li>
+                                                         <li><button class="dropdown-item" onclick="confirmDeleteQuestion(${data.question.id})">Delete</button></li>
+                                                        <li><button class="dropdown-item" href="#" onclick="openReportModal('question', ${data.question.id})">Report</button></li>
                                                     </ul>
                                                 </div>
                                             </div>
-                                            <div class="comment-body">
-                                                <span class="reply-content">${data.reply.content}</span>
+                                        </div>
+                                        <div class="question-body">${data.question.content}</div>
+                                        <div class="question-actions d-flex align-items-center mt-2">
+                                        <a href="#" class="btn btn-light me-2" onclick="toggleLike(${data.question.id})">
+                                            👍 <span class="like-count">0</span>
+                                        </a>
+                                        <a href="#" class="btn btn-light me-2" onclick="toggleDislike(${data.question.id})">
+                                            👎 <span class="dislike-count">0</span>
+                                        </a>
+                                            <button class="btn btn-light" onclick="toggleReplyForm(${data.question.id})">Reply</button>
+                                        </div>
+                                        <div class="reply-toggle" onclick="toggleReplyList(${data.question.id})">View Replies</div>
+                                        <div class="reply-list" id="reply-list-${data.question.id}" style="display: none;"></div>
+                                        <div class="reply-form" id="reply-form-${data.question.id}" style="display: none;">
+                                            <div class="d-flex">
+                                                <img src="https://static.xx.fbcdn.net/rsrc.php/v1/yi/r/odA9sNLrE86.jpg" alt="avatar" class="question-avatar">
+                                                <div class="w-100">
+                                                    <textarea class="form-control question-input" placeholder="Write a reply..." rows="2"></textarea>
+                                                    <button type="button" class="btn btn-primary mt-2" onclick="postReply(${data.question.id})">Post Reply</button>
+                                                </div>
                                             </div>
-                                            <div class="comment-actions">
-                                                <a href="#" class="like-button" data-action="like" data-comment-id="${data.reply.id}">
-                                                    <i class="fa-solid fa-thumbs-up"></i>
-                                                    <span class="like-dislike-count">0</span>
-                                                </a>
-                                                <a href="#" class="dislike-button" data-action="dislike" data-comment-id="${data.reply.id}">
-                                                    <i class="fa-solid fa-thumbs-down"></i>
-                                                    <span class="like-dislike-count">0</span>
-                                                </a>
-                                            </div>
-                                            <form class="reply-form" action="{{ route('replies.store', ':commentId') }}" method="POST" style="display: none;">
-                                                @csrf
-                                                    <div class="d-flex flex-column">
-                                                        <textarea name="content" class="form-control comment-input" placeholder="Write a reply..." rows="2"></textarea>
-                                                        <div class="d-flex justify-content-between  mt-2">
-                                                            <div id="comment-form-error" class="text-danger" style="display: none;">
-                                                                Error: Reply cannot be empty
-                                                            </div>
-                                                            <button type="submit" class="btn btn-primary ms-auto">Post Reply</button>
-                                                        </div>
-                                                    </div>
-                                            </form>
-                                            <div class="reply-list" style="display: none;"></div>
                                         </div>
                                     </div>
                                 </div>
-                                `.replace(':commentId', data.reply.id);
-
-                                    replyList.insertAdjacentHTML('beforeend', newReplyHtml);
-                                    form.reset();
-                                    form.style.display =
-                                        'none'; 
-
-                                    const replyToggle = form.closest('.comment').querySelector(
-                                        '.reply-toggle');
-                                    if (replyToggle) {
-                                        const replyList = replyToggle.nextElementSibling
-                                            .nextElementSibling;
-                                        replyList.style.display = 'block';
-                                        replyToggle.textContent = 'Hide replies';
-                                    }
-
-                                    initializeDropdowns();
-                                }
-                            } else {
-                                errorDiv.textContent = data.message || 'Error posting reply';
-                                errorDiv.style.display = 'block';
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            errorDiv.textContent = 'Something went wrong';
-                            errorDiv.style.display = 'block';
-                        });
-                }
-            });
-
-            document.getElementById('comment-list')?.addEventListener('click', function(event) {
-                if (event.target.closest('.reply-link')) {
-                    event.preventDefault();
-                    const replyForm = event.target.closest('.comment').querySelector('.reply-form');
-                    if (replyForm) {
-                        replyForm.style.display = replyForm.style.display === 'block' ? 'none' : 'block';
+                            </div>
+                        `;
+                        document.getElementById('question-list').prepend(newQuestionElement);
                     }
-                }
-            });
+                })
+                .catch(error => {
+                    console.error('Error posting question:', error);
+                    errorMessageElem.textContent = error.message;
+                });
+        }
+
+        function toggleReplyForm(questionId) {
+            const replyForm = document.getElementById(`reply-form-${questionId}`);
+            replyForm.style.display = replyForm.style.display === 'none' || replyForm.style.display === '' ? 'block' :
+                'none';
+        }
+
+        function postReply(questionId) {
+            const replyInput = document.querySelector(`#reply-form-${questionId} textarea`);
+            const content = replyInput.value.trim();
+
+            const existingErrorMessageElem = document.querySelector(`#reply-form-${questionId} .reply-error-message`);
+            if (existingErrorMessageElem) {
+                existingErrorMessageElem.remove();
+            }
+
+            if (!content) {
+                const replyErrorMessageElem = document.createElement(
+                    'div');
+                replyErrorMessageElem.classList.add('text-danger', 'reply-error-message');
+                replyErrorMessageElem.textContent = 'Reply content cannot be empty.';
+
+                replyInput.parentNode.insertBefore(replyErrorMessageElem, replyInput.nextSibling);
+                return;
+            }
+
+            fetch(`/departments/questions/${questionId}/replies`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    },
+                    body: JSON.stringify({
+                        content: content,
+                        question_id: questionId
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        replyInput.value = '';
+
+                        if (existingErrorMessageElem) {
+                            existingErrorMessageElem.remove();
+                        }
+
+                        const newReplyElement = document.createElement('div');
+                        newReplyElement.innerHTML = `
+                            <div class="question reply" data-question-id="${data.reply.id}">
+                                <div class="d-flex">
+                                    <img src="https://static.xx.fbcdn.net/rsrc.php/v1/yi/r/odA9sNLrE86.jpg" alt="avatar" class="question-avatar">
+                                    <div class="w-100">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <div class="question-author">${data.reply.user.name}</div>
+                                                <div class="question-time">Just Now</div>
+                                            </div>
+                                            <div class="question-actions">
+                                                <div class="dropdown">
+                                                    <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButtonReply${data.reply.id}" data-bs-toggle="dropdown" aria-expanded="false">...</button>
+                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButtonReply${data.reply.id}">
+                                                        <li><button class="dropdown-item" href="#" onclick="editReply(${questionId}, ${data.reply.id}, '${data.reply.content}')">Edit</button></li>
+                                                        <li><button class="dropdown-item" onclick="confirmDeleteReply(${data.reply.id})">Delete</button></li>
+                                                        <li><button class="dropdown-item" href="#" onclick="openReportModal('reply', ${data.reply.id})">Report</button></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="question-body">${data.reply.content}</div>
+                                        <div class="question-actions d-flex align-items-center mt-2">
+                                        <button class="btn btn-light me-2" onclick="toggleReplyLike(${data.reply.id})">
+                                            👍 <span class="like-count">0</span>
+                                        </button>
+                                        <button class="btn btn-light me-2" onclick="toggleReplyDislike(${data.reply.id})">
+                                            👎 <span class="dislike-count">0</span>
+                                        </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+
+                        const replyList = document.querySelector(`#reply-list-${questionId}`);
+                        replyList.appendChild(newReplyElement);
+
+                        if (replyList.style.display === 'none') {
+                            replyList.style.display = 'block';
+                        }
+
+                        document.getElementById(`reply-form-${questionId}`).style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error posting reply:', error);
+                    const replyErrorMessageElem = document.createElement('div');
+                    replyErrorMessageElem.classList.add('text-danger', 'reply-error-message');
+                    replyErrorMessageElem.textContent = error.message;
+                    replyInput.parentNode.insertBefore(replyErrorMessageElem, replyInput
+                        .nextSibling);
+                });
+        }
+
+        function editQuestion(questionId) {
+            const questionElement = document.querySelector(`[data-question-id="${questionId}"] .question-body`);
+            const originalContent = questionElement.textContent.trim();
+
+            questionElement.innerHTML = `
+                <textarea class="form-control question-edit-input" rows="3">${originalContent}</textarea>
+                <div class="text-danger mt-1" id="error-message-${questionId}"></div>
+                <div class="d-flex mt-2">
+                    <button type="button" class="btn btn-primary me-2" onclick="saveQuestionEdit(${questionId})">Save</button>
+                    <button type="button" class="btn btn-secondary" onclick="cancelEditQuestion(${questionId}, '${originalContent}')">Cancel</button>
+                </div>
+            `;
+        }
+
+        function saveQuestionEdit(questionId) {
+            const editInput = document.querySelector(`[data-question-id="${questionId}"] .question-edit-input`);
+            const errorMessageElem = document.getElementById(`error-message-${questionId}`);
+            const content = editInput.value.trim();
+
+            if (!content) {
+                errorMessageElem.textContent = 'Question content cannot be empty.';
+                return;
+            }
+
+            // Clear error message
+            errorMessageElem.textContent = '';
+
+            fetch(`/departments/questions/${questionId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    },
+                    body: JSON.stringify({
+                        content
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const questionElement = document.querySelector(
+                            `[data-question-id="${questionId}"] .question-body`);
+                        questionElement.innerHTML = content;
+                    }
+                })
+                .catch(error => console.error('Error updating question:', error));
+        }
+
+        function cancelEditQuestion(questionId, originalContent) {
+            const questionElement = document.querySelector(`[data-question-id="${questionId}"] .question-body`);
+            questionElement.innerHTML = originalContent;
+        }
+
+        function editReply(questionId, replyId) {
+            const replyElement = document.querySelector(`[data-question-id="${replyId}"] .question-body`);
+            const originalContent = replyElement.textContent.trim();
+
+            replyElement.innerHTML = `
+                <textarea class="form-control reply-edit-input" rows="2">${originalContent}</textarea>
+                <div class="text-danger mt-1" id="reply-error-message-${replyId}"></div>
+                    <div class="d-flex mt-2">
+                        <button type="button" class="btn btn-primary me-2" onclick="saveReplyEdit(${questionId}, ${replyId})">Save</button>
+                        <button type="button" class="btn btn-secondary" onclick="cancelEditReply(${replyId}, '${originalContent}')">Cancel</button>
+                    </div>
+                `;
+        }
+
+        function saveReplyEdit(questionId, replyId) {
+            const editInput = document.querySelector(`[data-question-id="${replyId}"] .reply-edit-input`);
+            const errorMessageElem = document.getElementById(`reply-error-message-${replyId}`);
+            const content = editInput.value.trim();
+
+            if (!content) {
+                errorMessageElem.textContent = 'Reply content cannot be empty.';
+                return;
+            }
+
+            errorMessageElem.textContent = '';
+
+            fetch(`/departments/questions/${questionId}/replies/${replyId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    },
+                    body: JSON.stringify({
+                        content
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const replyElement = document.querySelector(`[data-question-id="${replyId}"] .question-body`);
+                        replyElement.innerHTML = content;
+                    }
+                })
+                .catch(error => console.error('Error updating reply:', error));
+        }
+
+        function cancelEditReply(replyId, originalContent) {
+            const replyElement = document.querySelector(`[data-question-id="${replyId}"] .question-body`);
+            replyElement.innerHTML = originalContent;
+        }
+    </script>
+
+    <script>
+        function toggleLike(questionId) {
+            fetch(`/questions/${questionId}/like`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.querySelector(`[data-question-id="${questionId}"] .like-count`).textContent = data.likes;
+                    document.querySelector(`[data-question-id="${questionId}"] .dislike-count`).textContent = data
+                        .dislikes;
+                });
+        }
+
+        function toggleDislike(questionId) {
+            fetch(`/questions/${questionId}/dislike`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.querySelector(`[data-question-id="${questionId}"] .like-count`).textContent = data.likes;
+                    document.querySelector(`[data-question-id="${questionId}"] .dislike-count`).textContent = data
+                        .dislikes;
+                });
+        }
+
+        function toggleReplyLike(replyId) {
+            fetch(`/replies/${replyId}/like`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.querySelector(`.reply[data-question-id="${replyId}"] .like-count`).innerText = data.likes;
+                    document.querySelector(`.reply[data-question-id="${replyId}"] .dislike-count`).innerText = data
+                        .dislikes;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function toggleReplyDislike(replyId) {
+            fetch(`/replies/${replyId}/dislike`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.querySelector(`.reply[data-question-id="${replyId}"] .like-count`).innerText = data.likes;
+                    document.querySelector(`.reply[data-question-id="${replyId}"] .dislike-count`).innerText = data
+                        .dislikes;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+
+    <script>
+        let questionIdToDelete = null;
+        let replyIdToDelete = null;
+
+        function confirmDeleteQuestion(questionId) {
+            questionIdToDelete = questionId;
+            const deleteQuestionModal = new bootstrap.Modal(document.getElementById('deleteQuestionModal'));
+            deleteQuestionModal.show(); // Show the modal
+        }
+
+        function confirmDeleteReply(replyId) {
+            replyIdToDelete = replyId;
+            const deleteReplyModal = new bootstrap.Modal(document.getElementById('deleteReplyModal'));
+            deleteReplyModal.show(); // Show the modal
+        }
+
+        document.getElementById('confirmDeleteQuestionButton').addEventListener('click', function() {
+            fetch(`/questions/${questionIdToDelete}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.querySelector(`[data-question-id="${questionIdToDelete}"]`)
+                            .remove(); // Remove the question 
+                    }
+                    const deleteQuestionModal = bootstrap.Modal.getInstance(document.getElementById(
+                        'deleteQuestionModal'));
+                    deleteQuestionModal.hide(); // Hide the modal
+                });
         });
 
-        function initializeDropdowns() {
-            const dropdowns = document.querySelectorAll('.dropdown-toggle:not(.initialized)');
-            dropdowns.forEach(dropdown => {
-                new bootstrap.Dropdown(dropdown);
-                dropdown.classList.add('initialized');
-            });
+        document.getElementById('confirmDeleteReplyButton').addEventListener('click', function() {
+            fetch(`/replies/${replyIdToDelete}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.querySelector(`[data-question-id="${replyIdToDelete}"]`)
+                            .remove(); // Remove the reply 
+                    }
+                    const deleteReplyModal = bootstrap.Modal.getInstance(document.getElementById(
+                        'deleteReplyModal'));
+                    deleteReplyModal.hide(); // Hide the modal
+                });
+        });
+    </script>
+    <script>
+        let reportType;
+        let reportId;
+
+        function openReportModal(type, id) {
+            reportType = type;
+            reportId = id;
+            // Clear any previous error messages
+            document.getElementById('reportError').style.display = 'none';
+            document.getElementById('reportError').textContent = '';
+
+            const reportModal = new bootstrap.Modal(document.getElementById('reportModal'));
+            reportModal.show();
         }
 
-        function toggleReplies(element) {
-            const replyList = element.nextElementSibling.nextElementSibling;
-            const isVisible = replyList.style.display === 'block';
-            replyList.style.display = isVisible ? 'none' : 'block';
-            element.textContent = isVisible ? 'View replies' : 'Hide replies';
-        }
+        document.getElementById('submitReportButton').addEventListener('click', function() {
+            const reason = document.getElementById('reportReason').value;
+            const reportError = document.getElementById('reportError');
+
+            reportError.style.display = 'none';
+            reportError.textContent = '';
+
+            if (reason.trim() === '') {
+                reportError.style.display = 'block';
+                reportError.textContent = 'Please enter a reason for reporting.';
+                return;
+            }
+
+            fetch('/report', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                            'content')
+                    },
+                    body: JSON.stringify({
+                        type: reportType,
+                        id: reportId,
+                        reason: reason
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const reportModal = bootstrap.Modal.getInstance(document.getElementById('reportModal'));
+                        reportModal.hide();
+                    } else {
+                        reportError.style.display = 'block';
+                        reportError.textContent = 'Failed to submit report.';
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        });
     </script>
 @endsection

@@ -5,35 +5,33 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Department;
 use App\Models\Comment;
-use App\Models\Reply;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 
 class ChatsController extends Controller
 {
     //
-    public function index()
-    {
-        $departments = Department::all();
+    // public function index()
+    // {
+    //     $departments = Department::all();
 
-        return view('chats.index', compact('departments'));
-    }
+    //     return view('chats.index', compact('departments'));
+    // }
 
-    public function show(Department $department)
-    {
+    // public function show(Department $department)
+    // {
 
-        $comments = Comment::where('department_id', $department->id)
-            ->whereNull('parent_id')
-            ->with(['replies' => function ($query) {
-                $query->with('replies');
-            }])
-            ->orderBy('created_at', 'desc')
-            ->get();
+    //     $comments = Comment::where('department_id', $department->id)
+    //         ->whereNull('parent_id')
+    //         ->with(['replies' => function ($query) {
+    //             $query->with('replies');
+    //         }])
+    //         ->orderBy('created_at', 'desc')
+    //         ->get();
 
-        return view('chats.department', compact('department', 'comments'));
-    }
+    //     return view('chats.department', compact('department', 'comments'));
+    // }
 
     public function storeComment(Request $request, Department $department)
     {

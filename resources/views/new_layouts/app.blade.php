@@ -118,28 +118,15 @@
                                     <i class="fas fa-home"></i>
                                     <p>Home Page</p>
                                 </a>
-                            @elseif($role === 'admin')
-                                <a href="{{ route('admin.dashboard') }}">
-                                    <i class="fas fa-home"></i>
-                                    <p>Dashboard</p>
-                                </a>
                             @endif
-                        </li>
-                        <li class="nav-section">
-                            <span class="sidebar-mini-icon">
-                                <i class="fa fa-ellipsis-h"></i>
-                            </span>
-                            <h4 class="text-section">Components</h4>
-                        </li>
-
-                        @if ($role === 'user' or $role === 'guest')
-
+                            @if ($role === 'user')
+                                <!-- Routes All Uploads -->
                             <!-- Routes All Uploads -->
                             <li class="nav-item">
                                 <a data-bs-toggle="collapse" href="#uploadSubmenu">
                                     <i class="fas fa-cloud-upload-alt"></i>
                                     <p>Upload</p>
-                                    <span class="caret"></span>
+                                    <s[pan class="caret"></s>
                                 </a>
                                 <div class="collapse" id="uploadSubmenu">
                                     <ul class="nav nav-collapse">
@@ -166,6 +153,23 @@
                                     </ul>
                                 </div>
                             </li>
+                            @endif
+                        </li>
+                        @if ($role === 'admin')
+                            <a href="{{ route('admin.dashboard') }}">
+                                <i class="fas fa-home"></i>
+                                <p>Dashboard</p>
+                            </a>
+                        @endif
+                        </li>
+                        <li class="nav-section">
+                            <span class="sidebar-mini-icon">
+                                <i class="fa fa-ellipsis-h"></i>
+                            </span>
+                            <h4 class="text-section">Main Sections</h4>
+                        </li>
+
+                        @if ($role === 'user' or $role === 'guest')
 
                             <!-- Colleges -->
                             <li class="nav-item">
@@ -249,14 +253,20 @@
                                 </a>
                             </li>
 
-                            <!-- Route chats -->
+                            <!-- Route discussions -->
                             <li class="nav-item {{ request()->routeIs('chats.index') ? 'active' : '' }}">
                                 <a href="{{ route('chats.index') }}">
                                     <i class="fas fa-comments"></i>
-                                    <p>chats</p>
+                                    <p>Discussions</p>
                                 </a>
                             </li>
 
+                            <li class="nav-section">
+                                <span class="sidebar-mini-icon">
+                                    <i class="fa fa-ellipsis-h"></i>
+                                </span>
+                                <h4 class="text-section">My Resources</h4>
+                            </li>
                             <!-- My Library -->
                             <li class="nav-item {{ request()->routeIs('followed.materials') ? 'active' : '' }}">
                                 <a href="{{ route('followed.materials') }}">
