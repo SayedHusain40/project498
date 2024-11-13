@@ -20,7 +20,18 @@ class Reply extends Model
     }
     public function likesDislikes()
     {
-        return $this->hasMany(QuestionUserLikeDislike::class);
+        return $this->hasMany(ReplyUserLikeDislike::class);
+    }
+
+
+    public function likedByUser($userId)
+    {
+        return $this->likesDislikes()->where('user_id', $userId)->where('type', 'like')->exists();
+    }
+
+    public function dislikedByUser($userId)
+    {
+        return $this->likesDislikes()->where('user_id', $userId)->where('type', 'dislike')->exists();
     }
 
 }

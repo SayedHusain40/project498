@@ -52,9 +52,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/upload', UploadTemporaryFileController::class);
     Route::delete('/delete', DeleteTemporaryFileController::class);
     Route::post('/up', StoreMaterialController::class);
-    Route::get('/marketplace/upload', [MarketplaceController::class, 'index'])->name('marketplace');
-
+    
     // marketplace
+    Route::get('/marketplace', [MarketplaceController::class, 'index'])->name('marketplace');
     Route::post('/marketplace/upload', [MarketplaceController::class, 'store'])->name('marketplace.upload');
     Route::get('/upload/marketplace', [MarketplaceController::class, 'showUploadForm'])->name('marketplace.show');
 

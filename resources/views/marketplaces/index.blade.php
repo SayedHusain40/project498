@@ -31,23 +31,26 @@
                             </div>
                         </div>
 
-                        <div class="card-body">
-                            @if ($item->image_path)
-                                <img src="{{ asset('storage/' . $item->image_path) }}" class="card-img-top"
-                                    alt="{{ $item->title }}" style="height: 200px; object-fit: cover;">
-                            @endif
-                            <h4 class="card-title mt-3">{{ $item->title }}</h4>
-                            <p class="text-muted mb-0">{{ Str::limit($item->description, 100) }}</p>
-                            <p class="text-muted mb-2">{{ $item->category }} | Condition:
-                                {{ ucfirst($item->condition) }}</p>
-                            <span class="text-success fw-bold mt-2">Price: 
-                                @if ($item->price === null)
-                                    Free
-                                @else
-                                    BD {{ $item->price }}
-                                @endif
-                            </span>
-                        </div>
+<div class="card-body">
+    @if ($item->image_path)
+        <a href="{{ asset('storage/' . $item->image_path) }}" target="_blank">
+            <img src="{{ asset('storage/' . $item->image_path) }}" class="card-img-top"
+                 alt="{{ $item->title }}" style="height: 200px; object-fit: cover;">
+        </a>
+    @endif
+    <h4 class="card-title mt-3">{{ $item->title }}</h4>
+    <p class="text-muted mb-0">{{ Str::limit($item->description, 100) }}</p>
+    <p class="text-muted mb-2">{{ $item->category }} | Condition:
+        {{ ucfirst($item->condition) }}</p>
+    <span class="text-success fw-bold mt-2">Price: 
+        @if ($item->price === null)
+            Free
+        @else
+            BD {{ $item->price }}
+        @endif
+    </span>
+</div>
+
                         <div class="card-footer">
                             <form action="{{ route('users.profile') }}" method="POST" class="me-auto">
                                 @csrf

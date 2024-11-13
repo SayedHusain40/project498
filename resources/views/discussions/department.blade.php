@@ -229,19 +229,29 @@
                                     <div class="question-body">{{ $question->content }}</div>
                                     <div class="question-actions d-flex align-items-center mt-2">
                                         @if (auth()->check())
-                                            <button href="#" class="btn btn-light me-2"
-                                                onclick="toggleLike({{ $question->id }})">👍 <span
-                                                    class="like-count">{{ $question->likes }}</span></button>
-                                            <button href="#" class="btn btn-light me-2"
-                                                onclick="toggleDislike({{ $question->id }})">👎 <span
-                                                    class="dislike-count">{{ $question->dislikes }}</span></button>
+                                            <button href="#"
+                                                class="btn btn-light me-2 btn-like {{ $question->likesDislikes()->where('user_id', auth()->user()->id)->where('type', 'like')->exists()? 'text-success': '' }}"
+                                                onclick="toggleLike({{ $question->id }})">
+                                                <i class="fa fa-thumbs-up"></i> <span
+                                                    class="like-count">{{ $question->likes }}</span>
+                                            </button>
+                                            <button href="#"
+                                                class="btn btn-light me-2 btn-dislike {{ $question->likesDislikes()->where('user_id', auth()->user()->id)->where('type', 'dislike')->exists()? 'text-danger': '' }}"
+                                                onclick="toggleDislike({{ $question->id }})">
+                                                <i class="fa fa-thumbs-down"></i> <span
+                                                    class="dislike-count">{{ $question->dislikes }}</span>
+                                            </button>
                                         @else
                                             <button class="btn btn-light me-2" data-bs-toggle="modal"
-                                                data-bs-target="#loginSignupModal">👍 <span
-                                                    class="like-count">{{ $question->likes }}</span></button>
+                                                data-bs-target="#loginSignupModal">
+                                                <i class="fa fa-thumbs-up"></i> <span
+                                                    class="like-count">{{ $question->likes }}</span>
+                                            </button>
                                             <button class="btn btn-light me-2" data-bs-toggle="modal"
-                                                data-bs-target="#loginSignupModal">👎 <span
-                                                    class="dislike-count">{{ $question->dislikes }}</span></button>
+                                                data-bs-target="#loginSignupModal">
+                                                <i class="fa fa-thumbs-down"></i> <span
+                                                    class="dislike-count">{{ $question->dislikes }}</span>
+                                            </button>
                                         @endif
                                         @if (auth()->check())
                                             <button class="btn btn-light"
@@ -309,20 +319,27 @@
                                                         <div class="question-body">{{ $reply->content }}</div>
                                                         <div class="question-actions d-flex align-items-center mt-2">
                                                             @if (auth()->check())
-                                                                <button href="#" class="btn btn-light me-2"
-                                                                    onclick="toggleReplyLike({{ $reply->id }})">👍
-                                                                    <span
-                                                                        class="like-count">{{ $reply->likes }}</span></button>
-                                                                <button href="#" class="btn btn-light me-2"
-                                                                    onclick="toggleReplyDislike({{ $reply->id }})">👎
-                                                                    <span
-                                                                        class="dislike-count">{{ $reply->dislikes }}</span></button>
+                                                                <button
+                                                                    class="btn btn-light me-2 btn-like {{ $reply->likesDislikes()->where('user_id', auth()->user()->id)->where('type', 'like')->exists()? 'text-success': '' }}"
+                                                                    onclick="toggleReplyLike({{ $reply->id }})">
+                                                                    <i class="fa fa-thumbs-up"></i> <span
+                                                                        class="like-count">{{ $reply->likes }}</span>
+                                                                </button>
+                                                                <!-- Dislike Button -->
+                                                                <button
+                                                                    class="btn btn-light me-2 btn-dislike {{ $reply->likesDislikes()->where('user_id', auth()->user()->id)->where('type', 'dislike')->exists()? 'text-danger': '' }}"
+                                                                    onclick="toggleReplyDislike({{ $reply->id }})">
+                                                                    <i class="fa fa-thumbs-down"></i> <span
+                                                                        class="dislike-count">{{ $reply->dislikes }}</span>
+                                                                </button>
                                                             @else
                                                                 <button class="btn btn-light me-2" data-bs-toggle="modal"
-                                                                    data-bs-target="#loginSignupModal">👍 <span
+                                                                    data-bs-target="#loginSignupModal"><i
+                                                                        class="fa fa-thumbs-up"></i> <span
                                                                         class="like-count">{{ $reply->likes }}</span></button>
                                                                 <button class="btn btn-light me-2" data-bs-toggle="modal"
-                                                                    data-bs-target="#loginSignupModal">👎 <span
+                                                                    data-bs-target="#loginSignupModal"><i
+                                                                        class="fa fa-thumbs-down"></i> <span
                                                                         class="dislike-count">{{ $reply->dislikes }}</span></button>
                                                             @endif
                                                         </div>
@@ -492,7 +509,7 @@
                                                     <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton${data.question.id}" data-bs-toggle="dropdown" aria-expanded="false">...</button>
                                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton${data.question.id}">
                                                         <li><button class="dropdown-item" href="#" onclick="editQuestion(${data.question.id}, '${data.question.content}')">Edit</button></li>
-                                                         <li><button class="dropdown-item" onclick="confirmDeleteQuestion(${data.question.id})">Delete</button></li>
+                                                        <li><button class="dropdown-item" onclick="confirmDeleteQuestion(${data.question.id})">Delete</button></li>
                                                         <li><button class="dropdown-item" href="#" onclick="openReportModal('question', ${data.question.id})">Report</button></li>
                                                     </ul>
                                                 </div>
@@ -500,12 +517,14 @@
                                         </div>
                                         <div class="question-body">${data.question.content}</div>
                                         <div class="question-actions d-flex align-items-center mt-2">
-                                        <a href="#" class="btn btn-light me-2" onclick="toggleLike(${data.question.id})">
-                                            👍 <span class="like-count">0</span>
-                                        </a>
-                                        <a href="#" class="btn btn-light me-2" onclick="toggleDislike(${data.question.id})">
-                                            👎 <span class="dislike-count">0</span>
-                                        </a>
+                                            <button class="btn btn-light me-2 btn-like ${data.question.likedByUser ? 'text-success' : ''}" 
+                                                    onclick="toggleLike(${data.question.id})">
+                                                <i class="fa fa-thumbs-up"></i> <span class="like-count">0</span>
+                                            </button>
+                                            <button class="btn btn-light me-2 btn-dislike ${data.question.dislikedByUser ? 'text-danger' : ''}" 
+                                                    onclick="toggleDislike(${data.question.id})">
+                                                <i class="fa fa-thumbs-down"></i> <span class="dislike-count">0</span>
+                                            </button>
                                             <button class="btn btn-light" onclick="toggleReplyForm(${data.question.id})">Reply</button>
                                         </div>
                                         <div class="reply-toggle" onclick="toggleReplyList(${data.question.id})">View Replies</div>
@@ -523,6 +542,7 @@
                                 </div>
                             </div>
                         `;
+
                         document.getElementById('question-list').prepend(newQuestionElement);
                     }
                 })
@@ -601,17 +621,20 @@
                                         </div>
                                         <div class="question-body">${data.reply.content}</div>
                                         <div class="question-actions d-flex align-items-center mt-2">
-                                        <button class="btn btn-light me-2" onclick="toggleReplyLike(${data.reply.id})">
-                                            👍 <span class="like-count">0</span>
-                                        </button>
-                                        <button class="btn btn-light me-2" onclick="toggleReplyDislike(${data.reply.id})">
-                                            👎 <span class="dislike-count">0</span>
-                                        </button>
+                                            <button class="btn btn-light me-2 btn-like ${data.reply.likedByUser ? 'text-success' : ''}" 
+                                                    onclick="toggleReplyLike(${data.reply.id})">
+                                                <i class="fa fa-thumbs-up"></i> <span class="like-count">0</span>
+                                            </button>
+                                            <button class="btn btn-light me-2 btn-dislike ${data.reply.dislikedByUser ? 'text-danger' : ''}" 
+                                                    onclick="toggleReplyDislike(${data.reply.id})">
+                                                <i class="fa fa-thumbs-down"></i> <span class="dislike-count">0</span>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         `;
+
 
                         const replyList = document.querySelector(`#reply-list-${questionId}`);
                         replyList.appendChild(newReplyElement);
@@ -749,9 +772,25 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    document.querySelector(`[data-question-id="${questionId}"] .like-count`).textContent = data.likes;
-                    document.querySelector(`[data-question-id="${questionId}"] .dislike-count`).textContent = data
-                        .dislikes;
+                    const likeButton = document.querySelector(`[data-question-id="${questionId}"] .btn-like`);
+                    const dislikeButton = document.querySelector(`[data-question-id="${questionId}"] .btn-dislike`);
+                    const likeCount = document.querySelector(`[data-question-id="${questionId}"] .like-count`);
+                    const dislikeCount = document.querySelector(`[data-question-id="${questionId}"] .dislike-count`);
+
+                    likeCount.textContent = data.likes;
+                    dislikeCount.textContent = data.dislikes;
+
+                    // Toggle the green color for like
+                    if (likeButton.classList.contains('text-success')) {
+                        likeButton.classList.remove('text-success'); // Remove green if already active
+                    } else {
+                        likeButton.classList.add('text-success'); // Add green if not active
+                    }
+
+                    // If dislike button is active, remove red
+                    if (dislikeButton.classList.contains('text-danger')) {
+                        dislikeButton.classList.remove('text-danger');
+                    }
                 });
         }
 
@@ -765,27 +804,59 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    document.querySelector(`[data-question-id="${questionId}"] .like-count`).textContent = data.likes;
-                    document.querySelector(`[data-question-id="${questionId}"] .dislike-count`).textContent = data
-                        .dislikes;
+                    const likeButton = document.querySelector(`[data-question-id="${questionId}"] .btn-like`);
+                    const dislikeButton = document.querySelector(`[data-question-id="${questionId}"] .btn-dislike`);
+                    const likeCount = document.querySelector(`[data-question-id="${questionId}"] .like-count`);
+                    const dislikeCount = document.querySelector(`[data-question-id="${questionId}"] .dislike-count`);
+
+                    likeCount.textContent = data.likes;
+                    dislikeCount.textContent = data.dislikes;
+
+                    // Toggle the red color for dislike
+                    if (dislikeButton.classList.contains('text-danger')) {
+                        dislikeButton.classList.remove('text-danger'); // Remove red if already active
+                    } else {
+                        dislikeButton.classList.add('text-danger'); // Add red if not active
+                    }
+
+                    // If like button is active, remove green
+                    if (likeButton.classList.contains('text-success')) {
+                        likeButton.classList.remove('text-success');
+                    }
                 });
         }
+
 
         function toggleReplyLike(replyId) {
             fetch(`/replies/${replyId}/like`, {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                        'Content-Type': 'application/json'
-                    }
+                        'Content-Type': 'application/json',
+                    },
                 })
                 .then(response => response.json())
                 .then(data => {
-                    document.querySelector(`.reply[data-question-id="${replyId}"] .like-count`).innerText = data.likes;
-                    document.querySelector(`.reply[data-question-id="${replyId}"] .dislike-count`).innerText = data
-                        .dislikes;
-                })
-                .catch(error => console.error('Error:', error));
+                    const likeButton = document.querySelector(`[data-question-id="${replyId}"] .btn-like`);
+                    const dislikeButton = document.querySelector(`[data-question-id="${replyId}"] .btn-dislike`);
+                    const likeCount = document.querySelector(`[data-question-id="${replyId}"] .like-count`);
+                    const dislikeCount = document.querySelector(`[data-question-id="${replyId}"] .dislike-count`);
+
+                    likeCount.textContent = data.likes;
+                    dislikeCount.textContent = data.dislikes;
+
+                    // Toggle the green color for like
+                    if (likeButton.classList.contains('text-success')) {
+                        likeButton.classList.remove('text-success'); // Remove green if already active
+                    } else {
+                        likeButton.classList.add('text-success'); // Add green if not active
+                    }
+
+                    // If dislike button is active, remove red
+                    if (dislikeButton.classList.contains('text-danger')) {
+                        dislikeButton.classList.remove('text-danger');
+                    }
+                });
         }
 
         function toggleReplyDislike(replyId) {
@@ -793,16 +864,31 @@
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                        'Content-Type': 'application/json'
-                    }
+                        'Content-Type': 'application/json',
+                    },
                 })
                 .then(response => response.json())
                 .then(data => {
-                    document.querySelector(`.reply[data-question-id="${replyId}"] .like-count`).innerText = data.likes;
-                    document.querySelector(`.reply[data-question-id="${replyId}"] .dislike-count`).innerText = data
-                        .dislikes;
-                })
-                .catch(error => console.error('Error:', error));
+                    const likeButton = document.querySelector(`[data-question-id="${replyId}"] .btn-like`);
+                    const dislikeButton = document.querySelector(`[data-question-id="${replyId}"] .btn-dislike`);
+                    const likeCount = document.querySelector(`[data-question-id="${replyId}"] .like-count`);
+                    const dislikeCount = document.querySelector(`[data-question-id="${replyId}"] .dislike-count`);
+
+                    likeCount.textContent = data.likes;
+                    dislikeCount.textContent = data.dislikes;
+
+                    // Toggle the red color for dislike
+                    if (dislikeButton.classList.contains('text-danger')) {
+                        dislikeButton.classList.remove('text-danger'); // Remove red if already active
+                    } else {
+                        dislikeButton.classList.add('text-danger'); // Add red if not active
+                    }
+
+                    // If like button is active, remove green
+                    if (likeButton.classList.contains('text-success')) {
+                        likeButton.classList.remove('text-success');
+                    }
+                });
         }
     </script>
 

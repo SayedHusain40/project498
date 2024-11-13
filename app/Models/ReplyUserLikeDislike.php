@@ -9,6 +9,7 @@ class ReplyUserLikeDislike extends Model
 {
     use HasFactory;
     protected $table = 'reply_user_like_dislike'; 
+    
     protected $guarded = [];
 
     public function reply()

@@ -28,4 +28,18 @@ class Question extends Model
         return $this->hasMany(QuestionUserLikeDislike::class);
     }
 
+    
+    public function likedByUser($userId)
+    {
+        return $this->likesDislikes()->where('user_id', $userId)->where('type', 'like')->exists();
+    }
+
+    public function dislikedByUser($userId)
+    {
+        return $this->likesDislikes()->where('user_id', $userId)->where('type', 'dislike')->exists();
+    }
+
+
+
+
 }

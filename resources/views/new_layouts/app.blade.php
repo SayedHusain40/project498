@@ -175,7 +175,7 @@
                             <li class="nav-item">
                                 <a data-bs-toggle="collapse" href="#collegesSubmenu">
                                     <i class="fas fa-bars"></i>
-                                    <p>Find Materials</p>
+                                    <p>Materials</p>
                                     <span class="caret"></span>
                                 </a>
                                 <div class="collapse" id="collegesSubmenu">
