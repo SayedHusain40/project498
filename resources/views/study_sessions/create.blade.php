@@ -79,8 +79,8 @@
 
                     <div class="mb-3" id="price_field" style="display: none;">
                         <label for="price" class="form-label">Price (in BD):</label>
-                        <input type="number" class="form-control" id="price" name="price" step="0.001" 
-                            min="0.001" placeholder="Enter price" value="{{ old('price') }}">
+                        <input type="number" class="form-control" id="price" name="price" min="1"
+                            step="0.01" placeholder="Enter price" value="{{ old('price') }}">
                         @error('price')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
@@ -110,7 +110,7 @@
             var priceField = document.getElementById('price_field');
             var priceOrVolunteer = document.getElementById('price_or_volunteer');
             if (priceOrVolunteer.value === 'price') {
-                priceField.style.display = 'block'; 
+                priceField.style.display = 'block';
             }
         };
     </script>
