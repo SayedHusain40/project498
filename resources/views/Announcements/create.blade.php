@@ -63,7 +63,7 @@
 
                     <div class="mt-4">
                         <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
-                        <button type="submit" class="btn btn-primary w-100 py-2 px-4 rounded-lg shadow-md">Post Announcement</button>
+                        <button type="submit" class="btn btn-primary w-100 py-2 px-4 rounded-lg shadow-md">Post Event</button>
                     </div>
                 </div>
             </div>
