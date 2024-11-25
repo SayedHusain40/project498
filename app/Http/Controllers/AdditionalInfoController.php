@@ -23,7 +23,7 @@ class AdditionalInfoController extends Controller
     {
         $request->validate([
             'major_id' => 'nullable|exists:departments,id',
-            'phone' => 'nullable|regex:/^\+?[0-9]*$/|max:15',
+            'phone' => 'nullable|regex:/^[\+0-9\s]*$/',
             'course_ids' => 'array',
             'course_ids.*' => 'exists:courses,id',
         ]);
