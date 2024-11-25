@@ -52,7 +52,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/upload', UploadTemporaryFileController::class);
     Route::delete('/delete', DeleteTemporaryFileController::class);
     Route::post('/up', StoreMaterialController::class);
-    
+
     // marketplace
     Route::get('/marketplace', [MarketplaceController::class, 'index'])->name('marketplace');
     Route::post('/marketplace/upload', [MarketplaceController::class, 'store'])->name('marketplace.upload');
@@ -102,8 +102,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/users/profile', [UserProfileController::class, 'profile'])->name('users.profile');
 
     //study session
-    Route::get('/study-sessions', [StudySessionController::class, 'index'])->name('study-sessions.index'); 
-    Route::get('/study-sessions/create', [StudySessionController::class, 'create'])->name('study-sessions.create'); 
+    Route::get('/study-sessions', [StudySessionController::class, 'index'])->name('study-sessions.index');
+    Route::get('/study-sessions/create', [StudySessionController::class, 'create'])->name('study-sessions.create');
     Route::post('/study-sessions', [StudySessionController::class, 'store'])->name('study-sessions.store');
 
 

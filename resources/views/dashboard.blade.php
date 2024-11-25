@@ -23,4 +23,16 @@
             Content
         </div>
     </div>
+
+    <div class="card">
+        <div class="card-header">
+            Quote
+        </div>
+        <div class="card-body">
+            <blockquote class="blockquote mb-0">
+            <p>"The more I read, the more I acquire, the more certain I am that I know nothing."</p>
+            <footer class="blockquote-footer">Voltaire</footer>
+            </blockquote>
+        </div>
+    </div>
 @endsection
