@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,6 +24,7 @@ use App\Http\Controllers\StudySessionController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\UserUploadsController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\announcementsController;
 
 //admin
 use App\Http\Controllers\Admin\HomeController;
@@ -71,6 +73,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('my-uploads/marketplace/{id}', [UserUploadsController::class, 'destroyMarketplaceItem'])->name('marketplace.destroy');
     Route::delete('my-uploads/study-sessions/{id}', [UserUploadsController::class, 'destroyStudySession'])->name('study-sessions.destroy');
     Route::delete('my-uploads/restaurants/{id}', [UserUploadsController::class, 'destroyRestaurant'])->name('restaurants.destroy');
+    Route::delete('my-uploads/announcements/{id}', [UserUploadsController::class, 'destroyannouncement'])->name('announcements.destroy');
+
 
     //for martials
     Route::delete('/materials/{id}', [MaterialController::class, 'destroy'])->name('materials.delete');
@@ -105,6 +109,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/study-sessions', [StudySessionController::class, 'index'])->name('study-sessions.index');
     Route::get('/study-sessions/create', [StudySessionController::class, 'create'])->name('study-sessions.create');
     Route::post('/study-sessions', [StudySessionController::class, 'store'])->name('study-sessions.store');
+
+    //announcements
+    Route::get('/announcements', [AnnouncementController::class, 'index'])->name('announcements.index');
+    Route::get('/announcements/create', [AnnouncementController::class, 'create'])->name('announcements.create');
+    Route::post('/announcements', [AnnouncementController::class, 'store'])->name('announcements.store');
+
 
 
     //restaurants

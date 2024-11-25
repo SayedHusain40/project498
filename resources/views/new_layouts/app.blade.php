@@ -126,7 +126,7 @@
                                 <a data-bs-toggle="collapse" href="#uploadSubmenu">
                                     <i class="fas fa-cloud-upload-alt"></i>
                                     <p>Upload</p>
-                                    <s[pan class="caret"></s>
+                                    <span class="caret"></span>
                                 </a>
                                 <div class="collapse" id="uploadSubmenu">
                                     <ul class="nav nav-collapse">
@@ -237,13 +237,21 @@
                                 </a>
                             </li>
 
-                            <!-- Route marketplace -->
+                            <!-- Route Study Sessions -->
                             <li class="nav-item {{ request()->routeIs('study-sessions.index') ? 'active' : '' }}">
                                 <a href="{{ route('study-sessions.index') }}">
                                     <i class="fas fa-folder-open"></i>
                                     <p>Study Sessions</p>
                                 </a>
                             </li>
+
+                            <!-- Route announcements -->
+                                <li class="nav-item {{ request()->routeIs('announcements.index') ? 'active' : '' }}">
+                                    <a href="{{ route('announcements.index') }}">
+                                        <i class="fas fa-folder-open"></i>
+                                        <p>Events</p>
+                                    </a>
+                                </li>
 
                             <!-- Route restaurants -->
                             <li class="nav-item {{ request()->routeIs('restaurants.index') ? 'active' : '' }}">
