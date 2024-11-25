@@ -11,7 +11,9 @@ class AnnouncementController extends Controller
     // Display all announcements
     public function index()
     {
-        $announcements = Announcement::latest()->get();
+        $announcements = Announcement::latest()
+        ->where('event_date', '>=', now()->setTimezone('Asia/Bahrain'))
+        ->get();
         return view('announcements.index', compact('announcements'));
     }
 

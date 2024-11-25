@@ -55,7 +55,7 @@
                     <!-- Event Date Input -->
                     <div class="mb-3">
                         <label for="event_date" class="form-label">Event Date:</label>
-                        <input type="datetime-local" class="form-control" id="event_date" name="event_date" value="{{ old('event_date') }}">
+                        <input type="datetime-local" class="form-control" id="event_date" name="event_date" value="{{ old('event_date') }}" min="{{ now()->setTimezone('Asia/Bahrain')->format('Y-m-d\TH:i') }}">
                         @error('event_date')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
