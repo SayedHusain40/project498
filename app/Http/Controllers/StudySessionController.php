@@ -17,7 +17,6 @@ class StudySessionController extends Controller
         return view('study_sessions.index', compact('studySessions'));
     }
 
-
     public function create()
     {
         $courses = Course::all(); 
