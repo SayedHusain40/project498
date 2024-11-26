@@ -121,6 +121,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('restaurants', RestaurantController::class);
 
 });
+Route::view('/terms', 'terms')->name('terms');
+Route::view('/privacy', 'privacy')->name('privacy');
 
 // Only for admin
 Route::middleware(['admin'])->group(function () {
