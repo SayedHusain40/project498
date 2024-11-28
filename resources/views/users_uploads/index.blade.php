@@ -44,31 +44,33 @@
             font-size: 1rem;
             margin-top: 0.5rem;
         }
+
+        .nav-pills .nav-link:hover {
+            color: #253c60;
+        }
     </style>
 @endsection
 
 @section('content')
     <div class="container mt-4">
 
-        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+        <ul class="nav nav-pills nav-fill mb-4" id="pills-tab" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="pills-materials-tab" data-bs-toggle="pill" data-bs-target="#pills-materials"
-                    type="button" role="tab" aria-controls="pills-materials" aria-selected="true">Materials</button>
+                <a class="nav-link active" id="pills-materials-tab" data-bs-toggle="pill" data-bs-target="#pills-materials"
+                    href="#" role="tab" aria-controls="pills-materials" aria-selected="true">Materials</a>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="pills-marketplace-tab" data-bs-toggle="pill"
-                    data-bs-target="#pills-marketplace" type="button" role="tab" aria-controls="pills-marketplace"
-                    aria-selected="false">Marketplace</button>
+                <a class="nav-link" id="pills-marketplace-tab" data-bs-toggle="pill" data-bs-target="#pills-marketplace"
+                    href="#" role="tab" aria-controls="pills-marketplace" aria-selected="false">Marketplace</a>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="pills-study-sessions-tab" data-bs-toggle="pill"
-                    data-bs-target="#pills-study-sessions" type="button" role="tab"
-                    aria-controls="pills-study-sessions" aria-selected="false">Study Sessions</button>
+                <a class="nav-link" id="pills-study-sessions-tab" data-bs-toggle="pill"
+                    data-bs-target="#pills-study-sessions" href="#" role="tab"
+                    aria-controls="pills-study-sessions" aria-selected="false">Study Sessions</a>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="pills-restaurants-tab" data-bs-toggle="pill"
-                    data-bs-target="#pills-restaurants" type="button" role="tab" aria-controls="pills-restaurants"
-                    aria-selected="false">Restaurants</button>
+                <a class="nav-link" id="pills-restaurants-tab" data-bs-toggle="pill" data-bs-target="#pills-restaurants"
+                    href="#" role="tab" aria-controls="pills-restaurants" aria-selected="false">Restaurants</a>
             </li>
         </ul>
 
@@ -106,7 +108,7 @@
                                     </div>
                                 </a>
                                 <div class="card-footer">
-                                    <button type="button" class="btn btn-danger w-100 mt-2 delete-material"
+                                    <button type="button" class="btn btn-rounded btn-danger w-100 mt-2 delete-material"
                                         data-material-id="{{ $material->id }}">
                                         <i class="fa-solid fa-trash"></i> Delete
                                     </button>
@@ -150,7 +152,7 @@
                                     </span>
                                 </div>
                                 <div class="card-footer">
-                                    <button type="button" class="btn btn-danger w-100 mt-2 delete-item"
+                                    <button type="button" class="btn btn-rounded btn-danger w-100 mt-2 delete-item"
                                         data-item-id="{{ $item->id }}">
                                         <i class="fa-solid fa-trash"></i> Delete
                                     </button>

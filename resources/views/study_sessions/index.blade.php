@@ -12,7 +12,6 @@
     <!-- if there are not porducts-->
     @if ($studySessions->isEmpty())
         <div class="text-center">
-            {{-- <img src="{{ asset('images/') }}" alt="No products available" style="max-width: 50%; height: auto;"> --}}
             <p>No products available at the moment. Please check back later.</p>
         </div>
     @else
@@ -43,7 +42,7 @@
                                 <p class="mt-1" style="font-size: 14px;">
                                     <strong>Price: </strong>
                                     @if ($session->price_or_volunteer === 'price')
-                                        BD {{ number_format($session->price, 2) }}
+                                        BD {{ number_format($session->price, 3) }}
                                     @else
                                         Volunteer
                                     @endif
