@@ -139,6 +139,9 @@
                                     @if ($item->image_path)
                                         <img src="{{ asset('storage/' . $item->image_path) }}" class="card-img-top"
                                             alt="{{ $item->title }}" style="height: 200px; object-fit: cover;">
+                                    @else
+                                        <img src="{{ asset('images/no-image.jpg') }}" class="card-img-top"
+                                            alt="No image available" style="height: 200px; object-fit: cover;">
                                     @endif
                                     <h4 class="card-title mt-3">{{ $item->title }}</h4>
                                     <p class="text-muted mb-2">{{ $item->category }} | Condition:
