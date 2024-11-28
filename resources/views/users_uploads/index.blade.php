@@ -213,31 +213,46 @@
 
             <!-- Restaurants Tab -->
             <div class="tab-pane fade" id="pills-restaurants" role="tabpanel" aria-labelledby="pills-restaurants-tab">
-                <div class="row">
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
                     @foreach ($restaurants as $restaurant)
-                        <div class="col col-md-4 mb-4">
-                            <div class="card h-100 shadow-sm">
-                                @if ($restaurant->menu_image)
-                                    <img src="{{ asset('storage/' . $restaurant->menu_image) }}"
-                                        alt="{{ $restaurant->name }} Menu" class="card-img-top img-fluid"
-                                        style="width: 100%; height: 250px; object-fit: cover; cursor: pointer;"
-                                        data-bs-toggle="modal" data-bs-target="#imageModal"
-                                        onclick="showImage('{{ asset('storage/' . $restaurant->menu_image) }}')">
-                                @else
-                                    <img src="{{ asset('path/to/default/image.png') }}" alt="No Image Available"
-                                        class="card-img-top img-fluid"
-                                        style="width: 100%; height: 250px; object-fit: cover;">
-                                @endif
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ $restaurant->name }}</h5>
-                                    <p class="card-text">{{ Str::limit($restaurant->description, 100) }}</p>
-                                    <p class="card-text"><strong>Operating Hours:</strong>
-                                        {{ $restaurant->operating_hours }}
-                                    </p>
-                                    <p class="card-text"><strong>Location:</strong> {{ $restaurant->location }}</p>
+                        <div class="col">
+                            <div class="card border rounded-5">
+                                <!-- Card Header -->
+                                <div class="card-header d-flex align-items-center">
+                                    <div class="avatar rounded-circle bg-primary text-white d-flex justify-content-center align-items-center"
+                                        style="width: 40px; height: 40px;">
+                                        <i class="fas fa-user" style="font-size: 20px;"></i>
+                                    </div>
+                                    <div class="ms-3">
+                                        <h6 class="mb-0 fs-sm">By, {{ $restaurant->user->name }}</h6>
+                                        <span
+                                            class="text-muted fs-sm">{{ $restaurant->created_at->format('F j, Y') }}</span>
+                                    </div>
                                 </div>
+
+                                <!-- Card Body -->
+                                <div class="card-body">
+                                    @if ($restaurant->menu_image)
+                                        <a href="{{ asset('storage/' . $restaurant->menu_image) }}" target="_blank">
+                                            <img src="{{ asset('storage/' . $restaurant->menu_image) }}"
+                                                class="card-img-top" alt="{{ $restaurant->name }} Menu"
+                                                style="height: 200px; object-fit: cover;">
+                                        </a>
+                                    @else
+                                        <img src="{{ asset('images/no-image.jpg') }}" class="card-img-top"
+                                            alt="No image available" style="height: 200px; object-fit: cover;">
+                                    @endif
+
+                                    <h4 class="card-title mt-3">{{ $restaurant->name }}</h4>
+                                    <p class="text-muted mb-0">{{ Str::limit($restaurant->description, 100) }}</p>
+                                    <p class="text-muted mb-2"><strong>Operating Hours:</strong>
+                                        {{ $restaurant->operating_hours }}</p>
+                                    <p class="text-muted"><strong>Location:</strong> {{ $restaurant->location }}</p>
+                                </div>
+
+                                <!-- Card Footer -->
                                 <div class="card-footer">
-                                    <button type="button" class="btn btn-danger delete-restaurant w-100"
+                                    <button type="button" class="btn btn-rounded btn-danger delete-restaurant w-100"
                                         data-restaurant-id="{{ $restaurant->id }}" data-bs-toggle="modal"
                                         data-bs-target="#confirmDeleteRestaurantModal">
                                         Delete
@@ -248,6 +263,7 @@
                     @endforeach
                 </div>
             </div>
+
         </div>
 
     </div>
