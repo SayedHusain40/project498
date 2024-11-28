@@ -1,5 +1,5 @@
 @extends('new_layouts.app')
-@section('page_name', 'My Uploadeds')
+@section('page_name', 'My Uploaded')
 @section('styles')
     <style>
         .card:hover {
@@ -72,6 +72,12 @@
                 <a class="nav-link" id="pills-restaurants-tab" data-bs-toggle="pill" data-bs-target="#pills-restaurants"
                     href="#" role="tab" aria-controls="pills-restaurants" aria-selected="false">Restaurants</a>
             </li>
+
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="pills-announcements-tab" data-bs-toggle="pill" data-bs-target="#pills-announcements"
+                    href="#" role="tab" aria-controls="pills-announcements"
+                    aria-selected="false">Announcements</a>
+            </li>
         </ul>
 
         <div class="tab-content" id="pills-tabContent">
@@ -117,6 +123,58 @@
                         </div>
                     @endforeach
                 </div>
+            </div>
+
+            <!-- Announcements Tab -->
+            <div class="tab-pane fade" id="pills-announcements" role="tabpanel" aria-labelledby="pills-announcements-tab">
+                <!-- Check if there are no announcements -->
+                @if ($announcements->isEmpty())
+                    <div class="text-center">
+                        <p>No Events available at the moment. Please check back later.</p>
+                    </div>
+                @else
+                    <div class="container mt-4">
+                        <div class="row">
+                            @foreach ($announcements as $announcement)
+                                <div class="col-12 mb-4">
+                                    <div class="d-flex rounded-xl shadow-sm"
+                                        style="height: 200px; background-color: #ffffff;">
+                                        <div class="bg-primary text-white p-3 rounded-start"
+                                            style="width: 200px; border-top-left-radius: 0.5rem; border-bottom-left-radius: 0.5rem;">
+                                            <p class="text-muted text-uppercase" style="font-size: 12px;">Category</p>
+                                            <h2 class="font-weight-bold" style="font-size: 18px;">
+                                                {{ $announcement->category }}</h2>
+                                        </div>
+
+                                        <div class="p-3 bg-light rounded-end w-100 position-relative"
+                                            style="border-top-right-radius: 0.5rem; border-bottom-right-radius: 0.5rem;">
+                                            <h3 class="mt-1" style="font-weight: 500; font-size: 15px;"><b>Title:</b>
+                                                {{ $announcement->title }}</h3>
+                                            <h3 class="mt-1" style="font-weight: 500; font-size: 15px;">
+                                                <b>Description:</b>
+                                                {{ $announcement->description }}
+                                            </h3>
+
+                                            <p class="card-text"><strong>Date:</strong>
+                                                {{ \Carbon\Carbon::parse($announcement->event_date)->format('F j, Y h:i A') }}
+                                            </p>
+                                            <p class="mt-1" style="font-size: 14px;"><strong>Location:</strong>
+                                                {{ $announcement->location }}
+                                            </p>
+
+                                            <!-- Delete Button -->
+                                            <button type="button" class="btn btn-danger rounded-3 position-absolute"
+                                                style="right: 10px; bottom: 10px;"
+                                                data-announcement-id="{{ $announcement->id }}">
+                                                <i class="fa-solid fa-trash"></i> Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
             </div>
 
             <!-- Marketplace Tab -->
@@ -291,7 +349,29 @@
         </div>
     </div>
 
-    <!-- Confirm Delete Item Modal -->
+    <!-- Confirm Delete Announcement Modal -->
+    <div class="modal fade" id="confirmDeleteAnnouncementModal" tabindex="-1" role="dialog"
+        aria-labelledby="confirmDeleteAnnouncementModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteAnnouncementModalLabel">Confirm Delete</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this announcement?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteAnnouncement">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Delete Restaurant Modal -->
     <div class="modal fade" id="confirmDeleteItemModal" tabindex="-1" aria-labelledby="confirmDeleteItemModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
@@ -360,6 +440,7 @@
             let itemIdToDelete = null;
             let sessionIdToDelete = null;
             let restaurantIdToDelete = null;
+            let announcementIdToDelete = null;
 
             // delete for materials
             document.querySelectorAll('.delete-material').forEach(button => {
@@ -387,6 +468,37 @@
                         }
                     });
                 $('#confirmDeleteMaterialModal').modal('hide');
+            });
+
+            // delete for announcements
+            document.querySelectorAll('.btn-danger[data-announcement-id]').forEach(button => {
+                button.addEventListener('click', function() {
+                    announcementIdToDelete = this.getAttribute('data-announcement-id');
+                    $('#confirmDeleteAnnouncementModal').modal('show');
+                });
+            });
+
+            // Confirm delete for announcements
+            document.getElementById('confirmDeleteAnnouncement').addEventListener('click', function() {
+                if (announcementIdToDelete !== null) {
+                    fetch(`/my-uploads/announcements/${announcementIdToDelete}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Content-Type': 'application/json',
+                            },
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                document.querySelector(
+                                        `[data-announcement-id="${announcementIdToDelete}"]`)
+                                    .closest('.col-12').remove();
+                            } else {
+                                alert('Error deleting announcement.');
+                            }
+                        });
+                }
+                $('#confirmDeleteAnnouncementModal').modal('hide');
             });
 
             // delete for marketplace 
@@ -474,7 +586,6 @@
                     });
                 $('#confirmDeleteRestaurantModal').modal('hide');
             });
-
         });
     </script>
 @endsection

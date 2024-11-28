@@ -73,7 +73,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('my-uploads/marketplace/{id}', [UserUploadsController::class, 'destroyMarketplaceItem'])->name('marketplace.destroy');
     Route::delete('my-uploads/study-sessions/{id}', [UserUploadsController::class, 'destroyStudySession'])->name('study-sessions.destroy');
     Route::delete('my-uploads/restaurants/{id}', [UserUploadsController::class, 'destroyRestaurant'])->name('restaurants.destroy');
-    Route::delete('my-uploads/announcements/{id}', [UserUploadsController::class, 'destroyannouncement'])->name('announcements.destroy');
+    Route::delete('my-uploads/announcements/{id}', [UserUploadsController::class, 'destroyAnnouncement'])->name('announcements.destroy'); // New route for deleting announcements
 
 
     //for martials
@@ -101,7 +101,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/replies/{reply}', [QuestionController::class, 'destroyReply'])->name('replies.destroy');
     Route::post('/report', [QuestionController::class, 'reportContent']);
 
-
     //user profile
     Route::post('/users/profile', [UserProfileController::class, 'profile'])->name('users.profile');
 
@@ -114,8 +113,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/announcements', [AnnouncementController::class, 'index'])->name('announcements.index');
     Route::get('/announcements/create', [AnnouncementController::class, 'create'])->name('announcements.create');
     Route::post('/announcements', [AnnouncementController::class, 'store'])->name('announcements.store');
-
-
 
     //restaurants
     Route::resource('restaurants', RestaurantController::class);
