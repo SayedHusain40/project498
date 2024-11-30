@@ -270,6 +270,14 @@
                                 </a>
                             </li>
 
+                            <!-- Route Discounts -->
+                            <li class="nav-item">
+                                <a href="{{ route('discount.index') }}">
+                                    <i class="fa-solid fa-tag"></i>
+                                    <p>Student Discounts</p>
+                                </a>
+                            </li>
+
                             <li class="nav-section">
                                 <span class="sidebar-mini-icon">
                                     <i class="fa fa-ellipsis-h"></i>
@@ -292,14 +300,6 @@
                                     <p>My Uploadeds</p>
                                 </a>
                             </li>
-
-                            <!-- Route Discounts -->
-                        <li class="nav-item">
-                            <a href="{{ route('discount.index') }}">
-                                <i class="fa-solid fa-tag"></i>
-                                <p>Student Discounts</p>
-                            </a>
-                        </li>
 
                         @endif
 
