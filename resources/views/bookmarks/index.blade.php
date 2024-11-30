@@ -24,7 +24,7 @@
         }
 
         .bookmark-active svg {
-            fill: #FF9800; 
+            fill: #FF9800;
         }
     </style>
 @endsection
@@ -45,13 +45,16 @@
                     <tr>
                         <td>
                             @php
-                                $isBookmarked = true; 
+                                $isBookmarked = true;
                             @endphp
-                            <button type="button" class="btn btn-outline-dark bookmark-toggle bookmark-active" data-file-id="{{ $bookmark->file->id }}">
+                            <button type="button" class="btn btn-outline-dark bookmark-toggle bookmark-active"
+                                data-file-id="{{ $bookmark->file->id }}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                     class="bi bi-bookmarks-fill" viewBox="0 0 16 16">
-                                    <path d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L7 13.101l-4.223 2.815A.5.5 0 0 1 2 15.5z"/>
-                                    <path d="M4.268 1A2 2 0 0 1 6 0h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L13 13.768V2a1 1 0 0 0-1-1z"/>
+                                    <path
+                                        d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L7 13.101l-4.223 2.815A.5.5 0 0 1 2 15.5z" />
+                                    <path
+                                        d="M4.268 1A2 2 0 0 1 6 0h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L13 13.768V2a1 1 0 0 0-1-1z" />
                                 </svg>
                                 <span class="visually-hidden">Button</span>
                             </button>
@@ -73,7 +76,7 @@
                             </div>
                         </td>
                         <td>
-                            <a class="btn btn-primary rounded-pill" href="{{ Storage::url($bookmark->file->path) }}" download>
+                            <a class="btn btn-primary rounded-pill" href="{{ route('files.download', $bookmark->file) }}">
                                 <i class="fas fa-download me-1"></i> Download
                             </a>
                         </td>
@@ -86,36 +89,36 @@
 
 @section('scripts')
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('.bookmark-toggle').forEach(function (button) {
-                button.addEventListener('click', function () {
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.bookmark-toggle').forEach(function(button) {
+                button.addEventListener('click', function() {
                     const fileId = this.getAttribute('data-file-id');
                     const button = this;
 
                     fetch("{{ route('bookmark.toggle') }}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        body: JSON.stringify({
-                            file_id: fileId
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({
+                                file_id: fileId
+                            })
                         })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.status === 'removed') {
-                            button.closest('tr').remove(); 
-                        } else if (data.status === 'added') {
-                            button.classList.add('bookmark-active');
-                            button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'removed') {
+                                button.closest('tr').remove();
+                            } else if (data.status === 'added') {
+                                button.classList.add('bookmark-active');
+                                button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                         class="bi bi-bookmarks-fill" viewBox="0 0 16 16">
                                         <path d="M2 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L7 13.101l-4.223 2.815A.5.5 0 0 1 2 15.5z"/>
                                         <path d="M4.268 1A2 2 0 0 1 6 0h6a2 2 0 0 1 2 2v11.5a.5.5 0 0 1-.777.416L13 13.768V2a1 1 0 0 0-1-1z"/>
                                     </svg>`;
-                        }
-                    })
-                    .catch(error => console.error('Error:', error));
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
                 });
             });
         });
