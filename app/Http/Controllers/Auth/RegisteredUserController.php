@@ -32,7 +32,7 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255', 'unique:' . User::class],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'email' => ['required', 'string', 'email:rfc,dns', 'max:255','unique:' . User::class],
             'password' => [
                 'required',
                 'confirmed',
@@ -42,6 +42,7 @@ class RegisteredUserController extends Controller
                     ->numbers()    // At least one number
                     ->symbols(),   // At least one special character
             ],
+            'terms' => ['accepted'],
         ]);
 
         $user = User::create([

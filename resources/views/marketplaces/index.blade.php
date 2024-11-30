@@ -37,7 +37,11 @@
                                     <img src="{{ asset('storage/' . $item->image_path) }}" class="card-img-top"
                                         alt="{{ $item->title }}" style="height: 200px; object-fit: cover;">
                                 </a>
+                            @else
+                                <img src="{{ asset('images/no-image.jpg') }}" class="card-img-top" alt="No image available"
+                                    style="height: 200px; object-fit: cover;">
                             @endif
+
                             <h4 class="card-title mt-3">{{ $item->title }}</h4>
                             <p class="text-muted mb-0">{{ Str::limit($item->description, 100) }}</p>
                             <p class="text-muted mb-2">{{ $item->category }} | Condition:
@@ -45,8 +49,8 @@
                             <span class="text-success fw-bold mt-2">Price:
                                 @if ($item->price === null)
                                     Free
-                                @else6788
-                                    BD {{ $item->price }}
+                                @else
+                                    BD {{ number_format($item->price, 3) }}
                                 @endif
                             </span>
                         </div>

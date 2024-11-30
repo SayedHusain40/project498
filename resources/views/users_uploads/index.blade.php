@@ -1,5 +1,5 @@
 @extends('new_layouts.app')
-@section('page_name', 'My Uploadeds')
+@section('page_name', 'My Uploaded')
 @section('styles')
     <style>
         .card:hover {
@@ -44,31 +44,39 @@
             font-size: 1rem;
             margin-top: 0.5rem;
         }
+
+        .nav-pills .nav-link:hover {
+            color: #253c60;
+        }
     </style>
 @endsection
 
 @section('content')
     <div class="container mt-4">
 
-        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+        <ul class="nav nav-pills nav-fill mb-4" id="pills-tab" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="pills-materials-tab" data-bs-toggle="pill" data-bs-target="#pills-materials"
-                    type="button" role="tab" aria-controls="pills-materials" aria-selected="true">Materials</button>
+                <a class="nav-link active" id="pills-materials-tab" data-bs-toggle="pill" data-bs-target="#pills-materials"
+                    href="#" role="tab" aria-controls="pills-materials" aria-selected="true">Materials</a>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="pills-marketplace-tab" data-bs-toggle="pill"
-                    data-bs-target="#pills-marketplace" type="button" role="tab" aria-controls="pills-marketplace"
-                    aria-selected="false">Marketplace</button>
+                <a class="nav-link" id="pills-marketplace-tab" data-bs-toggle="pill" data-bs-target="#pills-marketplace"
+                    href="#" role="tab" aria-controls="pills-marketplace" aria-selected="false">Marketplace</a>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="pills-study-sessions-tab" data-bs-toggle="pill"
-                    data-bs-target="#pills-study-sessions" type="button" role="tab"
-                    aria-controls="pills-study-sessions" aria-selected="false">Study Sessions</button>
+                <a class="nav-link" id="pills-study-sessions-tab" data-bs-toggle="pill"
+                    data-bs-target="#pills-study-sessions" href="#" role="tab"
+                    aria-controls="pills-study-sessions" aria-selected="false">Study Sessions</a>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="pills-restaurants-tab" data-bs-toggle="pill"
-                    data-bs-target="#pills-restaurants" type="button" role="tab" aria-controls="pills-restaurants"
-                    aria-selected="false">Restaurants</button>
+                <a class="nav-link" id="pills-restaurants-tab" data-bs-toggle="pill" data-bs-target="#pills-restaurants"
+                    href="#" role="tab" aria-controls="pills-restaurants" aria-selected="false">Restaurants</a>
+            </li>
+
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="pills-announcements-tab" data-bs-toggle="pill" data-bs-target="#pills-announcements"
+                    href="#" role="tab" aria-controls="pills-announcements"
+                    aria-selected="false">Announcements</a>
             </li>
         </ul>
 
@@ -106,7 +114,7 @@
                                     </div>
                                 </a>
                                 <div class="card-footer">
-                                    <button type="button" class="btn btn-danger w-100 mt-2 delete-material"
+                                    <button type="button" class="btn btn-rounded btn-danger w-100 mt-2 delete-material"
                                         data-material-id="{{ $material->id }}">
                                         <i class="fa-solid fa-trash"></i> Delete
                                     </button>
@@ -115,6 +123,58 @@
                         </div>
                     @endforeach
                 </div>
+            </div>
+
+            <!-- Announcements Tab -->
+            <div class="tab-pane fade" id="pills-announcements" role="tabpanel" aria-labelledby="pills-announcements-tab">
+                <!-- Check if there are no announcements -->
+                @if ($announcements->isEmpty())
+                    <div class="text-center">
+                        <p>No Events available at the moment. Please check back later.</p>
+                    </div>
+                @else
+                    <div class="container mt-4">
+                        <div class="row">
+                            @foreach ($announcements as $announcement)
+                                <div class="col-12 mb-4">
+                                    <div class="d-flex rounded-xl shadow-sm"
+                                        style="height: 200px; background-color: #ffffff;">
+                                        <div class="bg-primary text-white p-3 rounded-start"
+                                            style="width: 200px; border-top-left-radius: 0.5rem; border-bottom-left-radius: 0.5rem;">
+                                            <p class="text-muted text-uppercase" style="font-size: 12px;">Category</p>
+                                            <h2 class="font-weight-bold" style="font-size: 18px;">
+                                                {{ $announcement->category }}</h2>
+                                        </div>
+
+                                        <div class="p-3 bg-light rounded-end w-100 position-relative"
+                                            style="border-top-right-radius: 0.5rem; border-bottom-right-radius: 0.5rem;">
+                                            <h3 class="mt-1" style="font-weight: 500; font-size: 15px;"><b>Title:</b>
+                                                {{ $announcement->title }}</h3>
+                                            <h3 class="mt-1" style="font-weight: 500; font-size: 15px;">
+                                                <b>Description:</b>
+                                                {{ $announcement->description }}
+                                            </h3>
+
+                                            <p class="card-text"><strong>Date:</strong>
+                                                {{ \Carbon\Carbon::parse($announcement->event_date)->format('F j, Y h:i A') }}
+                                            </p>
+                                            <p class="mt-1" style="font-size: 14px;"><strong>Location:</strong>
+                                                {{ $announcement->location }}
+                                            </p>
+
+                                            <!-- Delete Button -->
+                                            <button type="button" class="btn btn-danger rounded-3 position-absolute"
+                                                style="right: 10px; bottom: 10px;"
+                                                data-announcement-id="{{ $announcement->id }}">
+                                                <i class="fa-solid fa-trash"></i> Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
             </div>
 
             <!-- Marketplace Tab -->
@@ -137,6 +197,9 @@
                                     @if ($item->image_path)
                                         <img src="{{ asset('storage/' . $item->image_path) }}" class="card-img-top"
                                             alt="{{ $item->title }}" style="height: 200px; object-fit: cover;">
+                                    @else
+                                        <img src="{{ asset('images/no-image.jpg') }}" class="card-img-top"
+                                            alt="No image available" style="height: 200px; object-fit: cover;">
                                     @endif
                                     <h4 class="card-title mt-3">{{ $item->title }}</h4>
                                     <p class="text-muted mb-2">{{ $item->category }} | Condition:
@@ -150,7 +213,7 @@
                                     </span>
                                 </div>
                                 <div class="card-footer">
-                                    <button type="button" class="btn btn-danger w-100 mt-2 delete-item"
+                                    <button type="button" class="btn btn-rounded btn-danger w-100 mt-2 delete-item"
                                         data-item-id="{{ $item->id }}">
                                         <i class="fa-solid fa-trash"></i> Delete
                                     </button>
@@ -211,31 +274,46 @@
 
             <!-- Restaurants Tab -->
             <div class="tab-pane fade" id="pills-restaurants" role="tabpanel" aria-labelledby="pills-restaurants-tab">
-                <div class="row">
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
                     @foreach ($restaurants as $restaurant)
-                        <div class="col col-md-4 mb-4">
-                            <div class="card h-100 shadow-sm">
-                                @if ($restaurant->menu_image)
-                                    <img src="{{ asset('storage/' . $restaurant->menu_image) }}"
-                                        alt="{{ $restaurant->name }} Menu" class="card-img-top img-fluid"
-                                        style="width: 100%; height: 250px; object-fit: cover; cursor: pointer;"
-                                        data-bs-toggle="modal" data-bs-target="#imageModal"
-                                        onclick="showImage('{{ asset('storage/' . $restaurant->menu_image) }}')">
-                                @else
-                                    <img src="{{ asset('path/to/default/image.png') }}" alt="No Image Available"
-                                        class="card-img-top img-fluid"
-                                        style="width: 100%; height: 250px; object-fit: cover;">
-                                @endif
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ $restaurant->name }}</h5>
-                                    <p class="card-text">{{ Str::limit($restaurant->description, 100) }}</p>
-                                    <p class="card-text"><strong>Operating Hours:</strong>
-                                        {{ $restaurant->operating_hours }}
-                                    </p>
-                                    <p class="card-text"><strong>Location:</strong> {{ $restaurant->location }}</p>
+                        <div class="col">
+                            <div class="card border rounded-5">
+                                <!-- Card Header -->
+                                <div class="card-header d-flex align-items-center">
+                                    <div class="avatar rounded-circle bg-primary text-white d-flex justify-content-center align-items-center"
+                                        style="width: 40px; height: 40px;">
+                                        <i class="fas fa-user" style="font-size: 20px;"></i>
+                                    </div>
+                                    <div class="ms-3">
+                                        <h6 class="mb-0 fs-sm">By, {{ $restaurant->user->name }}</h6>
+                                        <span
+                                            class="text-muted fs-sm">{{ $restaurant->created_at->format('F j, Y') }}</span>
+                                    </div>
                                 </div>
+
+                                <!-- Card Body -->
+                                <div class="card-body">
+                                    @if ($restaurant->menu_image)
+                                        <a href="{{ asset('storage/' . $restaurant->menu_image) }}" target="_blank">
+                                            <img src="{{ asset('storage/' . $restaurant->menu_image) }}"
+                                                class="card-img-top" alt="{{ $restaurant->name }} Menu"
+                                                style="height: 200px; object-fit: cover;">
+                                        </a>
+                                    @else
+                                        <img src="{{ asset('images/no-image.jpg') }}" class="card-img-top"
+                                            alt="No image available" style="height: 200px; object-fit: cover;">
+                                    @endif
+
+                                    <h4 class="card-title mt-3">{{ $restaurant->name }}</h4>
+                                    <p class="text-muted mb-0">{{ Str::limit($restaurant->description, 100) }}</p>
+                                    <p class="text-muted mb-2"><strong>Operating Hours:</strong>
+                                        {{ $restaurant->operating_hours }}</p>
+                                    <p class="text-muted"><strong>Location:</strong> {{ $restaurant->location }}</p>
+                                </div>
+
+                                <!-- Card Footer -->
                                 <div class="card-footer">
-                                    <button type="button" class="btn btn-danger delete-restaurant w-100"
+                                    <button type="button" class="btn btn-rounded btn-danger delete-restaurant w-100"
                                         data-restaurant-id="{{ $restaurant->id }}" data-bs-toggle="modal"
                                         data-bs-target="#confirmDeleteRestaurantModal">
                                         Delete
@@ -246,6 +324,7 @@
                     @endforeach
                 </div>
             </div>
+
         </div>
 
     </div>
@@ -270,7 +349,29 @@
         </div>
     </div>
 
-    <!-- Confirm Delete Item Modal -->
+    <!-- Confirm Delete Announcement Modal -->
+    <div class="modal fade" id="confirmDeleteAnnouncementModal" tabindex="-1" role="dialog"
+        aria-labelledby="confirmDeleteAnnouncementModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteAnnouncementModalLabel">Confirm Delete</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this announcement?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteAnnouncement">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Delete Restaurant Modal -->
     <div class="modal fade" id="confirmDeleteItemModal" tabindex="-1" aria-labelledby="confirmDeleteItemModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
@@ -339,6 +440,7 @@
             let itemIdToDelete = null;
             let sessionIdToDelete = null;
             let restaurantIdToDelete = null;
+            let announcementIdToDelete = null;
 
             // delete for materials
             document.querySelectorAll('.delete-material').forEach(button => {
@@ -366,6 +468,37 @@
                         }
                     });
                 $('#confirmDeleteMaterialModal').modal('hide');
+            });
+
+            // delete for announcements
+            document.querySelectorAll('.btn-danger[data-announcement-id]').forEach(button => {
+                button.addEventListener('click', function() {
+                    announcementIdToDelete = this.getAttribute('data-announcement-id');
+                    $('#confirmDeleteAnnouncementModal').modal('show');
+                });
+            });
+
+            // Confirm delete for announcements
+            document.getElementById('confirmDeleteAnnouncement').addEventListener('click', function() {
+                if (announcementIdToDelete !== null) {
+                    fetch(`/my-uploads/announcements/${announcementIdToDelete}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Content-Type': 'application/json',
+                            },
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                document.querySelector(
+                                        `[data-announcement-id="${announcementIdToDelete}"]`)
+                                    .closest('.col-12').remove();
+                            } else {
+                                alert('Error deleting announcement.');
+                            }
+                        });
+                }
+                $('#confirmDeleteAnnouncementModal').modal('hide');
             });
 
             // delete for marketplace 
@@ -453,7 +586,6 @@
                     });
                 $('#confirmDeleteRestaurantModal').modal('hide');
             });
-
         });
     </script>
 @endsection

@@ -9,6 +9,7 @@ use App\Models\Restaurant;
 use App\Models\StudySession;
 use App\Models\Marketplace;
 use App\Models\MaterialType;
+use App\Models\Announcement;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -33,8 +34,10 @@ class UserUploadsController extends Controller
         $marketplaceItems = Marketplace::where('user_id', Auth::id())->get();
         $studySessions = StudySession::where('user_id', Auth::id())->get();
         $restaurants = Restaurant::where('user_id', Auth::id())->get();
+        $announcements = Announcement::where('user_id', Auth::id())->get();  
 
-        return view('users_uploads.index', compact('courses', 'materialTypes', 'materials', 'marketplaceItems', 'studySessions', 'restaurants'));
+
+        return view('users_uploads.index', compact('courses', 'materialTypes', 'materials', 'marketplaceItems', 'studySessions', 'restaurants', 'announcements'));
     }
 
 
@@ -67,6 +70,14 @@ class UserUploadsController extends Controller
         $restaurant->delete();
 
         return response()->json(['message' => 'Restaurant deleted successfully.']);
+    }
+
+    public function destroyAnnouncement($id)
+    {
+        $announcement = Announcement::findOrFail($id);
+        $announcement->delete();
+        
+        return response()->json(['message' => 'Announcement deleted successfully.']);
     }
 
 }

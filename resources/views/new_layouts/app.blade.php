@@ -233,7 +233,7 @@
                             <li class="nav-item {{ request()->routeIs('marketplace') ? 'active' : '' }}">
                                 <a href="{{ route('marketplace') }}">
                                     <i class="fas fa-folder-open"></i>
-                                    <p>marketplace</p>
+                                    <p>Marketplace</p>
                                 </a>
                             </li>
 
