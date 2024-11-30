@@ -418,24 +418,30 @@
 
     <!-- Report Modal -->
     <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-body text-center">
-                    <div class="mb-3">
-                        <i class="fa-solid fa-flag modal-icon"></i>
-                    </div>
+                <div class="modal-header">
                     <h5 class="modal-title" id="reportModalLabel">Report Content</h5>
-                    <p>Please enter your reason for reporting this content:</p>
-                    <textarea id="reportReason" class="form-control mt-3" placeholder="Enter your reason here..." rows="3"></textarea>
-                    <div id="reportError" class="text-danger mt-2" style="display: none;"></div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-footer d-flex justify-content-center">
-                    <button type="button" class="btn btn-primary" id="submitReportButton">Submit Report</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <div class="modal-body">
+                    <form id="reportForm">
+                        <div class="mb-3">
+                            <label for="reason" class="form-label">Reason</label>
+                            <textarea class="form-control" id="reason" rows="3" placeholder="Enter your reason..." required></textarea>
+                        </div>
+                        <input type="hidden" id="reportType">
+                        <input type="hidden" id="reportId">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="submitReport()">Submit Report</button>
                 </div>
             </div>
         </div>
     </div>
+
 
     <!-- Login/Signup Modal -->
     <div class="modal fade" id="loginSignupModal" tabindex="-1" aria-labelledby="loginSignupModalLabel"
@@ -510,7 +516,7 @@
                                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton${data.question.id}">
                                                         <li><button class="dropdown-item" href="#" onclick="editQuestion(${data.question.id}, '${data.question.content}')">Edit</button></li>
                                                         <li><button class="dropdown-item" onclick="confirmDeleteQuestion(${data.question.id})">Delete</button></li>
-                                                        <li><button class="dropdown-item" href="#" onclick="openReportModal('question', ${data.question.id})">Report</button></li>
+                                                        <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#reportModal" onclick="setReportData('question', ${data.question.id})">Report</button></li>
                                                     </ul>
                                                 </div>
                                             </div>
@@ -614,7 +620,7 @@
                                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButtonReply${data.reply.id}">
                                                         <li><button class="dropdown-item" href="#" onclick="editReply(${questionId}, ${data.reply.id}, '${data.reply.content}')">Edit</button></li>
                                                         <li><button class="dropdown-item" onclick="confirmDeleteReply(${data.reply.id})">Delete</button></li>
-                                                        <li><button class="dropdown-item" href="#" onclick="openReportModal('reply', ${data.reply.id})">Report</button></li>
+                                                        <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#reportModal" onclick="setReportData('reply', ${data.reply.id})">Report</button></li>
                                                     </ul>
                                                 </div>
                                             </div>
@@ -949,30 +955,18 @@
         });
     </script>
     <script>
-        let reportType;
-        let reportId;
-
-        function openReportModal(type, id) {
-            reportType = type;
-            reportId = id;
-            // Clear any previous error messages
-            document.getElementById('reportError').style.display = 'none';
-            document.getElementById('reportError').textContent = '';
-
-            const reportModal = new bootstrap.Modal(document.getElementById('reportModal'));
-            reportModal.show();
+        function setReportData(type, id) {
+            document.getElementById('reportType').value = type;
+            document.getElementById('reportId').value = id;
         }
 
-        document.getElementById('submitReportButton').addEventListener('click', function() {
-            const reason = document.getElementById('reportReason').value;
-            const reportError = document.getElementById('reportError');
+        function submitReport() {
+            const type = document.getElementById('reportType').value;
+            const id = document.getElementById('reportId').value;
+            const reason = document.getElementById('reason').value;
 
-            reportError.style.display = 'none';
-            reportError.textContent = '';
-
-            if (reason.trim() === '') {
-                reportError.style.display = 'block';
-                reportError.textContent = 'Please enter a reason for reporting.';
+            if (!reason) {
+                alert("Please provide a reason.");
                 return;
             }
 
@@ -980,26 +974,27 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute(
-                            'content')
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                     },
                     body: JSON.stringify({
-                        type: reportType,
-                        id: reportId,
-                        reason: reason
+                        type: type,
+                        id: id,
+                        reason: reason,
                     })
                 })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        const reportModal = bootstrap.Modal.getInstance(document.getElementById('reportModal'));
-                        reportModal.hide();
+                        $('#reportModal').modal('hide');
+
                     } else {
-                        reportError.style.display = 'block';
-                        reportError.textContent = 'Failed to submit report.';
+                        alert("Something went wrong. Please try again later.");
                     }
                 })
-                .catch(error => console.error('Error:', error));
-        });
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert("An error occurred. Please try again later.");
+                });
+        }
     </script>
 @endsection
