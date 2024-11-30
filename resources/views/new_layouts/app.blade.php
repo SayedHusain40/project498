@@ -121,47 +121,49 @@
                             @endif
                             @if ($role === 'user')
                                 <!-- Routes All Uploads -->
-                            <!-- Routes All Uploads -->
-                            <li class="nav-item">
-                                <a data-bs-toggle="collapse" href="#uploadSubmenu">
-                                    <i class="fas fa-cloud-upload-alt"></i>
-                                    <p>Upload</p>
-                                    <span class="caret"></span>
-                                </a>
-                                <div class="collapse" id="uploadSubmenu">
-                                    <ul class="nav nav-collapse">
-                                        <li class="nav-item">
-                                            <a href="{{ route('up') }}">
-                                                <span class="sub-item">Upload Materials</span>
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="{{ route('marketplace.show') }}">
-                                                <span class="sub-item">Upload to Marketplace</span>
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="{{ route('study-sessions.create') }}">
-                                                <span class="sub-item">Post Study Session</span>
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="{{ route('restaurants.create') }}">
-                                                <span class="sub-item">Add New Restaurant</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-                            @endif
-                        </li>
-                        @if ($role === 'admin')
-                            <a href="{{ route('admin.dashboard') }}">
-                                <i class="fas fa-home"></i>
-                                <p>Dashboard</p>
+                        <li class="nav-item">
+                            <a data-bs-toggle="collapse" href="#uploadSubmenu">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Upload</p>
+                                <span class="caret"></span>
                             </a>
+                            <div class="collapse" id="uploadSubmenu">
+                                <ul class="nav nav-collapse">
+                                    <li class="nav-item">
+                                        <a href="{{ route('up') }}">
+                                            <span class="sub-item">Upload Materials</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('marketplace.show') }}">
+                                            <span class="sub-item">Upload to Marketplace</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('study-sessions.create') }}">
+                                            <span class="sub-item">Post Study Session</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('restaurants.create') }}">
+                                            <span class="sub-item">Add New Restaurant</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
                         @endif
                         </li>
+
+                        @if ($role === 'admin')
+                            <li class="nav-item">
+                                <a href="{{ route('admin.dashboard') }}">
+                                    <i class="fas fa-home"></i>
+                                    <p>Dashboard</p>
+                                </a>
+                            </li>
+                        @endif
+
                         <li class="nav-section">
                             <span class="sidebar-mini-icon">
                                 <i class="fa fa-ellipsis-h"></i>
@@ -170,7 +172,6 @@
                         </li>
 
                         @if ($role === 'user' or $role === 'guest')
-
                             <!-- Colleges -->
                             <li class="nav-item">
                                 <a data-bs-toggle="collapse" href="#collegesSubmenu">
@@ -246,12 +247,12 @@
                             </li>
 
                             <!-- Route announcements -->
-                                <li class="nav-item {{ request()->routeIs('announcements.index') ? 'active' : '' }}">
-                                    <a href="{{ route('announcements.index') }}">
-                                        <i class="fas fa-folder-open"></i>
-                                        <p>Events</p>
-                                    </a>
-                                </li>
+                            <li class="nav-item {{ request()->routeIs('announcements.index') ? 'active' : '' }}">
+                                <a href="{{ route('announcements.index') }}">
+                                    <i class="fas fa-folder-open"></i>
+                                    <p>Events</p>
+                                </a>
+                            </li>
 
                             <!-- Route restaurants -->
                             <li class="nav-item {{ request()->routeIs('restaurants.index') ? 'active' : '' }}">
@@ -275,6 +276,7 @@
                                 </span>
                                 <h4 class="text-section">My Resources</h4>
                             </li>
+
                             <!-- My Library -->
                             <li class="nav-item {{ request()->routeIs('followed.materials') ? 'active' : '' }}">
                                 <a href="{{ route('followed.materials') }}">
@@ -304,7 +306,6 @@
                             </li>
                         @endif
 
-
                         <!-- For All users -->
 
                         <!-- Route Discounts -->
@@ -317,6 +318,7 @@
                     </ul>
                 </div>
             </div>
+
 
         </div>
         <!-- End Sidebar -->
