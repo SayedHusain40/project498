@@ -291,6 +291,14 @@
                                 </a>
                             </li>
 
+                            <!-- Route Discounts -->
+                        <li class="nav-item">
+                            <a href="{{ route('discount.index') }}">
+                                <i class="fa-solid fa-tag"></i>
+                                <p>Student Discounts</p>
+                            </a>
+                        </li>
+
                         @endif
 
                         <!-- for admin -->
@@ -307,13 +315,6 @@
 
                         <!-- For All users -->
 
-                        <!-- Route Discounts -->
-                        <li class="nav-item">
-                            <a href="{{ route('discount.index') }}">
-                                <i class="fa-solid fa-tag"></i>
-                                <p>Student Discounts</p>
-                            </a>
-                        </li>
                     </ul>
                 </div>
             </div>
