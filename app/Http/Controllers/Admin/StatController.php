@@ -15,15 +15,15 @@ class StatController extends Controller
         $materialsCount = Material::count();
         $usersCount = User::where('role', 'user')->count();
         $users = User::all();
+        $totalDownloads = \DB::table('files')->sum('downloads');
 
         return view('admin.dashboard', [
             'materialsCount' => $materialsCount,
             'usersCount' => $usersCount,
+            'totalDownloads' => $totalDownloads,
             'users' => $users
         ]);
     }
-
-
 
 
     public function edit($id)
