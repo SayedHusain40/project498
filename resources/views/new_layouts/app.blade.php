@@ -75,20 +75,20 @@
 
     <div class="wrapper">
         <!-- Sidebar -->
-        <div class="sidebar sidebar-style-2" data-background-color="dark">
+        <div class="sidebar sidebar-style-2 pt-5" data-background-color="dark">
             <div class="sidebar-logo">
                 <!-- Logo Header -->
                 <div class="logo-header" data-background-color="dark">
 
                     @if ($role === 'user' or $role === 'guest')
                         <a href="{{ route('dashboard') }}" class="logo">
-                            <img src="{{ asset('assets/img/kaiadmin/logo_light.svg') }}" alt="navbar brand"
-                                class="navbar-brand" height="20" />
+                            <img src="{{ asset('images/white.png')  }}" alt="navbar brand"
+                                class="navbar-brand img-fluid" style="max-height: 200px;" />
                         </a>
                     @elseif($role === 'admin')
                         <a href="{{ route('admin.dashboard') }}" class="logo">
-                            <img src="{{ asset('assets/img/kaiadmin/logo_light.svg') }}" alt="navbar brand"
-                                class="navbar-brand" height="20" />
+                            <img src="{{ asset('images/white.png')  }}" alt="navbar brand"
+                                class="navbar-brand" class="navbar-brand img-fluid" style="max-height: 200px;" />
                         </a>
                     @endif
 
@@ -108,9 +108,9 @@
                 <!-- End Logo Header -->
             </div>
 
-            <div class="sidebar-wrapper scrollbar scrollbar-inner">
+            <div class="sidebar-wrapper scrollbar scrollbar-inner" style="margin-top: 10px !important">
                 <div class="sidebar-content">
-                    <ul class="nav nav-secondary">
+                    <ul class="nav nav-secondary" >
                         <li
                             class="nav-item {{ request()->routeIs('dashboard') || request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                             @if ($role === 'user' or $role === 'guest')
