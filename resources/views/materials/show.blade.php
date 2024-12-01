@@ -153,11 +153,15 @@
     if (auth()->check()) {
         if (auth()->user()->role === 'user') {
             $role = 'user';
+        } elseif (auth()->user()->role === 'admin') {
+            $role = 'admin';
         }
     } else {
         $role = 'guest';
     }
 @endphp
+
+
 
 @section('content')
     <div>

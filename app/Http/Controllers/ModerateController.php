@@ -3,6 +3,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Question;
+use App\Models\Reply;
 use Illuminate\Support\Facades\DB;
 
 class ModerateController extends Controller
@@ -111,12 +113,20 @@ class ModerateController extends Controller
                 return redirect()->route('materials.show', ['material' => $id]);
 
             case 'Reply':
-                // Redirect to the existing reply in the discussion page
-                return redirect()->route('discussions.department', ['discussion' => $id]);
+                // You need to know the department from the reply or question context, adjust this accordingly
+                $reply = Reply::find($id); // Assuming it's a reply
+                $departmentId = $reply->question->department_id; // Get the department from the related question
+                return redirect()->route('chats.department', ['department' => $departmentId]);
 
             case 'Question':
-                // Redirect to the existing question in the discussion page
-                return redirect()->route('discussions.department', ['discussion' => $id]);
+                // Fetch the department for the question and redirect
+                $question = Question::find($id);
+                $departmentId = $question->department_id; // Get the department from the question
+                return redirect()->route('chats.department', ['department' => $departmentId]);
+
+            default:
+                abort(404, 'Invalid type');
         }
     }
+
 }
