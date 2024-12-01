@@ -25,6 +25,8 @@ use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\UserUploadsController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\announcementsController;
+use App\Http\Controllers\ModerateController;
+
 
 //admin
 use App\Http\Controllers\Admin\HomeController;
@@ -113,6 +115,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/announcements', [AnnouncementController::class, 'index'])->name('announcements.index');
     Route::get('/announcements/create', [AnnouncementController::class, 'create'])->name('announcements.create');
     Route::post('/announcements', [AnnouncementController::class, 'store'])->name('announcements.store');
+
+    //Moderate Reports
+    Route::get('/moderate/reports', [ModerateController::class, 'index'])->name('moderate.index');
+    Route::post('/moderate/reports/allow/{type}/{id}', [ModerateController::class, 'allow'])->name('moderate.allow');
+    Route::delete('/moderate/reports/delete/{type}/{id}', [ModerateController::class, 'delete'])->name('moderate.delete');
+    Route::get('/moderate/view/{type}/{id}', [ModerateController::class, 'view'])->name('moderate.view');
+    Route::get('/materials/{material}', [MaterialController::class, 'show'])->name('materials.show');
+    Route::get('/discussions/{discussion}', [QuestionController::class, 'department'])->name('discussions.department');
+
 
     //restaurants
     Route::resource('restaurants', RestaurantController::class);

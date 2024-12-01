@@ -270,6 +270,7 @@
                                 </a>
                             </li>
 
+
                             <!-- Route Discounts -->
                             <li class="nav-item">
                                 <a href="{{ route('discount.index') }}">
@@ -310,6 +311,13 @@
                                 <a href="{{ route('admin.reports.index') }}">
                                     <i class="fas fa-file-alt"></i>
                                     <p>Reports</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('moderate.index') }}">
+                                    <i class="fa-solid fa-flag"></i>
+                                    <p>Moderate Content</p>
                                 </a>
                             </li>
                         @endif
