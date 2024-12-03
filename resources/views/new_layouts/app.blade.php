@@ -53,6 +53,9 @@
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link rel="stylesheet" href="{{ asset('assets/css/demo.css') }}">
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.9/css/intlTelInput.min.css">
+
+
     @yield('styles')
 
 </head>
@@ -792,6 +795,9 @@
     <script src="{{ asset('assets/js/kaiadmin.min.js') }}"></script>
 
     <script src="assets/js/setting-demo.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.9/js/intlTelInput.min.js"></script>
+
 
     @yield('scripts')
 </body>
