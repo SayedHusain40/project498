@@ -272,6 +272,13 @@
                                     <p>Discussions</p>
                                 </a>
                             </li>
+                            <!-- Route feedback -->
+                            <li class="nav-item {{ request()->routeIs('feedback.index') ? 'active' : '' }}">
+                                <a href="{{ route('feedback.index') }}">
+                                    <i class="fas fa-comments"></i>
+                                    <p>Feedback</p>
+                                </a>
+                            </li>
 
 
                             <!-- Route Discounts -->
@@ -638,10 +645,8 @@
 
                     <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
                         <div>
-
-                            <h3 class="fw-bold mb-3">@yield('page_name')</h3>
+                            <h2 class="fw-bold">@yield('page_name')</h2>
                             <h6 class="op-7 mb-2">@yield('page_description')</h6>
-
                         </div>
 
                         <div class="ms-md-auto py-2 py-md-0">
