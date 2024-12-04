@@ -17,7 +17,6 @@ class StoreMaterialController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required',
-            'description' => 'required',
             'course_id' => 'required',
             'material_type_id' => 'required|exists:material_types,id',
             'file' => 'required|min:1',

@@ -46,7 +46,7 @@
                             <p class="text-muted mb-0">{{ Str::limit($item->description, 100) }}</p>
                             <p class="text-muted mb-2">{{ $item->category }} | Condition:
                                 {{ ucfirst($item->condition) }}</p>
-                            <span class="text-success fw-bold mt-2">Price:
+                            <span class="text fw-bold mt-2">Price:
                                 @if ($item->price === null)
                                     Free
                                 @else

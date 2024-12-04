@@ -24,7 +24,6 @@ class MarketplaceController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'required|string',
             'price_option' => 'required',
             'category' => 'required|string',
             'condition' => 'required|in:new,used',

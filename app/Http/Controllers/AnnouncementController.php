@@ -36,7 +36,6 @@ class AnnouncementController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'required|string',
             'category' => 'required|in:Academic,Career Development,Community Engagement,Competitions and Hackathons,Entertainment and Social',
             'location' => 'required|string|max:255',
             'event_date' => 'required|date',

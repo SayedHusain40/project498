@@ -27,7 +27,6 @@ class StudySessionController extends Controller
     {
         $request->validate([
             'topic' => 'required|string|max:255',
-            'description' => 'required|string',
             'session_date' => 'required|date',
             'location' => 'required|string|max:255',
             'course_id' => 'required|exists:courses,id',
