@@ -53,32 +53,30 @@
 
 @section('content')
     <div class="container mt-4">
+<ul class="nav nav-tabs nav-line nav-color-secondary mb-4" id="pills-tab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link active" id="pills-materials-tab" data-bs-toggle="pill" data-bs-target="#pills-materials"
+            href="#" role="tab" aria-controls="pills-materials" aria-selected="true">Materials</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="pills-marketplace-tab" data-bs-toggle="pill" data-bs-target="#pills-marketplace"
+            href="#" role="tab" aria-controls="pills-marketplace" aria-selected="false">Marketplace</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="pills-study-sessions-tab" data-bs-toggle="pill"
+            data-bs-target="#pills-study-sessions" href="#" role="tab"
+            aria-controls="pills-study-sessions" aria-selected="false">Study Sessions</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="pills-restaurants-tab" data-bs-toggle="pill" data-bs-target="#pills-restaurants"
+            href="#" role="tab" aria-controls="pills-restaurants" aria-selected="false">Restaurants</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="pills-announcements-tab" data-bs-toggle="pill" data-bs-target="#pills-announcements"
+            href="#" role="tab" aria-controls="pills-announcements" aria-selected="false">Announcements</a>
+    </li>
+</ul>
 
-        <ul class="nav nav-pills nav-fill mb-4" id="pills-tab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <a class="nav-link active" id="pills-materials-tab" data-bs-toggle="pill" data-bs-target="#pills-materials"
-                    href="#" role="tab" aria-controls="pills-materials" aria-selected="true">Materials</a>
-            </li>
-            <li class="nav-item" role="presentation">
-                <a class="nav-link" id="pills-marketplace-tab" data-bs-toggle="pill" data-bs-target="#pills-marketplace"
-                    href="#" role="tab" aria-controls="pills-marketplace" aria-selected="false">Marketplace</a>
-            </li>
-            <li class="nav-item" role="presentation">
-                <a class="nav-link" id="pills-study-sessions-tab" data-bs-toggle="pill"
-                    data-bs-target="#pills-study-sessions" href="#" role="tab"
-                    aria-controls="pills-study-sessions" aria-selected="false">Study Sessions</a>
-            </li>
-            <li class="nav-item" role="presentation">
-                <a class="nav-link" id="pills-restaurants-tab" data-bs-toggle="pill" data-bs-target="#pills-restaurants"
-                    href="#" role="tab" aria-controls="pills-restaurants" aria-selected="false">Restaurants</a>
-            </li>
-
-            <li class="nav-item" role="presentation">
-                <a class="nav-link" id="pills-announcements-tab" data-bs-toggle="pill" data-bs-target="#pills-announcements"
-                    href="#" role="tab" aria-controls="pills-announcements"
-                    aria-selected="false">Announcements</a>
-            </li>
-        </ul>
 
         <div class="tab-content" id="pills-tabContent">
             <!-- Materials Tab -->
