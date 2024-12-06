@@ -53,7 +53,7 @@
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link rel="stylesheet" href="{{ asset('assets/css/demo.css') }}">
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.9/css/intlTelInput.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.9/css/intlTelInput.min.css">
 
 
     @yield('styles')
@@ -85,13 +85,13 @@
 
                     @if ($role === 'user' or $role === 'guest')
                         <a href="{{ route('dashboard') }}" class="logo">
-                            <img src="{{ asset('images/white.png')  }}" alt="navbar brand"
-                                class="navbar-brand img-fluid" style="max-height: 200px;" />
+                            <img src="{{ asset('images/white.png') }}" alt="navbar brand" class="navbar-brand img-fluid"
+                                style="max-height: 200px;" />
                         </a>
                     @elseif($role === 'admin')
                         <a href="{{ route('admin.dashboard') }}" class="logo">
-                            <img src="{{ asset('images/white.png')  }}" alt="navbar brand"
-                                class="navbar-brand" class="navbar-brand img-fluid" style="max-height: 200px;" />
+                            <img src="{{ asset('images/white.png') }}" alt="navbar brand" class="navbar-brand"
+                                class="navbar-brand img-fluid" style="max-height: 200px;" />
                         </a>
                     @endif
 
@@ -113,7 +113,7 @@
 
             <div class="sidebar-wrapper scrollbar scrollbar-inner" style="margin-top: 10px !important">
                 <div class="sidebar-content">
-                    <ul class="nav nav-secondary" >
+                    <ul class="nav nav-secondary">
                         <li
                             class="nav-item {{ request()->routeIs('dashboard') || request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                             @if ($role === 'user' or $role === 'guest')
@@ -562,9 +562,20 @@
                                 <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#"
                                     aria-expanded="false">
                                     <div class="avatar-sm">
-                                        <img src="{{ asset('assets/img/profile.jpg') }}" alt="..."
-                                            class="avatar-img rounded-circle" />
+                                        <div class="rounded-circle"
+                                            style="width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0;">
+                                            @if (Auth::user()->profile_image)
+                                                <img src="{{ asset('storage/' . Auth::user()->profile_image) }}"
+                                                    alt="Profile Image" class="avatar-img rounded-circle"
+                                                    style="width: 100%; height: 100%; object-fit: cover;">
+                                            @else
+                                                <i class="fas fa-user" style="font-size: 25px; color: #aaa;"></i>
+                                            @endif
+                                        </div>
                                     </div>
+
+
+
                                     <span class="profile-username">
                                         <span class="op-7">Hi,</span>
                                         <span class="fw-bold">
@@ -581,9 +592,16 @@
                                     <div class="dropdown-user-scroll scrollbar-outer">
                                         <li>
                                             <div class="user-box">
-                                                <div class="avatar-lg">
-                                                    <img src="{{ asset('assets/img/profile.jpg') }}"
-                                                        alt="image profile" class="avatar-img rounded" />
+                                                <div class="avatar-lg rounded-circle"
+                                                    style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0;">
+                                                    @if (Auth::user()->profile_image)
+                                                        <img src="{{ asset('storage/' . Auth::user()->profile_image) }}"
+                                                            alt="Profile Image" class="avatar-img rounded-circle"
+                                                            style="width: 100%; height: 100%; object-fit: cover;">
+                                                    @else
+                                                        <i class="fas fa-user"
+                                                            style="font-size: 30px; color: #aaa;"></i>
+                                                    @endif
                                                 </div>
                                                 <div class="u-text">
                                                     <h4>

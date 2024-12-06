@@ -4,6 +4,45 @@
 
 @section('content')
     <div class="container py-4">
+
+<div class="card p-4 text-center">
+    <h3>Profile Image</h3>
+
+    <div class="d-flex justify-content-center mb-3">
+        <div class="rounded-circle"
+            style="width: 110px; height: 110px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0;">
+            @if ($user->profile_image)
+                <img src="{{ asset('storage/' . $user->profile_image) }}" alt="Profile Image"
+                    class="img-fluid rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
+            @else
+                <i class="fas fa-user" style="font-size: 70px; color: #aaa;"></i>
+            @endif
+        </div>
+    </div>
+
+    <form action="{{ route('profile.updateImage') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        <div class="mb-3">
+            <label for="profile_image" class="form-label">Upload Profile Image</label>
+            <input type="file" name="profile_image" id="profile_image" class="form-control w-50 mx-auto" accept="image/*">
+            @error('profile_image')
+                <div class="text-danger mt-2">{{ $message }}</div>
+            @enderror
+        </div>
+        <button type="submit" class="btn btn-primary">Upload Image</button>
+    </form>
+
+    @if ($user->profile_image)
+        <form action="{{ route('profile.removeImage') }}" method="POST" style="margin-top: 10px;">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-danger">Remove Profile Image</button>
+        </form>
+    @endif
+</div>
+
+
+
         <div class="card p-4">
             <section>
                 <header>
@@ -22,8 +61,8 @@
 
                     <div class="mb-3">
                         <x-input-label for="name" :value="__('Name')" />
-                        <x-text-input id="name" name="name" type="text" class="form-control" style="width: 300px;"
-                            :value="old('name', $user->name)" required autofocus autocomplete="name" />
+                        <x-text-input id="name" name="name" type="text" class="form-control"
+                            style="width: 300px;" :value="old('name', $user->name)" required autofocus autocomplete="name" />
                         <x-input-error class="mt-2 text-danger" :messages="$errors->get('name')" />
                     </div>
 

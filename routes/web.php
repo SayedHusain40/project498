@@ -52,6 +52,11 @@ Route::get('/departments/{department}/questions', [QuestionController::class, 's
 
 Route::middleware('auth')->group(function () {
 
+    //upload profile image
+    Route::post('/profile/image', [ProfileController::class, 'updateImage'])->name('profile.updateImage');
+    Route::delete('/profile/remove-image', [ProfileController::class, 'removeImage'])->name('profile.removeImage');
+
+
     // feedback 
     Route::get('/feedback', [FeedbackController::class, 'index'])->name('feedback.index');
     Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
