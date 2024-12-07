@@ -22,14 +22,11 @@
 
     <form action="{{ route('profile.updateImage') }}" method="POST" enctype="multipart/form-data">
         @csrf
-        <div class="mb-3">
-            <label for="profile_image" class="form-label">Upload Profile Image</label>
-            <input type="file" name="profile_image" id="profile_image" class="form-control w-50 mx-auto" accept="image/*">
-            @error('profile_image')
-                <div class="text-danger mt-2">{{ $message }}</div>
-            @enderror
-        </div>
-        <button type="submit" class="btn btn-primary">Upload Image</button>
+        <input type="file" name="profile_image" id="profile_image" class="d-none" accept="image/*"
+            onchange="this.form.submit()">
+        <button type="button" class="btn btn-primary" onclick="document.getElementById('profile_image').click()">
+            Change Avatar
+        </button>
     </form>
 
     @if ($user->profile_image)
@@ -40,6 +37,7 @@
         </form>
     @endif
 </div>
+
 
 
 

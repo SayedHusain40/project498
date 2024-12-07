@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 04, 2024 at 03:05 PM
+-- Generation Time: Dec 06, 2024 at 10:10 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -39,15 +39,6 @@ CREATE TABLE `announcements` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `announcements`
---
-
-INSERT INTO `announcements` (`id`, `user_id`, `title`, `description`, `category`, `location`, `event_date`, `created_at`, `updated_at`) VALUES
-(2, 6, 'first post', 'dwa', 'Academic', 'manama', '2024-11-25 15:54:00', '2024-11-25 09:53:12', '2024-11-25 09:53:12'),
-(3, 3, 'first post', 'W', 'Academic', 'manama', '2024-11-30 16:15:00', '2024-11-28 10:15:37', '2024-11-28 10:15:37'),
-(4, 5, 'first post', NULL, 'Career Development', 'manama', '2024-12-28 17:04:00', '2024-12-04 11:04:17', '2024-12-04 11:04:17');
-
 -- --------------------------------------------------------
 
 --
@@ -61,13 +52,6 @@ CREATE TABLE `bookmarks` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `bookmarks`
---
-
-INSERT INTO `bookmarks` (`id`, `user_id`, `file_id`, `created_at`, `updated_at`) VALUES
-(3, 3, 60, '2024-11-30 11:02:11', '2024-11-30 11:02:11');
 
 -- --------------------------------------------------------
 
@@ -94,8 +78,8 @@ INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
 ('admin2@a.com|127.0.0.1:timer', 'i:1726239197;', 1726239197),
 ('q@h.com|127.0.0.1', 'i:1;', 1732538232),
 ('q@h.com|127.0.0.1:timer', 'i:1732538232;', 1732538232),
-('s@h.com|127.0.0.1', 'i:1;', 1733312966),
-('s@h.com|127.0.0.1:timer', 'i:1733312966;', 1733312966),
+('s@h.com|127.0.0.1', 'i:1;', 1733508732),
+('s@h.com|127.0.0.1:timer', 'i:1733508732;', 1733508732),
 ('s@hotamil.com|127.0.0.1', 'i:1;', 1733312974),
 ('s@hotamil.com|127.0.0.1:timer', 'i:1733312974;', 1733312974),
 ('t@h.com|127.0.0.1', 'i:1;', 1732456092),
@@ -199,17 +183,6 @@ CREATE TABLE `expertise_user` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `expertise_user`
---
-
-INSERT INTO `expertise_user` (`id`, `user_id`, `expertise_id`, `created_at`, `updated_at`) VALUES
-(1, 3, 1, NULL, NULL),
-(2, 3, 2, NULL, NULL),
-(3, 3, 3, NULL, NULL),
-(4, 6, 1, NULL, NULL),
-(5, 2, 1, NULL, NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -240,19 +213,6 @@ CREATE TABLE `feedback` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `feedback`
---
-
-INSERT INTO `feedback` (`id`, `rating`, `feedback`, `created_at`, `updated_at`) VALUES
-(1, 5, 'yes it wokfs', '2024-12-04 09:57:00', '2024-12-04 09:57:00'),
-(2, 1, 'hi', '2024-12-04 09:57:48', '2024-12-04 09:57:48'),
-(3, 3, NULL, '2024-12-04 10:01:37', '2024-12-04 10:01:37'),
-(4, 3, NULL, '2024-12-04 10:01:59', '2024-12-04 10:01:59'),
-(5, 3, NULL, '2024-12-04 10:02:57', '2024-12-04 10:02:57'),
-(6, 1, NULL, '2024-12-04 10:05:49', '2024-12-04 10:05:49'),
-(7, 3, NULL, '2024-12-04 10:27:04', '2024-12-04 10:27:04');
-
 -- --------------------------------------------------------
 
 --
@@ -270,14 +230,6 @@ CREATE TABLE `files` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `files`
---
-
-INSERT INTO `files` (`id`, `material_id`, `name`, `path`, `file_type`, `downloads`, `created_at`, `updated_at`) VALUES
-(59, 93, 'Screenshot 2024-11-17 191601.png', 'public/files/1732799554_Screenshot 2024-11-17 191601.png', 'png', 1, '2024-11-28 10:12:34', '2024-12-01 08:33:20'),
-(60, 94, 'Lab 1.pdf', 'public/files/1732975321_Lab 1.pdf', 'pdf', 1, '2024-11-30 11:02:01', '2024-11-30 11:02:08');
-
 -- --------------------------------------------------------
 
 --
@@ -292,14 +244,6 @@ CREATE TABLE `file_user` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `file_user`
---
-
-INSERT INTO `file_user` (`id`, `file_id`, `user_id`, `created_at`, `updated_at`) VALUES
-(25, 60, 3, NULL, NULL),
-(26, 59, 3, NULL, NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -313,13 +257,6 @@ CREATE TABLE `follows` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `follows`
---
-
-INSERT INTO `follows` (`id`, `user_id`, `material_id`, `created_at`, `updated_at`) VALUES
-(3, 3, 93, '2024-11-28 10:47:17', '2024-11-28 10:47:17');
 
 -- --------------------------------------------------------
 
@@ -375,14 +312,6 @@ CREATE TABLE `marketplaces` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `marketplaces`
---
-
-INSERT INTO `marketplaces` (`id`, `user_id`, `title`, `description`, `price`, `category`, `condition`, `image_path`, `created_at`, `updated_at`) VALUES
-(3, 3, 'first post', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc at ultrices diam. In quis massa maximus, laoreet ante eget, pretium arcu. Donec a interdum mauris. Phasellus consectetur diam tincidunt mi hendrerit congue. Mauris lectus ex, iaculis ut purus in, sodales commodo velit. Donec vel odio turpis. Cras euismod eu mauris id vestibulum. Donec maximus auctor diam vitae tincidunt. Vestibulum tristique ipsum sed vestibulum elementum. Donec imperdiet ultrices augue, a ullamcorper tellus posuere eu. Morbi hendrerit ornare lectus vitae imperdiet. Duis ut nisi vel sem accumsan ultricies. Nunc mattis cursus ultrices. Praesent ut dui et odio consequat congue. Nam sit amet massa vitae orci rhoncus accumsan at vel libero.\n\nPraesent quis urna eget nulla euismod sagittis non quis purus. Cras sit amet congue ipsum. Fusce sollicitudin odio eu odio malesuada vehicula. Aenean suscipit lectus sed sollicitudin tincidunt. Maecenas id nisi nec eros interdum malesuada. Quisque scelerisque mi ac urna pretium scelerisque. Vivamus quis tortor ac nibh molestie porta non in nisl. Sed convallis mi ante, id consectetur diam rhoncus ut. Donec dictum ultricies volutpat. Vivamus odio neque, dictum in porta id, mollis quis purus. Sed sit amet euismod ipsum.\n\nSed molestie facilisis tristique. Sed pharetra, urna et eleifend ultricies, diam leo volutpat quam, sit amet luctus nibh massa et est. Ut egestas ligula vitae interdum varius. Aenean lectus mi, faucibus ut nunc a, fermentum efficitur ante. Aenean maximus, justo at porttitor laoreet, nisi enim condimentum mi, et feugiat purus orci in purus. Suspendisse nec faucibus neque. Phasellus ac semper sapien.\n\nPhasellus commodo lacus sed turpis ornare eleifend. Pellentesque lacinia, ligula ut tincidunt dapibus, erat quam molestie elit, sed egestas erat est sit amet erat. Donec fringilla interdum lorem, nec vestibulum justo euismod in. Vivamus interdum gravida elit, ac congue tortor finibus ut. Pellentesque gravida egestas iaculis. Etiam est sem, molestie ac laoreet nec, tristique et risus. Vivamus varius tempus diam eu blandit. Aenean imperdiet, massa vel mollis feugiat, dolor nulla ornare tortor, vitae pretium nisi libero ut quam. Suspendisse in porttitor erat. Donec eu nisl nibh. Phasellus auctor diam in massa tincidunt consequat. Nullam vulputate libero nec ligula interdum euismod.\n\nNunc malesuada tortor orci, placerat faucibus est finibus nec. Suspendisse fermentum ipsum libero, in laoreet leo luctus ut. Aliquam laoreet fringilla diam sit amet volutpat. Aenean et leo ut leo mattis laoreet. Suspendisse potenti. Ut suscipit, ex at malesuada egestas, tellus velit pharetra sapien, sit amet interdum augue dolor non ex. Etiam sed massa sit amet mi porta venenatis in a arcu. Nullam laoreet urna vitae posuere pulvinar. Suspendisse potenti. Phasellus sollicitudin tellus ut rhoncus laoreet. Mauris fermentum bibendum consequat. Nam feugiat dictum libero ac luctus. Pellentesque eget arcu gravida, lobortis sapien eget, mattis lectus.', NULL, 'electronics', 'used', NULL, '2024-11-28 10:23:52', '2024-11-28 10:23:52'),
-(4, 5, 'f', NULL, NULL, 'books', 'new', NULL, '2024-12-04 10:56:53', '2024-12-04 10:56:53');
-
 -- --------------------------------------------------------
 
 --
@@ -401,14 +330,6 @@ CREATE TABLE `materials` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `materials`
---
-
-INSERT INTO `materials` (`id`, `title`, `description`, `user_id`, `course_id`, `material_type_id`, `file_count`, `created_at`, `updated_at`) VALUES
-(93, 'first post', 'EWF32', 3, 3, 2, 1, '2024-11-28 10:12:34', '2024-11-28 10:12:34'),
-(94, 'f', '123', 3, 3, 3, 1, '2024-11-30 11:02:01', '2024-11-30 11:02:01');
-
 -- --------------------------------------------------------
 
 --
@@ -424,13 +345,6 @@ CREATE TABLE `material_reports` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `material_reports`
---
-
-INSERT INTO `material_reports` (`id`, `material_id`, `user_id`, `reason`, `created_at`, `updated_at`) VALUES
-(10, 93, 8, 'hhh', '2024-12-01 08:27:03', '2024-12-01 08:27:03');
-
 -- --------------------------------------------------------
 
 --
@@ -444,15 +358,6 @@ CREATE TABLE `material_types` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `material_types`
---
-
-INSERT INTO `material_types` (`id`, `name`, `color`, `created_at`, `updated_at`) VALUES
-(1, 'Test', 'red', NULL, NULL),
-(2, 'Homework ', 'green', NULL, NULL),
-(3, 'Quiz', 'blue', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -498,8 +403,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (71, '2024_11_04_145412_create_report_questions_table', 34),
 (72, '2024_11_04_145412_create_report_replies_table', 34),
 (74, '2024_11_25_104302_create_announcements_table', 36),
-(75, '0001_01_01_000000_create_users_table', 37),
-(76, '2024_12_04_112316_create_feedback_table', 38);
+(76, '2024_12_04_112316_create_feedback_table', 38),
+(77, '0001_01_01_000000_create_users_table', 39);
 
 -- --------------------------------------------------------
 
@@ -530,20 +435,6 @@ CREATE TABLE `questions` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `questions`
---
-
-INSERT INTO `questions` (`id`, `department_id`, `user_id`, `content`, `likes`, `dislikes`, `created_at`, `updated_at`) VALUES
-(82, 24, 3, 'a', 0, 0, '2024-11-30 09:28:37', '2024-11-30 09:28:37'),
-(83, 24, 3, 'a', 0, 0, '2024-11-30 10:06:32', '2024-11-30 10:06:32'),
-(84, 24, 3, 'n', 0, 0, '2024-11-30 10:17:35', '2024-11-30 10:17:35'),
-(85, 24, 3, 'q', 0, 0, '2024-11-30 10:27:23', '2024-11-30 10:27:23'),
-(86, 24, 3, 'new', 1, 0, '2024-11-30 10:30:15', '2024-11-30 10:32:15'),
-(87, 24, 3, 'now', 0, 0, '2024-11-30 10:33:01', '2024-11-30 10:33:01'),
-(88, 24, 3, 'a', 0, 1, '2024-11-30 10:37:52', '2024-11-30 10:37:53'),
-(89, 24, 3, 'q', 0, 0, '2024-12-01 08:24:10', '2024-12-01 08:24:10');
-
 -- --------------------------------------------------------
 
 --
@@ -558,14 +449,6 @@ CREATE TABLE `question_user_like_dislike` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `question_user_like_dislike`
---
-
-INSERT INTO `question_user_like_dislike` (`id`, `question_id`, `user_id`, `type`, `created_at`, `updated_at`) VALUES
-(47, 86, 3, 'like', '2024-11-30 10:32:15', '2024-11-30 10:32:15'),
-(48, 88, 3, 'dislike', '2024-11-30 10:37:53', '2024-11-30 10:37:53');
 
 -- --------------------------------------------------------
 
@@ -584,16 +467,6 @@ CREATE TABLE `replies` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `replies`
---
-
-INSERT INTO `replies` (`id`, `question_id`, `user_id`, `content`, `likes`, `dislikes`, `created_at`, `updated_at`) VALUES
-(35, 85, 3, 'qq', 0, 0, '2024-11-30 10:28:03', '2024-11-30 10:28:03'),
-(36, 87, 3, 'reply', 0, 0, '2024-11-30 10:35:04', '2024-11-30 10:35:04'),
-(37, 87, 3, 'w', 0, 0, '2024-11-30 10:36:41', '2024-11-30 10:36:41'),
-(38, 88, 3, 'w', 1, 0, '2024-11-30 10:37:58', '2024-11-30 10:37:59');
-
 -- --------------------------------------------------------
 
 --
@@ -608,13 +481,6 @@ CREATE TABLE `reply_user_like_dislike` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `reply_user_like_dislike`
---
-
-INSERT INTO `reply_user_like_dislike` (`id`, `reply_id`, `user_id`, `type`, `created_at`, `updated_at`) VALUES
-(13, 38, 3, 'like', '2024-11-30 10:37:59', '2024-11-30 10:37:59');
 
 -- --------------------------------------------------------
 
@@ -631,13 +497,6 @@ CREATE TABLE `report_questions` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `report_questions`
---
-
-INSERT INTO `report_questions` (`id`, `question_id`, `user_id`, `reason`, `created_at`, `updated_at`) VALUES
-(77, 87, 3, 'yed', '2024-11-30 10:33:09', '2024-11-30 10:33:09');
-
 -- --------------------------------------------------------
 
 --
@@ -652,13 +511,6 @@ CREATE TABLE `report_replies` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `report_replies`
---
-
-INSERT INTO `report_replies` (`id`, `reply_id`, `user_id`, `reason`, `created_at`, `updated_at`) VALUES
-(6, 37, 3, 'w reply', '2024-11-30 10:36:50', '2024-11-30 10:36:50');
 
 -- --------------------------------------------------------
 
@@ -677,14 +529,6 @@ CREATE TABLE `restaurants` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `restaurants`
---
-
-INSERT INTO `restaurants` (`id`, `name`, `user_id`, `description`, `menu_image`, `operating_hours`, `location`, `created_at`, `updated_at`) VALUES
-(10, 'Ali99', 3, 'w6d6wd', NULL, '12am to 10 pm', 'ubuibui', '2024-11-28 10:07:37', '2024-11-28 10:07:37'),
-(13, 'hwh9', 3, '123', 'menus/1732802632_Screenshot 2024-11-18 170745.png', '12am to 10 pm', 'manama', '2024-11-28 11:03:52', '2024-11-28 11:03:52');
 
 -- --------------------------------------------------------
 
@@ -706,7 +550,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('q61hRlQHUNmLmehkNakTvQ8KRY1kslBIifwecEWt', 5, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoiZmhVbHVWU2psd1d3eTF4M1VlM0FXN09PcFBjUDRzN3BwVVFKRkkyaCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MzA6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9mZWVkYmFjayI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6MzoidXJsIjthOjE6e3M6ODoiaW50ZW5kZWQiO3M6MzA6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9mZWVkYmFjayI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjU7fQ==', 1733321091);
+('1tbhVBFBYyDBgzXraHbPDSC12RSNjXv9VjMWJuhZ', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiamFQY0N1UTNZWGpJd0lrb2o4MkxYR1pqT05qejk2M2h5ZzVKMFJvcyI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjk6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9wcm9maWxlIjt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6Mjt9', 1733519215);
 
 -- --------------------------------------------------------
 
@@ -727,14 +571,6 @@ CREATE TABLE `study_sessions` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `study_sessions`
---
-
-INSERT INTO `study_sessions` (`id`, `topic`, `description`, `session_date`, `user_id`, `course_id`, `location`, `price_or_volunteer`, `price`, `created_at`, `updated_at`) VALUES
-(23, 'qdwad2132', '132', '2024-11-30 16:06:00', 3, 1, 'manama', 'price', 12.90, '2024-11-28 10:07:17', '2024-11-28 10:07:17'),
-(24, 'qdwad2132', NULL, '2024-12-27 17:00:00', 5, 1, 'manama', 'volunteer', NULL, '2024-12-04 11:00:17', '2024-12-04 11:00:17');
 
 -- --------------------------------------------------------
 
@@ -763,23 +599,14 @@ CREATE TABLE `users` (
   `role` enum('user','admin') NOT NULL DEFAULT 'user',
   `major_id` bigint(20) UNSIGNED DEFAULT NULL,
   `phone` varchar(255) DEFAULT NULL,
-  `country_code` varchar(255) DEFAULT NULL,
   `email` varchar(255) NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(255) NOT NULL,
+  `profile_image` varchar(255) DEFAULT NULL,
   `remember_token` varchar(100) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`id`, `name`, `role`, `major_id`, `phone`, `country_code`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(2, 'Ali', 'user', 25, '+97337355106', NULL, 'a@hotmail.com', NULL, '$2y$12$3dFe2bt9d7NCMYn6XmyRier6vWfbtKu5aeqN3d.Dge1kzDrP.j6KO', NULL, '2024-12-03 14:07:09', '2024-12-03 14:11:15'),
-(3, 'Sayed', 'user', NULL, '+97337355012', NULL, 's@hotmail.com', NULL, '$2y$12$/W131TjuvNf8L//5tLzXjOnjWanRptzVLvdtll2WTdJLF7ZKRzccK', NULL, '2024-12-03 13:18:21', '2024-12-03 14:00:47'),
-(5, 'l', 'user', NULL, NULL, NULL, 'b@hotmail.com', NULL, '$2y$12$tZWsvR.QxxIMZiwVStj40uTM6l2soLfsLKdr1yXssj6oqAPS4bHZm', NULL, '2024-12-04 08:55:09', '2024-12-04 08:55:09');
 
 -- --------------------------------------------------------
 
@@ -1049,13 +876,13 @@ ALTER TABLE `user_sessions`
 -- AUTO_INCREMENT for table `announcements`
 --
 ALTER TABLE `announcements`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `bookmarks`
 --
 ALTER TABLE `bookmarks`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `colleges`
@@ -1079,7 +906,7 @@ ALTER TABLE `departments`
 -- AUTO_INCREMENT for table `expertise_user`
 --
 ALTER TABLE `expertise_user`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -1091,7 +918,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `feedback`
 --
 ALTER TABLE `feedback`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `files`
@@ -1109,7 +936,7 @@ ALTER TABLE `file_user`
 -- AUTO_INCREMENT for table `follows`
 --
 ALTER TABLE `follows`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `jobs`
@@ -1121,7 +948,7 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `marketplaces`
 --
 ALTER TABLE `marketplaces`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `materials`
@@ -1145,7 +972,7 @@ ALTER TABLE `material_types`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
 
 --
 -- AUTO_INCREMENT for table `questions`
@@ -1187,7 +1014,7 @@ ALTER TABLE `report_replies`
 -- AUTO_INCREMENT for table `restaurants`
 --
 ALTER TABLE `restaurants`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `study_sessions`
@@ -1205,7 +1032,7 @@ ALTER TABLE `temporary_files`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `user_sessions`
