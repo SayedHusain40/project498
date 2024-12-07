@@ -181,7 +181,6 @@
                                     </span>
                                 </p>
 
-                                <!-- Date in the body now -->
                                 <div class="date" style="color: #888;">
                                     <i class="fa-solid fa-calendar me-2"></i>{{ $material->created_at->format('Y-m-d') }}
                                 </div>
@@ -194,17 +193,24 @@
                                     <input type="hidden" name="user_id" value="{{ $material->user->id }}">
                                     <button type="submit" class="btn btn-link p-0"
                                         style="text-decoration: none !important; color: inherit; display: flex; align-items: center;">
-                                        <i class="fa-solid fa-user-circle me-2"
-                                            style="font-size: 24px; text-decoration: none !important;"></i>
+                                        @if ($material->user->profile_image)
+                                            <div class="rounded-circle"
+                                                style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:5px;">
+                                                <img src="{{ asset('storage/' . $material->user->profile_image) }}"
+                                                    alt="Profile Image" class="img-fluid rounded-circle"
+                                                    style="width: 40px; height: 40px; object-fit: cover;">
+                                            </div>
+                                        @else
+                                            <div class="rounded-circle"
+                                                style="width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:5px;">
+                                                <i class="fas fa-user" style="font-size: 25px; color: #aaa;"></i>
+                                            </div>
+                                        @endif
                                         <span class="user-name">By, {{ $material->user->name }}</span>
                                     </button>
                                 </form>
                             </div>
 
-
-
-
-                            <!-- Follow/Save Button -->
                             @if ($role === 'guest')
                                 <button type="button" class="btn btn-rounded follow-button"
                                     style="background-color: #e2eaf7; color:#2a2f5b;" data-bs-toggle="modal"

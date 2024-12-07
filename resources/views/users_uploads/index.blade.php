@@ -53,29 +53,30 @@
 
 @section('content')
     <div class="container mt-4">
-<ul class="nav nav-tabs nav-line nav-color-secondary mb-4" id="pills-tab" role="tablist">
-    <li class="nav-item" role="presentation">
-        <a class="nav-link active" id="pills-materials-tab" data-bs-toggle="pill" data-bs-target="#pills-materials"
-            href="#" role="tab" aria-controls="pills-materials" aria-selected="true">Materials</a>
-    </li>
-    <li class="nav-item" role="presentation">
-        <a class="nav-link" id="pills-marketplace-tab" data-bs-toggle="pill" data-bs-target="#pills-marketplace"
-            href="#" role="tab" aria-controls="pills-marketplace" aria-selected="false">Marketplace</a>
-    </li>
-    <li class="nav-item" role="presentation">
-        <a class="nav-link" id="pills-study-sessions-tab" data-bs-toggle="pill"
-            data-bs-target="#pills-study-sessions" href="#" role="tab"
-            aria-controls="pills-study-sessions" aria-selected="false">Study Sessions</a>
-    </li>
-    <li class="nav-item" role="presentation">
-        <a class="nav-link" id="pills-restaurants-tab" data-bs-toggle="pill" data-bs-target="#pills-restaurants"
-            href="#" role="tab" aria-controls="pills-restaurants" aria-selected="false">Restaurants</a>
-    </li>
-    <li class="nav-item" role="presentation">
-        <a class="nav-link" id="pills-announcements-tab" data-bs-toggle="pill" data-bs-target="#pills-announcements"
-            href="#" role="tab" aria-controls="pills-announcements" aria-selected="false">Announcements</a>
-    </li>
-</ul>
+        <ul class="nav nav-tabs nav-line nav-color-secondary mb-4" id="pills-tab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="pills-materials-tab" data-bs-toggle="pill" data-bs-target="#pills-materials"
+                    href="#" role="tab" aria-controls="pills-materials" aria-selected="true">Materials</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="pills-marketplace-tab" data-bs-toggle="pill" data-bs-target="#pills-marketplace"
+                    href="#" role="tab" aria-controls="pills-marketplace" aria-selected="false">Marketplace</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="pills-study-sessions-tab" data-bs-toggle="pill"
+                    data-bs-target="#pills-study-sessions" href="#" role="tab"
+                    aria-controls="pills-study-sessions" aria-selected="false">Study Sessions</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="pills-restaurants-tab" data-bs-toggle="pill" data-bs-target="#pills-restaurants"
+                    href="#" role="tab" aria-controls="pills-restaurants" aria-selected="false">Restaurants</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="pills-announcements-tab" data-bs-toggle="pill" data-bs-target="#pills-announcements"
+                    href="#" role="tab" aria-controls="pills-announcements"
+                    aria-selected="false">Announcements</a>
+            </li>
+        </ul>
 
 
         <div class="tab-content" id="pills-tabContent">
@@ -95,7 +96,9 @@
                                                 <span style="color: #2a2f5b">{{ $material->course->code }}</span></span>
                                             <span class="text-muted">{{ $material->created_at->format('Y-m-d') }}</span>
                                         </div>
-                                        <h4 class="card-title">{{ $material->title }}</h4>
+                                        <div class="text-center">
+                                            <h4 class="card-title">{{ $material->title }}</h4>
+                                        </div>
                                         <p>
                                             <span class="badge rounded-pill" style="background-color:#cfe2ff; color:black;">
                                                 <i class="fa-solid fa-file-lines" style="color: #3092fa;"></i>
@@ -106,17 +109,40 @@
                                                 {{ $material->materialType->name ?? 'Unknown Type' }}
                                             </span>
                                         </p>
-                                        <div style="color: #253c60; margin-bottom:0;">
-                                            <i class="fa fa-user me-2"></i> <span>By, {{ $material->user->name }}</span>
-                                        </div>
                                     </div>
                                 </a>
-                                <div class="card-footer">
-                                    <button type="button" class="btn btn-rounded btn-danger w-100 mt-2 delete-material"
+                                <div class="card-footer"
+                                    style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div style="display: flex; align-items: center; color: #253c60;">
+                                        <form action="{{ route('users.profile') }}" method="POST" class="d-inline">
+                                            @csrf
+                                            <input type="hidden" name="user_id" value="{{ $material->user->id }}">
+                                            <button type="submit" class="btn btn-link p-0"
+                                                style="text-decoration: none !important; color: inherit; display: flex; align-items: center;">
+                                                @if ($material->user->profile_image)
+                                                    <div class="rounded-circle"
+                                                        style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right: 5px;">
+                                                        <img src="{{ asset('storage/' . $material->user->profile_image) }}"
+                                                            alt="Profile Image" class="img-fluid rounded-circle"
+                                                            style="width: 40px; height: 40px; object-fit: cover;">
+                                                    </div>
+                                                @else
+                                                    <div class="rounded-circle"
+                                                        style="width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right: 5px;">
+                                                        <i class="fas fa-user" style="font-size: 25px; color: #aaa;"></i>
+                                                    </div>
+                                                @endif
+                                                <span class="user-name">By, {{ $material->user->name }}</span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                    <button type="button" class="btn btn-rounded btn-danger delete-material"
+                                        style="background-color: #e3342f; color: #fff;"
                                         data-material-id="{{ $material->id }}">
                                         <i class="fa-solid fa-trash"></i> Delete
                                     </button>
                                 </div>
+
                             </div>
                         </div>
                     @endforeach
@@ -124,7 +150,8 @@
             </div>
 
             <!-- Announcements Tab -->
-            <div class="tab-pane fade" id="pills-announcements" role="tabpanel" aria-labelledby="pills-announcements-tab">
+            <div class="tab-pane fade" id="pills-announcements" role="tabpanel"
+                aria-labelledby="pills-announcements-tab">
                 <!-- Check if there are no announcements -->
                 @if ($announcements->isEmpty())
                     <div class="text-center">
@@ -182,10 +209,19 @@
                         <div class="col">
                             <div class="card border rounded-5">
                                 <div class="card-header d-flex align-items-center">
-                                    <div class="avatar rounded-circle bg-primary text-white d-flex justify-content-center align-items-center"
-                                        style="width: 40px; height: 40px;">
-                                        <i class="fas fa-user" style="font-size: 20px;"></i>
-                                    </div>
+                                    @if ($item->user->profile_image)
+                                        <div class="rounded-circle"
+                                            style="width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:5px;">
+                                            <img src="{{ asset('storage/' . $item->user->profile_image) }}"
+                                                alt="Profile Image" class="img-fluid rounded-circle"
+                                                style="width: 50px; height: 50px; object-fit: cover;">
+                                        </div>
+                                    @else
+                                        <div class="rounded-circle"
+                                            style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:5px;">
+                                            <i class="fas fa-user" style="font-size: 30px; color: #aaa;"></i>
+                                        </div>
+                                    @endif
                                     <div class="ms-3">
                                         <h6 class="mb-0 fs-sm">By, {{ $item->user->name }}</h6>
                                         <span class="text-muted fs-sm">{{ $item->created_at->format('F j, Y') }}</span>
@@ -278,10 +314,19 @@
                             <div class="card border rounded-5">
                                 <!-- Card Header -->
                                 <div class="card-header d-flex align-items-center">
-                                    <div class="avatar rounded-circle bg-primary text-white d-flex justify-content-center align-items-center"
-                                        style="width: 40px; height: 40px;">
-                                        <i class="fas fa-user" style="font-size: 20px;"></i>
-                                    </div>
+                                    @if ($restaurant->user->profile_image)
+                                        <div class="rounded-circle"
+                                            style="width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:5px;">
+                                            <img src="{{ asset('storage/' . $restaurant->user->profile_image) }}"
+                                                alt="Profile Image" class="img-fluid rounded-circle"
+                                                style="width: 50px; height: 50px; object-fit: cover;">
+                                        </div>
+                                    @else
+                                        <div class="rounded-circle"
+                                            style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:5px;">
+                                            <i class="fas fa-user" style="font-size: 30px; color: #aaa;"></i>
+                                        </div>
+                                    @endif
                                     <div class="ms-3">
                                         <h6 class="mb-0 fs-sm">By, {{ $restaurant->user->name }}</h6>
                                         <span
