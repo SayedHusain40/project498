@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 06, 2024 at 10:10 PM
+-- Generation Time: Dec 08, 2024 at 02:40 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -78,10 +78,14 @@ INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
 ('admin2@a.com|127.0.0.1:timer', 'i:1726239197;', 1726239197),
 ('q@h.com|127.0.0.1', 'i:1;', 1732538232),
 ('q@h.com|127.0.0.1:timer', 'i:1732538232;', 1732538232),
-('s@h.com|127.0.0.1', 'i:1;', 1733508732),
-('s@h.com|127.0.0.1:timer', 'i:1733508732;', 1733508732),
+('q@hotmail.com|127.0.0.1', 'i:1;', 1733594945),
+('q@hotmail.com|127.0.0.1:timer', 'i:1733594945;', 1733594945),
+('s@h.com|127.0.0.1', 'i:1;', 1733591443),
+('s@h.com|127.0.0.1:timer', 'i:1733591443;', 1733591443),
 ('s@hotamil.com|127.0.0.1', 'i:1;', 1733312974),
 ('s@hotamil.com|127.0.0.1:timer', 'i:1733312974;', 1733312974),
+('s@hotmail.com|127.0.0.1', 'i:1;', 1733595060),
+('s@hotmail.com|127.0.0.1:timer', 'i:1733595060;', 1733595060),
 ('t@h.com|127.0.0.1', 'i:1;', 1732456092),
 ('t@h.com|127.0.0.1:timer', 'i:1732456092;', 1732456092);
 
@@ -209,6 +213,7 @@ CREATE TABLE `feedback` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `rating` tinyint(3) UNSIGNED NOT NULL,
   `feedback` text DEFAULT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -359,6 +364,14 @@ CREATE TABLE `material_types` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `material_types`
+--
+
+INSERT INTO `material_types` (`id`, `name`, `color`, `created_at`, `updated_at`) VALUES
+(4, 'quiz', 'red', '2024-12-07 17:12:49', '2024-12-07 17:12:49'),
+(5, 'exam', 'green', '2024-12-07 17:12:49', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -403,8 +416,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (71, '2024_11_04_145412_create_report_questions_table', 34),
 (72, '2024_11_04_145412_create_report_replies_table', 34),
 (74, '2024_11_25_104302_create_announcements_table', 36),
-(76, '2024_12_04_112316_create_feedback_table', 38),
-(77, '0001_01_01_000000_create_users_table', 39);
+(77, '0001_01_01_000000_create_users_table', 39),
+(78, '2024_12_04_112316_create_feedback_table', 40);
 
 -- --------------------------------------------------------
 
@@ -550,7 +563,8 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('1tbhVBFBYyDBgzXraHbPDSC12RSNjXv9VjMWJuhZ', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiamFQY0N1UTNZWGpJd0lrb2o4MkxYR1pqT05qejk2M2h5ZzVKMFJvcyI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjk6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9wcm9maWxlIjt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6Mjt9', 1733519215);
+('8y8o7hUKYr75KUnHMOmEbuxMzksspdMKjqWDON96', 3, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoic2tja012ZmNCOG5kZXNXN2c5dkN0TkhNT1B1NVlSNDNvd2lSOVAyaiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NjI6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9tYXRlcmlhbHM/Y291cnNlX2NvZGU9Jm1hdGVyaWFsX3R5cGVfaWQ9Ijt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czozOiJ1cmwiO2E6MDp7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjM7fQ==', 1733663994),
+('LdgrBnZ4btbih7ZYuzk3wLZql6uyEtmZDy4xitP7', 3, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiOHVNQTV6eEZ2dkgwS2J4aEkwYmhQY2V5NXl0eWFhaHBUSE0yS2dLQiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MzE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9tYXRlcmlhbHMiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aTozO30=', 1733596883);
 
 -- --------------------------------------------------------
 
@@ -607,6 +621,14 @@ CREATE TABLE `users` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `name`, `role`, `major_id`, `phone`, `email`, `email_verified_at`, `password`, `profile_image`, `remember_token`, `created_at`, `updated_at`) VALUES
+(3, 'a', 'user', NULL, NULL, 'a@hotmail.com', NULL, '$2y$12$Ev7tchMpemyRd0CN9iwuNumf1dDGfDrjxLcDO5Nt/hcvjRTqF3RR.', NULL, NULL, '2024-12-07 13:00:53', '2024-12-07 15:40:59'),
+(4, 'l', 'user', NULL, NULL, 'q@hotmail.com', NULL, '$2y$12$1g3naCtszvfaacW4pp1L3emh7wfTknuaB1DRXZBslavbyRHac0gIm', 'profile_images/1733594983_h.jpeg', NULL, '2024-12-07 15:08:26', '2024-12-07 15:09:43');
 
 -- --------------------------------------------------------
 
@@ -695,7 +717,8 @@ ALTER TABLE `failed_jobs`
 -- Indexes for table `feedback`
 --
 ALTER TABLE `feedback`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `feedback_user_id_foreign` (`user_id`);
 
 --
 -- Indexes for table `files`
@@ -876,7 +899,7 @@ ALTER TABLE `user_sessions`
 -- AUTO_INCREMENT for table `announcements`
 --
 ALTER TABLE `announcements`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `bookmarks`
@@ -918,19 +941,19 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `feedback`
 --
 ALTER TABLE `feedback`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `files`
 --
 ALTER TABLE `files`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
 -- AUTO_INCREMENT for table `file_user`
 --
 ALTER TABLE `file_user`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `follows`
@@ -948,13 +971,13 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `marketplaces`
 --
 ALTER TABLE `marketplaces`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `materials`
 --
 ALTER TABLE `materials`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
 
 --
 -- AUTO_INCREMENT for table `material_reports`
@@ -966,31 +989,31 @@ ALTER TABLE `material_reports`
 -- AUTO_INCREMENT for table `material_types`
 --
 ALTER TABLE `material_types`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
 
 --
 -- AUTO_INCREMENT for table `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=90;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=94;
 
 --
 -- AUTO_INCREMENT for table `question_user_like_dislike`
 --
 ALTER TABLE `question_user_like_dislike`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT for table `replies`
 --
 ALTER TABLE `replies`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT for table `reply_user_like_dislike`
@@ -1014,25 +1037,25 @@ ALTER TABLE `report_replies`
 -- AUTO_INCREMENT for table `restaurants`
 --
 ALTER TABLE `restaurants`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `study_sessions`
 --
 ALTER TABLE `study_sessions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `temporary_files`
 --
 ALTER TABLE `temporary_files`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=195;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=198;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `user_sessions`
@@ -1075,6 +1098,12 @@ ALTER TABLE `departments`
 ALTER TABLE `expertise_user`
   ADD CONSTRAINT `expertise_user_expertise_id_foreign` FOREIGN KEY (`expertise_id`) REFERENCES `courses` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `expertise_user_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `feedback`
+--
+ALTER TABLE `feedback`
+  ADD CONSTRAINT `feedback_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `files`

@@ -104,13 +104,6 @@
 @endphp
 @section('content')
 
-    <!-- if there are not porducts-->
-    @if ($materials->isEmpty())
-        <div class="text-center">
-            {{-- <img src="{{ asset('images/') }}" alt="No products available" style="max-width: 50%; height: auto;"> --}}
-            <p>No materials available at the moment. Please check back later.</p>
-        </div>
-    @else
         <!-- Filter -->
         <div class="d-flex justify-content-between mb-4">
             <div class="d-flex">
@@ -139,6 +132,14 @@
                 </form>
             </div>
         </div>
+
+    <!-- if there are not porducts-->
+    @if ($materials->isEmpty())
+        <div class="text-center">
+            {{-- <img src="{{ asset('images/') }}" alt="No products available" style="max-width: 50%; height: auto;"> --}}
+            <p>No materials available at the moment. Please check back later.</p>
+        </div>
+    @else
 
         <!-- Materials -->
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3" id="myGrid">
