@@ -32,6 +32,8 @@ use App\Http\Controllers\ModerateController;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\TableController;
 
+use App\Http\Controllers\ChartController;
+
 Route::get('/', function () {
     return view('dashboard');
 });
@@ -57,7 +59,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile/remove-image', [ProfileController::class, 'removeImage'])->name('profile.removeImage');
 
 
-    // feedback 
+    // feedback
     Route::get('/feedback', [FeedbackController::class, 'index'])->name('feedback.index');
     Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
 
@@ -136,6 +138,11 @@ Route::middleware('auth')->group(function () {
 
     //restaurants
     Route::resource('restaurants', RestaurantController::class);
+
+    //chart
+    Route::get('/admin/dashboard', [ChartController::class, 'index']);
+    Route::get('/fetch-chart-data', [ChartController::class, 'fetchChartData']);
+
 
 });
 Route::view('/terms', 'terms')->name('terms');

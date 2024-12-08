@@ -72,12 +72,33 @@
 </div>
 
 
+<div id="chart-container" style="height: 400px; width: 100%; margin: 0 auto;">
+    <div class="d-flex align-items-center mb-3">
+        <label for="monthFilter" class="form-label mb-0 mr-2">Select Month:</label>
+        <select id="monthFilter" class="form-select w-auto" aria-label="Select Month">
+            <option value="1">January</option>
+            <option value="2">February</option>
+            <option value="3">March</option>
+            <option value="4">April</option>
+            <option value="5">May</option>
+            <option value="6">June</option>
+            <option value="7">July</option>
+            <option value="8">August</option>
+            <option value="9">September</option>
+            <option value="10">October</option>
+            <option value="11">November</option>
+            <option value="12" selected>December</option>
+        </select>
+    </div>
+    <canvas id="multipleLineChart" style="max-width: 100%; max-height: 100%;"></canvas>
+</div>
+
 
 
 
 <!-- Display user data in Table -->
 
-<div class="container mt-4">
+<div class="container mt-5">
     <h2>Users List</h2>
     <table class="table table-striped table-hover table-bordered" style="border-radius: 10px; overflow: hidden; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
         <thead style="background-color: #4a90e2; color: white;">
@@ -128,4 +149,53 @@
 
 
 
+@endsection
+
+
+@section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('multipleLineChart').getContext('2d');
+
+    let myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [], // Days of the month
+            datasets: [
+                { label: "Materials", borderColor: "#1d7af3", data: [], fill: false },
+                { label: "Items", borderColor: "#59d05d", data: [], fill: false },
+                { label: "Study Sessions", borderColor: "#f3545d", data: [], fill: false },
+                { label: "Events", borderColor: "#f3a03d", data: [], fill: false }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+        }
+    });
+
+    function fetchChartData(month) {
+        fetch(`/fetch-chart-data?month=${month}`)
+            .then(response => response.json())
+            .then(data => {
+                const labels = Array.from({ length: 31 }, (_, i) => i + 1); // Days of the month
+                myChart.data.labels = labels;
+
+                myChart.data.datasets[0].data = labels.map(day => data.materials[day] || 0);
+                myChart.data.datasets[1].data = labels.map(day => data.items[day] || 0);
+                myChart.data.datasets[2].data = labels.map(day => data.study_sessions[day] || 0);
+                myChart.data.datasets[3].data = labels.map(day => data.events[day] || 0);
+
+                myChart.update();
+            });
+    }
+
+    document.getElementById('monthFilter').addEventListener('change', (e) => {
+        const selectedMonth = e.target.value;
+        fetchChartData(selectedMonth);
+    });
+
+    // Load data for the current month on page load
+    fetchChartData(new Date().getMonth() + 1);
+</script>
 @endsection
