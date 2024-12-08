@@ -330,6 +330,63 @@
                                     <p>Moderate Content</p>
                                 </a>
                             </li>
+
+
+                            <!-- Route materials -->
+                            <li class="nav-item {{ request()->routeIs('materials') ? 'active' : '' }}">
+                                <a href="{{ route('materials') }}">
+                                    <i class="fas fa-folder-open"></i>
+                                    <p>Materials List</p>
+                                </a>
+                            </li>
+
+                            <!-- Route marketplace -->
+                            <li class="nav-item {{ request()->routeIs('marketplace') ? 'active' : '' }}">
+                                <a href="{{ route('marketplace') }}">
+                                    <i class="fas fa-folder-open"></i>
+                                    <p>Marketplace List</p>
+                                </a>
+                            </li>
+
+                            <!-- Route Study Sessions -->
+                            <li class="nav-item {{ request()->routeIs('study-sessions.index') ? 'active' : '' }}">
+                                <a href="{{ route('study-sessions.index') }}">
+                                    <i class="fas fa-folder-open"></i>
+                                    <p>Study Sessions List</p>
+                                </a>
+                            </li>
+
+                            <!-- Route announcements -->
+                            <li class="nav-item {{ request()->routeIs('announcements.index') ? 'active' : '' }}">
+                                <a href="{{ route('announcements.index') }}">
+                                    <i class="fas fa-folder-open"></i>
+                                    <p>Events List</p>
+                                </a>
+                            </li>
+
+                            <!-- Route restaurants -->
+                            <li class="nav-item {{ request()->routeIs('restaurants.index') ? 'active' : '' }}">
+                                <a href="{{ route('restaurants.index') }}">
+                                    <i class="fas fa-folder-open"></i>
+                                    <p>Restaurants List</p>
+                                </a>
+                            </li>
+
+                            <!-- Route discussions -->
+                            <li class="nav-item {{ request()->routeIs('chats.index') ? 'active' : '' }}">
+                                <a href="{{ route('chats.index') }}">
+                                    <i class="fas fa-comments"></i>
+                                    <p>Discussions List</p>
+                                </a>
+                            </li>
+                            <!-- Route feedback -->
+                            <li class="nav-item {{ request()->routeIs('feedback.index') ? 'active' : '' }}">
+                                <a href="{{ route('feedback.index') }}">
+                                    <i class="fas fa-comments"></i>
+                                    <p>Users Feedback</p>
+                                </a>
+                            </li>
+
                         @endif
 
                         <!-- For All users -->
