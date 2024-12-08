@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('feedback', function (Blueprint $table) {
             $table->id();
             $table->unsignedTinyInteger('rating'); // Rating (1-5)
-            $table->text('feedback')->nullable(); 
+            $table->text('feedback')->nullable();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps(); 
         });
     }
