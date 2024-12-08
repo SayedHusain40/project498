@@ -21,10 +21,19 @@
                 <div class="col">
                     <div class="card border rounded-5">
                         <div class="card-header d-flex align-items-center">
-                            <div class="avatar rounded-circle bg-primary text-white d-flex justify-content-center align-items-center"
-                                style="width: 40px; height: 40px;">
-                                <i class="fas fa-user" style="font-size: 20px;"></i>
-                            </div>
+                            @if ($item->user->profile_image)
+                                <div class="rounded-circle"
+                                    style="width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:5px;">
+                                    <img src="{{ asset('storage/' . $item->user->profile_image) }}" alt="Profile Image"
+                                        class="img-fluid rounded-circle"
+                                        style="width: 50px; height: 50px; object-fit: cover;">
+                                </div>
+                            @else
+                                <div class="rounded-circle"
+                                    style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:5px;">
+                                    <i class="fas fa-user" style="font-size: 30px; color: #aaa;"></i>
+                                </div>
+                            @endif
                             <div class="ms-3">
                                 <h6 class="mb-0 fs-sm">By, {{ $item->user->name }}</h6>
                                 <span class="text-muted fs-sm">{{ $item->created_at->format('F j, Y') }}</span>
@@ -46,7 +55,7 @@
                             <p class="text-muted mb-0">{{ Str::limit($item->description, 100) }}</p>
                             <p class="text-muted mb-2">{{ $item->category }} | Condition:
                                 {{ ucfirst($item->condition) }}</p>
-                            <span class="text-success fw-bold mt-2">Price:
+                            <span class="text fw-bold mt-2">Price:
                                 @if ($item->price === null)
                                     Free
                                 @else

@@ -23,20 +23,20 @@ class AdditionalInfoController extends Controller
     {
         $request->validate([
             'major_id' => 'nullable|exists:departments,id',
-            'phone' => 'nullable|regex:/^[\+0-9\s]*$/',
             'course_ids' => 'array',
             'course_ids.*' => 'exists:courses,id',
         ]);
 
         $user = User::findOrFail($id);
         $user->major_id = $request->major_id;
-        $user->phone = $request->phone;
+        $user->phone = $request->phone; 
         $user->save();
 
         $user->expertise()->sync($request->course_ids);
 
         return redirect()->route('profile.edit')->with('success', 'Information updated successfully.');
     }
+
 
 
 }

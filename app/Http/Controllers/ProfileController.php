@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
+
 
 
 class ProfileController extends Controller
@@ -22,6 +24,41 @@ class ProfileController extends Controller
     //         'user' => $request->user(),
     //     ]);
     // }
+
+    public function updateImage(Request $request)
+    {
+        $request->validate([
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        if ($request->hasFile('profile_image')) {
+            $imageName = time() . '_' . $request->file('profile_image')->getClientOriginalName();
+            $request->file('profile_image')->move(public_path('storage/profile_images'), $imageName);
+            $path = 'profile_images/' . $imageName;
+            $user = auth()->user();
+            $user->profile_image = $path;
+            $user->save();
+        }
+        return back()->with('status', 'Profile image updated successfully!');
+    }
+    public function removeImage()
+    {
+        $user = auth()->user();
+
+        if ($user->profile_image) {
+            $imagePath = public_path('storage/' . $user->profile_image);
+            if (file_exists($imagePath)) {
+                unlink($imagePath); 
+            }
+            $user->profile_image = null;
+            $user->save();
+        }
+
+        return back()->with('status', 'Profile image removed successfully!');
+    }
+
+
+
 
     public function edit(Request $request): View
     {

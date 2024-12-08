@@ -16,7 +16,7 @@ use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\UserReportController;
-use App\Http\Controllers\ChatsController;
+use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\AdditionalInfoController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\MarketplaceController;
@@ -51,6 +51,15 @@ Route::get('/departments/questions', [QuestionController::class, 'index'])->name
 Route::get('/departments/{department}/questions', [QuestionController::class, 'show'])->name('chats.department');
 
 Route::middleware('auth')->group(function () {
+
+    //upload profile image
+    Route::post('/profile/image', [ProfileController::class, 'updateImage'])->name('profile.updateImage');
+    Route::delete('/profile/remove-image', [ProfileController::class, 'removeImage'])->name('profile.removeImage');
+
+
+    // feedback 
+    Route::get('/feedback', [FeedbackController::class, 'index'])->name('feedback.index');
+    Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
 
     Route::get('/up', UploadController::class)->name('up');
     Route::post('/upload', UploadTemporaryFileController::class);

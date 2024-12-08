@@ -15,7 +15,7 @@ return new class extends Migration
             $table->increments('id');
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); 
             $table->string('title');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->decimal('price', 10, 3)->nullable();  
             $table->string('category');
             $table->enum('condition', ['new', 'used']);

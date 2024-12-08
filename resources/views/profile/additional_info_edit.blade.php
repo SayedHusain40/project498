@@ -24,6 +24,14 @@
         .checkbox-wrapper-16 .checkbox-input:checked+.checkbox-tile .checkbox-label {
             color: #2260ff;
         }
+
+        .hide {
+            display: none;
+        }
+
+        .error {
+            border-color: red;
+        }
     </style>
 @endsection
 
@@ -31,7 +39,7 @@
     <div class="container">
         <h2>Enhance Your Profile</h2>
 
-        <form action="{{ route('additional-info.update', $user->id) }}" method="POST">
+        <form id="profile-form" action="{{ route('additional-info.update', $user->id) }}" method="POST">
             @csrf
 
             <div class="mb-3">
@@ -48,8 +56,11 @@
 
             <div class="mb-3">
                 <label for="phone" class="form-label">Phone Number</label>
-                <input type="text" class="form-control" id="phone" name="phone" value="{{ $user->phone }}" style="width: fit-content;">
-                                @error('phone')
+                <input type="tel" id="phone" name="phone" class="form-control" value="{{ $user->phone }}"
+                    style="width: fit-content;">
+                <span id="valid-msg" class="hide">✓ Valid</span>
+                <span id="error-msg" class="hide"></span>
+                @error('phone')
                     <p class="text-danger">{{ $message }}</p>
                 @enderror
             </div>
@@ -79,3 +90,65 @@
     </div>
 @endsection
 
+@section('scripts')
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var input = document.querySelector("#phone");
+            var form = document.querySelector("#profile-form");
+            var errorMsg = document.querySelector("#error-msg");
+            var validMsg = document.querySelector("#valid-msg");
+
+            // Initialize intl-tel-input
+            const iti = window.intlTelInput(input, {
+                preferredCountries: ['bh',''], // Bahrain as the preferred country
+                separateDialCode: true,
+                utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.9/js/utils.js" // For validation and formatting
+            });
+
+            // Reset validation messages
+            const reset = () => {
+                input.classList.remove("error");
+                errorMsg.innerHTML = "";
+                errorMsg.classList.add("hide");
+                validMsg.classList.add("hide");
+            };
+
+            // Show error message
+            const showError = (msg) => {
+                input.classList.add("error");
+                errorMsg.innerHTML = msg;
+                errorMsg.classList.remove("hide");
+            };
+
+            // Form submission handler
+            form.addEventListener('submit', function(event) {
+                reset(); // Reset previous messages
+
+                // Get the full phone number including country code
+                const fullPhoneNumber = iti.getNumber();
+
+                // Check if phone number is valid
+                if (!fullPhoneNumber.trim()) {
+                    showError("Phone number is required.");
+                    event.preventDefault(); // Prevent form submission
+                } else if (!iti.isValidNumber()) {
+                    const errorCode = iti.getValidationError();
+                    const errorMessages = [
+                        "Invalid number",
+                        "Invalid country code",
+                        "Too short",
+                        "Too long",
+                        "Invalid number"
+                    ];
+                    const msg = errorMessages[errorCode] || "Invalid phone number";
+                    showError(msg);
+                    event.preventDefault(); // Prevent form submission
+                } else {
+                    // Set the input value to include the country code
+                    input.value = fullPhoneNumber;
+                }
+            });
+
+        });
+    </script>
+@endsection

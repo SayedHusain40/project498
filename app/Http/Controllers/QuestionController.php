@@ -54,6 +54,7 @@ class QuestionController extends Controller
                 'created_at' => $question->created_at,
                 'user' => [
                     'name' => $user->name,
+                    'profile_image' => $user->profile_image,
                 ],
             ],
         ]);
@@ -81,7 +82,8 @@ class QuestionController extends Controller
                 'content' => $reply->content,
                 'created_at' => $reply->created_at,
                 'user' => [
-                    'name' => $reply->user->name
+                    'name' => $reply->user->name,
+                    'profile_image' => $reply->user->profile_image,
                 ]
             ]
         ];
