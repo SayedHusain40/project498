@@ -179,7 +179,7 @@
                             <li class="nav-item">
                                 <a data-bs-toggle="collapse" href="#collegesSubmenu">
                                     <i class="fas fa-bars"></i>
-                                    <p>Materials</p>
+                                    <p>Courses</p>
                                     <span class="caret"></span>
                                 </a>
                                 <div class="collapse" id="collegesSubmenu">
@@ -236,7 +236,7 @@
                             <!-- Route marketplace -->
                             <li class="nav-item {{ request()->routeIs('marketplace') ? 'active' : '' }}">
                                 <a href="{{ route('marketplace') }}">
-                                    <i class="fas fa-folder-open"></i>
+                                    <i class="fas fa-store"></i>
                                     <p>Marketplace</p>
                                 </a>
                             </li>
@@ -244,7 +244,7 @@
                             <!-- Route Study Sessions -->
                             <li class="nav-item {{ request()->routeIs('study-sessions.index') ? 'active' : '' }}">
                                 <a href="{{ route('study-sessions.index') }}">
-                                    <i class="fas fa-folder-open"></i>
+                                    <i class="fas fa-users"></i>
                                     <p>Study Sessions</p>
                                 </a>
                             </li>
@@ -252,7 +252,7 @@
                             <!-- Route announcements -->
                             <li class="nav-item {{ request()->routeIs('announcements.index') ? 'active' : '' }}">
                                 <a href="{{ route('announcements.index') }}">
-                                    <i class="fas fa-folder-open"></i>
+                                    <i class="fas fa-calendar-alt"></i>
                                     <p>Events</p>
                                 </a>
                             </li>
@@ -260,7 +260,7 @@
                             <!-- Route restaurants -->
                             <li class="nav-item {{ request()->routeIs('restaurants.index') ? 'active' : '' }}">
                                 <a href="{{ route('restaurants.index') }}">
-                                    <i class="fas fa-folder-open"></i>
+                                    <i class="fas fa-utensils"></i>
                                     <p>Restaurants</p>
                                 </a>
                             </li>
@@ -275,7 +275,7 @@
                             <!-- Route feedback -->
                             <li class="nav-item {{ request()->routeIs('feedback.index') ? 'active' : '' }}">
                                 <a href="{{ route('feedback.index') }}">
-                                    <i class="fas fa-comments"></i>
+                                    <i class="fas fa-comment-dots"></i>
                                     <p>Feedback</p>
                                 </a>
                             </li>
@@ -307,7 +307,7 @@
                             <!-- My Uploadeds -->
                             <li class="nav-item {{ request()->routeIs('user.materials') ? 'active' : '' }}">
                                 <a href="{{ route('user.materials') }}">
-                                    <i class="fas fa-book"></i>
+                                    <i class="fas fa-upload"></i>
                                     <p>My Uploadeds</p>
                                 </a>
                             </li>
@@ -343,7 +343,7 @@
                             <!-- Route marketplace -->
                             <li class="nav-item {{ request()->routeIs('marketplace') ? 'active' : '' }}">
                                 <a href="{{ route('marketplace') }}">
-                                    <i class="fas fa-folder-open"></i>
+                                    <i class="fas fa-store"></i>
                                     <p>Marketplace List</p>
                                 </a>
                             </li>
@@ -351,7 +351,7 @@
                             <!-- Route Study Sessions -->
                             <li class="nav-item {{ request()->routeIs('study-sessions.index') ? 'active' : '' }}">
                                 <a href="{{ route('study-sessions.index') }}">
-                                    <i class="fas fa-folder-open"></i>
+                                    <i class="fas fa-users"></i>
                                     <p>Study Sessions List</p>
                                 </a>
                             </li>
@@ -359,7 +359,7 @@
                             <!-- Route announcements -->
                             <li class="nav-item {{ request()->routeIs('announcements.index') ? 'active' : '' }}">
                                 <a href="{{ route('announcements.index') }}">
-                                    <i class="fas fa-folder-open"></i>
+                                    <i class="fas fa-calendar-alt"></i>
                                     <p>Events List</p>
                                 </a>
                             </li>
@@ -367,7 +367,7 @@
                             <!-- Route restaurants -->
                             <li class="nav-item {{ request()->routeIs('restaurants.index') ? 'active' : '' }}">
                                 <a href="{{ route('restaurants.index') }}">
-                                    <i class="fas fa-folder-open"></i>
+                                    <i class="fas fa-utensils"></i>
                                     <p>Restaurants List</p>
                                 </a>
                             </li>
