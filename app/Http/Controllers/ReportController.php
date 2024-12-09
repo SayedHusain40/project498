@@ -1,12 +1,13 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\Department;
-use App\Models\College;
-use App\Models\Course;
+use App\Models\MaterialReport;
+use App\Models\Marketplace;
+use App\Models\StudySession;
+use App\Models\Restaurant;
+use App\Models\Announcement; // Assuming Announcement model
+use Illuminate\Http\Request;
 use TCPDF;
 
 class ReportController extends Controller
@@ -25,18 +26,26 @@ class ReportController extends Controller
                 $data = User::all();
                 $pdf = $this->generateUsersPDF($data);
                 return $pdf->Output('users_report.pdf', 'D');
-            case 'departments':
-                $data = Department::all();
-                $pdf = $this->generateDepartmentsPDF($data);
-                return $pdf->Output('departments_report.pdf', 'D');
-            case 'colleges':
-                $data = College::all();
-                $pdf = $this->generateCollegesPDF($data);
-                return $pdf->Output('colleges_report.pdf', 'D');
-            case 'courses':
-                $data = Course::all();
-                $pdf = $this->generateCoursesPDF($data);
-                return $pdf->Output('courses_report.pdf', 'D');
+            case 'materials':
+                $data = MaterialReport::all();
+                $pdf = $this->generateMaterialsPDF($data);
+                return $pdf->Output('materials_report.pdf', 'D');
+            case 'marketplaces':
+                $data = Marketplace::all();
+                $pdf = $this->generateMarketplacesPDF($data);
+                return $pdf->Output('marketplaces_report.pdf', 'D');
+            case 'study_sessions':
+                $data = StudySession::all();
+                $pdf = $this->generateStudySessionsPDF($data);
+                return $pdf->Output('study_sessions_report.pdf', 'D');
+            case 'restaurants':
+                $data = Restaurant::all();
+                $pdf = $this->generateRestaurantsPDF($data);
+                return $pdf->Output('restaurants_report.pdf', 'D');
+            case 'announcements': // Adding case for announcements
+                $data = Announcement::all(); // Fetch all announcements
+                $pdf = $this->generateAnnouncementsPDF($data);
+                return $pdf->Output('announcements_report.pdf', 'D');
             default:
                 return back()->withErrors(['Invalid report type selected']);
         }
@@ -46,83 +55,250 @@ class ReportController extends Controller
     {
         $pdf = new TCPDF();
         $pdf->AddPage();
-        $html = '<h1>Users Report</h1>';
-        $html .= '<table border="1" cellpadding="4">';
-        $html .= '<thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Created At</th></tr></thead>';
-        $html .= '<tbody>';
+
+        // Add custom Bootstrap-like styles for table
+        $style = '
+        <style>
+            body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+            h1 { text-align: center; font-size: 24px; margin-bottom: 20px; }
+            table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+            table th, table td { padding: 10px; text-align: left; border: 1px solid #ddd; }
+            table th { background-color: #f8f9fa; font-weight: bold; }
+            table tr:nth-child(even) { background-color: #f2f2f2; }
+            table tr:hover { background-color: #f1f1f1; }
+        </style>';
+
+        // Create table content
+        $html = $style . '
+        <h1>Users Report</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Created At</th>
+                </tr>
+            </thead>
+            <tbody>';
+
         foreach ($users as $user) {
-            $html .= '<tr>';
-            $html .= '<td>' . $user->id . '</td>';
-            $html .= '<td>' . $user->name . '</td>';
-            $html .= '<td>' . $user->email . '</td>';
-            $html .= '<td>' . $user->created_at . '</td>';
-            $html .= '</tr>';
+            $html .= '
+                <tr>
+                    <td>' . $user->id . '</td>
+                    <td>' . $user->name . '</td>
+                    <td>' . $user->email . '</td>
+                    <td>' . $user->created_at . '</td>
+                </tr>';
         }
+
         $html .= '</tbody></table>';
         $pdf->writeHTML($html, true, false, true, false, '');
         return $pdf;
     }
 
-    private function generateDepartmentsPDF($departments)
+    private function generateMaterialsPDF($materials)
     {
         $pdf = new TCPDF();
         $pdf->AddPage();
-        $html = '<h1>Departments Report</h1>';
-        $html .= '<table border="1" cellpadding="4">';
-        $html .= '<thead><tr><th>ID</th><th>Name</th><th>College ID</th><th>Created At</th><th>Updated At</th></tr></thead>';
-        $html .= '<tbody>';
-        foreach ($departments as $department) {
-            $html .= '<tr>';
-            $html .= '<td>' . $department->id . '</td>';
-            $html .= '<td>' . $department->name . '</td>';
-            $html .= '<td>' . $department->college_id . '</td>';
-            $html .= '<td>' . $department->created_at . '</td>';
-            $html .= '<td>' . $department->updated_at . '</td>';
-            $html .= '</tr>';
+
+        // Add custom Bootstrap-like styles for table
+        $style = '
+        <style>
+            body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+            h1 { text-align: center; font-size: 24px; margin-bottom: 20px; }
+            table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+            table th, table td { padding: 10px; text-align: left; border: 1px solid #ddd; }
+            table th { background-color: #f8f9fa; font-weight: bold; }
+            table tr:nth-child(even) { background-color: #f2f2f2; }
+            table tr:hover { background-color: #f1f1f1; }
+        </style>';
+
+        // Create table content
+        $html = $style . '
+        <h1>Materials Report</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th>Location</th>
+                    <th>Event Date</th>
+                </tr>
+            </thead>
+            <tbody>';
+
+        foreach ($materials as $material) {
+            $html .= '
+                <tr>
+                    <td>' . $material->id . '</td>
+                    <td>' . $material->title . '</td>
+                    <td>' . $material->description . '</td>
+                    <td>' . $material->category . '</td>
+                    <td>' . $material->location . '</td>
+                    <td>' . $material->event_date . '</td>
+                </tr>';
         }
+
         $html .= '</tbody></table>';
         $pdf->writeHTML($html, true, false, true, false, '');
         return $pdf;
     }
 
-    private function generateCollegesPDF($colleges)
+    private function generateMarketplacesPDF($marketplaces)
     {
         $pdf = new TCPDF();
         $pdf->AddPage();
-        $html = '<h1>Colleges Report</h1>';
-        $html .= '<table border="1" cellpadding="4">';
-        $html .= '<thead><tr><th>ID</th><th>Name</th></tr></thead>';
-        $html .= '<tbody>';
-        foreach ($colleges as $college) {
-            $html .= '<tr>';
-            $html .= '<td>' . $college->id . '</td>';
-            $html .= '<td>' . $college->name . '</td>';
-            $html .= '</tr>';
+
+        // Add custom Bootstrap-like styles for table
+        $style = '
+        <style>
+            body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+            h1 { text-align: center; font-size: 24px; margin-bottom: 20px; }
+            table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+            table th, table td { padding: 10px; text-align: left; border: 1px solid #ddd; }
+            table th { background-color: #f8f9fa; font-weight: bold; }
+            table tr:nth-child(even) { background-color: #f2f2f2; }
+            table tr:hover { background-color: #f1f1f1; }
+        </style>';
+
+        // Create table content
+        $html = $style . '
+        <h1>Marketplaces Report</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Category</th>
+                    <th>Condition</th>
+                    <th>Image Path</th>
+                </tr>
+            </thead>
+            <tbody>';
+
+        foreach ($marketplaces as $marketplace) {
+            $html .= '
+                <tr>
+                    <td>' . $marketplace->id . '</td>
+                    <td>' . $marketplace->title . '</td>
+                    <td>' . $marketplace->description . '</td>
+                    <td>' . $marketplace->price . '</td>
+                    <td>' . $marketplace->category . '</td>
+                    <td>' . $marketplace->condition . '</td>
+                    <td>' . $marketplace->image_path . '</td>
+                </tr>';
         }
+
         $html .= '</tbody></table>';
         $pdf->writeHTML($html, true, false, true, false, '');
         return $pdf;
     }
 
-    private function generateCoursesPDF($courses)
+    private function generateStudySessionsPDF($study_sessions)
     {
         $pdf = new TCPDF();
         $pdf->AddPage();
-        $html = '<h1>Courses Report</h1>';
-        $html .= '<table border="1" cellpadding="4">';
-        $html .= '<thead><tr><th>ID</th><th>Name</th><th>Department ID</th><th>Created At</th><th>Updated At</th></tr></thead>';
-        $html .= '<tbody>';
-        foreach ($courses as $course) {
-            $html .= '<tr>';
-            $html .= '<td>' . $course->id . '</td>';
-            $html .= '<td>' . $course->name . '</td>';
-            $html .= '<td>' . $course->department_id . '</td>';
-            $html .= '<td>' . $course->created_at . '</td>';
-            $html .= '<td>' . $course->updated_at . '</td>';
-            $html .= '</tr>';
+
+        // Add custom Bootstrap-like styles for table
+        $style = '
+        <style>
+            body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+            h1 { text-align: center; font-size: 24px; margin-bottom: 20px; }
+            table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+            table th, table td { padding: 10px; text-align: left; border: 1px solid #ddd; }
+            table th { background-color: #f8f9fa; font-weight: bold; }
+            table tr:nth-child(even) { background-color: #f2f2f2; }
+            table tr:hover { background-color: #f1f1f1; }
+        </style>';
+
+        // Create table content
+        $html = $style . '
+        <h1>Study Sessions Report</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Topic</th>
+                    <th>Description</th>
+                    <th>Session Date</th>
+                    <th>Location</th>
+                    <th>Price/Volunteer</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>';
+
+        foreach ($study_sessions as $session) {
+            $html .= '
+                <tr>
+                    <td>' . $session->id . '</td>
+                    <td>' . $session->topic . '</td>
+                    <td>' . $session->description . '</td>
+                    <td>' . $session->session_date . '</td>
+                    <td>' . $session->location . '</td>
+                    <td>' . $session->price_or_volunteer . '</td>
+                    <td>' . $session->price . '</td>
+                </tr>';
         }
+
         $html .= '</tbody></table>';
         $pdf->writeHTML($html, true, false, true, false, '');
         return $pdf;
     }
+
+    private function generateRestaurantsPDF($restaurants)
+    {
+        $pdf = new TCPDF();
+        $pdf->AddPage();
+
+        // Add custom Bootstrap-like styles for table
+        $style = '
+        <style>
+            body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+            h1 { text-align: center; font-size: 24px; margin-bottom: 20px; }
+            table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+            table th, table td { padding: 10px; text-align: left; border: 1px solid #ddd; }
+            table th { background-color: #f8f9fa; font-weight: bold; }
+            table tr:nth-child(even) { background-color: #f2f2f2; }
+            table tr:hover { background-color: #f1f1f1; }
+        </style>';
+
+        // Create table content
+        $html = $style . '
+        <h1>Restaurants Report</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Menu Image</th>
+                    <th>Operating Hours</th>
+                    <th>Location</th>
+                </tr>
+            </thead>
+            <tbody>';
+
+        foreach ($restaurants as $restaurant) {
+            $html .= '
+                <tr>
+                    <td>' . $restaurant->id . '</td>
+                    <td>' . $restaurant->name . '</td>
+                    <td>' . $restaurant->description . '</td>
+                    <td>' . $restaurant->menu_image . '</td>
+                    <td>' . $restaurant->operating_hours . '</td>
+                    <td>' . $restaurant->location . '</td>
+                </tr>';
+        }
+
+        $html .= '</tbody></table>';
+        $pdf->writeHTML($html, true, false, true, false, '');
+        return $pdf;
+    }
+
 }
