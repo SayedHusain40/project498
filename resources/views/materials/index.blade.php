@@ -116,7 +116,6 @@
         </div>
     </div>
 
-
     <!-- Filter -->
     <div class="d-flex justify-content-between mb-4">
         <div class="d-flex">
@@ -185,6 +184,11 @@
                                 </div>
 
                                 <h4 class="card-title">{{ $material->title }}</h4>
+
+                                <p class="material-description text-muted" style="font-size: 0.9rem;">
+                                    {{ Str::limit($material->description, 100) ?? 'No description available.' }}
+                                </p>
+
                                 <p>
                                     <span class="badge rounded-pill" style="background-color:#cfe2ff; color:black;">
                                         <i class="fa-solid fa-file-lines" style="color: #3092fa;"></i>
