@@ -1,7 +1,7 @@
 @extends('new_layouts.app')
 @section('page_name', 'Materials')
 @section('button_url')
-    {{ route('up') }}  
+    {{ route('up') }}
 @endsection
 
 @section('button_label')
@@ -37,7 +37,7 @@
             color: #253c60;
         }
 
-        .dropdown-menu {
+        .dropdown-menu-report {
             display: none;
             position: absolute;
             top: 30px;
@@ -49,7 +49,7 @@
             z-index: 1000;
         }
 
-        .dropdown-menu.show {
+        .dropdown-menu-report.show {
             display: block;
         }
 
@@ -104,34 +104,50 @@
 @endphp
 @section('content')
 
-        <!-- Filter -->
-        <div class="d-flex justify-content-between mb-4">
-            <div class="d-flex">
-                <form method="GET" action="{{ route('materials') }}" class="d-flex">
-                    <div class="input-group">
-                        <select class="form-select me-2" name="course_code" id="course_code">
-                            <option value="">All courses</option>
-                            @foreach ($courses as $course)
-                                <option value="{{ $course->code }}"
-                                    {{ request('course_code') == $course->code ? 'selected' : '' }}>
-                                    {{ $course->name }}-{{ $course->code }}
-                                </option>
-                            @endforeach
-                        </select>
-                        <select class="form-select me-2" name="material_type_id" id="material_type_id">
-                            <option value="">All types</option>
-                            @foreach ($materialTypes as $materialType)
-                                <option value="{{ $materialType->id }}"
-                                    {{ request('material_type_id') == $materialType->id ? 'selected' : '' }}>
-                                    {{ $materialType->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                        <button class="btn btn-primary" type="submit">Filter</button>
-                    </div>
-                </form>
+    <!-- Search Bar -->
+    <div class="d-flex justify-content-between mb-4">
+        <div class="d-flex">
+            <div class="input-icon">
+                <input type="text" id="search" class="form-control" placeholder="Search for..."
+                    onkeyup="filterMaterials()" />
+                <span class="input-icon-addon">
+                    <i class="fa fa-search"></i>
+                </span>
             </div>
         </div>
+    </div>
+
+
+    <!-- Filter -->
+    <div class="d-flex justify-content-between mb-4">
+        <div class="d-flex">
+            <form method="GET" action="{{ route('materials') }}" class="d-flex">
+                <div class="input-group">
+                    <select class="form-select me-2" name="course_code" id="course_code">
+                        <option value="">All courses</option>
+                        @foreach ($courses as $course)
+                            <option value="{{ $course->code }}"
+                                {{ request('course_code') == $course->code ? 'selected' : '' }}>
+                                {{ $course->name }}-{{ $course->code }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <select class="form-select me-2" name="material_type_id" id="material_type_id">
+                        <option value="">All types</option>
+                        @foreach ($materialTypes as $materialType)
+                            <option value="{{ $materialType->id }}"
+                                {{ request('material_type_id') == $materialType->id ? 'selected' : '' }}>
+                                {{ $materialType->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <button class="btn btn-primary" type="submit">Filter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="border-top my-4"></div>
 
     <!-- if there are not porducts-->
     @if ($materials->isEmpty())
@@ -140,18 +156,17 @@
             <p>No materials available at the moment. Please check back later.</p>
         </div>
     @else
-
         <!-- Materials -->
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3" id="myGrid">
             @foreach ($materials as $material)
-                <div class="col">
+                <div class="col material-item">
                     <div class="card border rounded-5">
                         <a href="{{ route('materials.show', $material->id) }}" class="text-decoration-none card-link">
                             <div class="card-body">
                                 <!-- Report Section -->
                                 <div class="report-dots" title="Report this material">
                                     <i class="fas fa-ellipsis-v"></i>
-                                    <div class="dropdown-menu">
+                                    <div class="dropdown-menu-report">
                                         @if ($role === 'guest')
                                             <div style="color: red; padding:10px;" data-bs-toggle="modal"
                                                 data-bs-target="#guestModal">Report</div>
@@ -319,7 +334,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const reportDots = document.querySelectorAll('.report-dots');
-            const dropdownMenus = document.querySelectorAll('.dropdown-menu');
+            const dropdownMenus = document.querySelectorAll('.dropdown-menu-report');
             const reportModalElement = document.getElementById('reportModal');
             const reportModal = new bootstrap.Modal(reportModalElement);
 
@@ -328,7 +343,7 @@
                     event.stopPropagation();
                     event.preventDefault();
 
-                    const dropdownMenu = this.querySelector('.dropdown-menu');
+                    const dropdownMenu = this.querySelector('.dropdown-menu-report');
                     dropdownMenu.classList.toggle('show');
 
                     // Hide other open dropdown menus
@@ -394,4 +409,19 @@
         });
     </script>
 
+    <script>
+        function filterMaterials() {
+            const searchQuery = document.getElementById('search').value.toLowerCase();
+            const materials = document.querySelectorAll('.material-item');
+
+            materials.forEach(material => {
+                const title = material.querySelector('.card-title').innerText.toLowerCase();
+                if (title.includes(searchQuery)) {
+                    material.style.display = '';
+                } else {
+                    material.style.display = 'none';
+                }
+            });
+        }
+    </script>
 @endsection

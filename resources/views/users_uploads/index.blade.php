@@ -83,70 +83,79 @@
             <!-- Materials Tab -->
             <div class="tab-pane fade show active" id="pills-materials" role="tabpanel"
                 aria-labelledby="pills-materials-tab">
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3" id="myGrid">
-                    @foreach ($materials as $material)
-                        <div class="col">
-                            <div class="card border rounded-5">
-                                <a href="{{ route('materials.show', $material->id) }}"
-                                    class="text-decoration-none card-link">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between mb-3">
-                                            <span><i class="fas fa-folder mr-10px"
-                                                    style="font-size: 20px; color:#4caf50"></i>
-                                                <span style="color: #2a2f5b">{{ $material->course->code }}</span></span>
-                                            <span class="text-muted">{{ $material->created_at->format('Y-m-d') }}</span>
+                @if ($materials->isEmpty())
+                    <div class="text-center">
+                        <p>No materials have been uploaded yet.</p>
+                    </div>
+                @else
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3" id="myGrid">
+                        @foreach ($materials as $material)
+                            <div class="col">
+                                <div class="card border rounded-5">
+                                    <a href="{{ route('materials.show', $material->id) }}"
+                                        class="text-decoration-none card-link">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between mb-3">
+                                                <span><i class="fas fa-folder mr-10px"
+                                                        style="font-size: 20px; color:#4caf50"></i>
+                                                    <span style="color: #2a2f5b">{{ $material->course->code }}</span></span>
+                                                <span class="text-muted">{{ $material->created_at->format('Y-m-d') }}</span>
+                                            </div>
+                                            <div class="text-center">
+                                                <h4 class="card-title">{{ $material->title }}</h4>
+                                            </div>
+                                            <p>
+                                                <span class="badge rounded-pill"
+                                                    style="background-color:#cfe2ff; color:black;">
+                                                    <i class="fa-solid fa-file-lines" style="color: #3092fa;"></i>
+                                                    <span>{{ $material->file_count }}</span>
+                                                </span>
+                                                <span class="badge rounded-pill"
+                                                    style="background-color: {{ $material->materialType->color ?? '#ccc' }}">
+                                                    {{ $material->materialType->name ?? 'Unknown Type' }}
+                                                </span>
+                                            </p>
                                         </div>
-                                        <div class="text-center">
-                                            <h4 class="card-title">{{ $material->title }}</h4>
+                                    </a>
+                                    <div class="card-footer"
+                                        style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div style="display: flex; align-items: center; color: #253c60;">
+                                            <form action="{{ route('users.profile') }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <input type="hidden" name="user_id" value="{{ $material->user->id }}">
+                                                <button type="submit" class="btn btn-link p-0"
+                                                    style="text-decoration: none !important; color: inherit; display: flex; align-items: center;">
+                                                    @if ($material->user->profile_image)
+                                                        <div class="rounded-circle"
+                                                            style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right: 5px;">
+                                                            <img src="{{ asset('storage/' . $material->user->profile_image) }}"
+                                                                alt="Profile Image" class="img-fluid rounded-circle"
+                                                                style="width: 40px; height: 40px; object-fit: cover;">
+                                                        </div>
+                                                    @else
+                                                        <div class="rounded-circle"
+                                                            style="width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right: 5px;">
+                                                            <i class="fas fa-user"
+                                                                style="font-size: 25px; color: #aaa;"></i>
+                                                        </div>
+                                                    @endif
+                                                    <span class="user-name">By, {{ $material->user->name }}</span>
+                                                </button>
+                                            </form>
                                         </div>
-                                        <p>
-                                            <span class="badge rounded-pill" style="background-color:#cfe2ff; color:black;">
-                                                <i class="fa-solid fa-file-lines" style="color: #3092fa;"></i>
-                                                <span>{{ $material->file_count }}</span>
-                                            </span>
-                                            <span class="badge rounded-pill"
-                                                style="background-color: {{ $material->materialType->color ?? '#ccc' }}">
-                                                {{ $material->materialType->name ?? 'Unknown Type' }}
-                                            </span>
-                                        </p>
+                                        <button type="button" class="btn btn-rounded btn-danger delete-material"
+                                            style="background-color: #e3342f; color: #fff;"
+                                            data-material-id="{{ $material->id }}">
+                                            <i class="fa-solid fa-trash"></i> Delete
+                                        </button>
                                     </div>
-                                </a>
-                                <div class="card-footer"
-                                    style="display: flex; justify-content: space-between; align-items: center;">
-                                    <div style="display: flex; align-items: center; color: #253c60;">
-                                        <form action="{{ route('users.profile') }}" method="POST" class="d-inline">
-                                            @csrf
-                                            <input type="hidden" name="user_id" value="{{ $material->user->id }}">
-                                            <button type="submit" class="btn btn-link p-0"
-                                                style="text-decoration: none !important; color: inherit; display: flex; align-items: center;">
-                                                @if ($material->user->profile_image)
-                                                    <div class="rounded-circle"
-                                                        style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right: 5px;">
-                                                        <img src="{{ asset('storage/' . $material->user->profile_image) }}"
-                                                            alt="Profile Image" class="img-fluid rounded-circle"
-                                                            style="width: 40px; height: 40px; object-fit: cover;">
-                                                    </div>
-                                                @else
-                                                    <div class="rounded-circle"
-                                                        style="width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right: 5px;">
-                                                        <i class="fas fa-user" style="font-size: 25px; color: #aaa;"></i>
-                                                    </div>
-                                                @endif
-                                                <span class="user-name">By, {{ $material->user->name }}</span>
-                                            </button>
-                                        </form>
-                                    </div>
-                                    <button type="button" class="btn btn-rounded btn-danger delete-material"
-                                        style="background-color: #e3342f; color: #fff;"
-                                        data-material-id="{{ $material->id }}">
-                                        <i class="fa-solid fa-trash"></i> Delete
-                                    </button>
-                                </div>
 
+                                </div>
                             </div>
-                        </div>
-                    @endforeach
-                </div>
+                        @endforeach
+                    </div>
+                @endif
+
             </div>
 
             <!-- Announcements Tab -->
@@ -155,7 +164,7 @@
                 <!-- Check if there are no announcements -->
                 @if ($announcements->isEmpty())
                     <div class="text-center">
-                        <p>No Events available at the moment. Please check back later.</p>
+                        <p>No announcements have been uploaded yet.</p>
                     </div>
                 @else
                     <div class="container mt-4">
@@ -204,168 +213,192 @@
 
             <!-- Marketplace Tab -->
             <div class="tab-pane fade" id="pills-marketplace" role="tabpanel" aria-labelledby="pills-marketplace-tab">
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
-                    @foreach ($marketplaceItems as $item)
-                        <div class="col">
-                            <div class="card border rounded-5">
-                                <div class="card-header d-flex align-items-center">
-                                    @if ($item->user->profile_image)
-                                        <div class="rounded-circle"
-                                            style="width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:5px;">
-                                            <img src="{{ asset('storage/' . $item->user->profile_image) }}"
-                                                alt="Profile Image" class="img-fluid rounded-circle"
-                                                style="width: 50px; height: 50px; object-fit: cover;">
+                @if ($marketplaceItems->isEmpty())
+                    <div class="text-center">
+                        <p>No marketplaceItems have been uploaded yet.</p>
+                    </div>
+                @else
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+                        @foreach ($marketplaceItems as $item)
+                            <div class="col">
+                                <div class="card border rounded-5">
+                                    <div class="card-header d-flex align-items-center">
+                                        @if ($item->user->profile_image)
+                                            <div class="rounded-circle"
+                                                style="width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:5px;">
+                                                <img src="{{ asset('storage/' . $item->user->profile_image) }}"
+                                                    alt="Profile Image" class="img-fluid rounded-circle"
+                                                    style="width: 50px; height: 50px; object-fit: cover;">
+                                            </div>
+                                        @else
+                                            <div class="rounded-circle"
+                                                style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:5px;">
+                                                <i class="fas fa-user" style="font-size: 30px; color: #aaa;"></i>
+                                            </div>
+                                        @endif
+                                        <div class="ms-3">
+                                            <h6 class="mb-0 fs-sm">By, {{ $item->user->name }}</h6>
+                                            <span
+                                                class="text-muted fs-sm">{{ $item->created_at->format('F j, Y') }}</span>
                                         </div>
-                                    @else
-                                        <div class="rounded-circle"
-                                            style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:5px;">
-                                            <i class="fas fa-user" style="font-size: 30px; color: #aaa;"></i>
-                                        </div>
-                                    @endif
-                                    <div class="ms-3">
-                                        <h6 class="mb-0 fs-sm">By, {{ $item->user->name }}</h6>
-                                        <span class="text-muted fs-sm">{{ $item->created_at->format('F j, Y') }}</span>
+                                    </div>
+                                    <div class="card-body">
+                                        @if ($item->image_path)
+                                            <img src="{{ asset('storage/' . $item->image_path) }}" class="card-img-top"
+                                                alt="{{ $item->title }}" style="height: 200px; object-fit: contain;">
+                                        @else
+                                            <img src="{{ asset('images/no-image.jpg') }}" class="card-img-top"
+                                                alt="No image available" style="height: 200px; object-fit: cover;">
+                                        @endif
+                                        <h4 class="card-title mt-3">{{ $item->title }}</h4>
+                                        <p class="text-muted mb-2">{{ $item->category }} | Condition:
+                                            {{ ucfirst($item->condition) }}</p>
+                                        <p class="text-muted mb-0">{{ Str::limit($item->description, 100) }}</p>
+                                        <span class="text-success fw-bold mt-2">Price: @if ($item->price === null)
+                                                Free
+                                            @else
+                                                BD {{ $item->price }}
+                                            @endif
+                                        </span>
+                                    </div>
+                                    <div class="card-footer">
+                                        <button type="button" class="btn btn-rounded btn-danger w-100 mt-2 delete-item"
+                                            data-item-id="{{ $item->id }}">
+                                            <i class="fa-solid fa-trash"></i> Delete
+                                        </button>
                                     </div>
                                 </div>
-                                <div class="card-body">
-                                    @if ($item->image_path)
-                                        <img src="{{ asset('storage/' . $item->image_path) }}" class="card-img-top"
-                                            alt="{{ $item->title }}" style="height: 200px; object-fit: cover;">
-                                    @else
-                                        <img src="{{ asset('images/no-image.jpg') }}" class="card-img-top"
-                                            alt="No image available" style="height: 200px; object-fit: cover;">
-                                    @endif
-                                    <h4 class="card-title mt-3">{{ $item->title }}</h4>
-                                    <p class="text-muted mb-2">{{ $item->category }} | Condition:
-                                        {{ ucfirst($item->condition) }}</p>
-                                    <p class="text-muted mb-0">{{ Str::limit($item->description, 100) }}</p>
-                                    <span class="text-success fw-bold mt-2">Price: @if ($item->price === null)
-                                            Free
-                                        @else
-                                            BD {{ $item->price }}
-                                        @endif
-                                    </span>
-                                </div>
-                                <div class="card-footer">
-                                    <button type="button" class="btn btn-rounded btn-danger w-100 mt-2 delete-item"
-                                        data-item-id="{{ $item->id }}">
-                                        <i class="fa-solid fa-trash"></i> Delete
-                                    </button>
-                                </div>
                             </div>
-                        </div>
-                    @endforeach
-                </div>
+                        @endforeach
+                    </div>
+                @endif
+
             </div>
 
             <!-- Study Sessions Tab -->
             <div class="tab-pane fade" id="pills-study-sessions" role="tabpanel"
                 aria-labelledby="pills-study-sessions-tab">
-                <div class="row">
-                    @foreach ($studySessions as $session)
-                        <div class="col col-12 mb-4">
-                            <div class="d-flex rounded-xl shadow-sm" style="height: 200px; background-color: #ffffff;">
-                                <div class="bg-primary text-white p-3 rounded-start"
-                                    style="width: 200px; border-top-left-radius: 0.5rem; border-bottom-left-radius: 0.5rem;">
-                                    <p class="text-muted text-uppercase" style="font-size: 12px;">Course</p>
-                                    <h2 class="font-weight-bold" style="font-size: 18px;">{{ $session->course->name }}
-                                    </h2>
-                                </div>
+                @if ($studySessions->isEmpty())
+                    <div class="text-center">
+                        <p>No studySessions have been uploaded yet.</p>
+                    </div>
+                @else
+                    <div class="row">
+                        @foreach ($studySessions as $session)
+                            <div class="col col-12 mb-4">
+                                <div class="d-flex rounded-xl shadow-sm"
+                                    style="height: 200px; background-color: #ffffff;">
+                                    <div class="bg-primary text-white p-3 rounded-start"
+                                        style="width: 200px; border-top-left-radius: 0.5rem; border-bottom-left-radius: 0.5rem;">
+                                        <p class="text-muted text-uppercase" style="font-size: 12px;">Course</p>
+                                        <h2 class="font-weight-bold" style="font-size: 18px;">
+                                            {{ $session->course->name }}
+                                        </h2>
+                                    </div>
 
-                                <div class="p-3 bg-light rounded-end w-100 position-relative"
-                                    style="border-top-right-radius: 0.5rem; border-bottom-right-radius: 0.5rem;">
-                                    <h3 class="mt-1" style="font-weight: 500; font-size: 15px;"><b>Topic:</b>
-                                        {{ $session->topic }}</h3>
-                                    <h3 class="mt-1" style="font-weight: 500; font-size: 15px;"><b>Description:</b>
-                                        {{ $session->description }}</h3>
+                                    <div class="p-3 bg-light rounded-end w-100 position-relative"
+                                        style="border-top-right-radius: 0.5rem; border-bottom-right-radius: 0.5rem;">
+                                        <h3 class="mt-1" style="font-weight: 500; font-size: 15px;"><b>Topic:</b>
+                                            {{ $session->topic }}</h3>
+                                        <h3 class="mt-1" style="font-weight: 500; font-size: 15px;"><b>Description:</b>
+                                            {{ $session->description }}</h3>
 
-                                    <p class="card-text"><strong>Date:</strong>
-                                        {{ \Carbon\Carbon::parse($session->session_date)->format('F j, Y h:i A') }}</p>
-                                    <p class="mt-1" style="font-size: 14px;"><strong>Location:</strong>
-                                        {{ $session->location }}
-                                    </p>
-                                    <p class="mt-1" style="font-size: 14px;">
-                                        <strong>Price: </strong>
-                                        @if ($session->price_or_volunteer === 'price')
-                                            BD {{ number_format($session->price, 2) }}
-                                        @else
-                                            Volunteer
-                                        @endif
-                                    </p>
+                                        <p class="card-text"><strong>Date:</strong>
+                                            {{ \Carbon\Carbon::parse($session->session_date)->format('F j, Y h:i A') }}</p>
+                                        <p class="mt-1" style="font-size: 14px;"><strong>Location:</strong>
+                                            {{ $session->location }}
+                                        </p>
+                                        <p class="mt-1" style="font-size: 14px;">
+                                            <strong>Price: </strong>
+                                            @if ($session->price_or_volunteer === 'price')
+                                                BD {{ number_format($session->price, 2) }}
+                                            @else
+                                                Volunteer
+                                            @endif
+                                        </p>
 
-                                    <button type="button" class="btn btn-danger delete-session position-absolute"
-                                        style="right: 10px; bottom: 10px;" data-session-id="{{ $session->id }}"
-                                        data-bs-toggle="modal" data-bs-target="#confirmDeleteSessionModal">
-                                        Delete
-                                    </button>
+                                        <button type="button" class="btn btn-danger delete-session position-absolute"
+                                            style="right: 10px; bottom: 10px;" data-session-id="{{ $session->id }}"
+                                            data-bs-toggle="modal" data-bs-target="#confirmDeleteSessionModal">
+                                            Delete
+                                        </button>
 
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    @endforeach
-                </div>
+                        @endforeach
+                    </div>
+                @endif
+
             </div>
 
             <!-- Restaurants Tab -->
             <div class="tab-pane fade" id="pills-restaurants" role="tabpanel" aria-labelledby="pills-restaurants-tab">
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
-                    @foreach ($restaurants as $restaurant)
-                        <div class="col">
-                            <div class="card border rounded-5">
-                                <!-- Card Header -->
-                                <div class="card-header d-flex align-items-center">
-                                    @if ($restaurant->user->profile_image)
-                                        <div class="rounded-circle"
-                                            style="width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:5px;">
-                                            <img src="{{ asset('storage/' . $restaurant->user->profile_image) }}"
-                                                alt="Profile Image" class="img-fluid rounded-circle"
-                                                style="width: 50px; height: 50px; object-fit: cover;">
+                @if ($restaurants->isEmpty())
+                    <div class="text-center">
+                        <p>No restaurants have been uploaded yet.</p>
+                    </div>
+                @else
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+                        @foreach ($restaurants as $restaurant)
+                            <div class="col">
+                                <div class="card border rounded-5">
+                                    <!-- Card Header -->
+                                    <div class="card-header d-flex align-items-center">
+                                        @if ($restaurant->user->profile_image)
+                                            <div class="rounded-circle"
+                                                style="width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:5px;">
+                                                <img src="{{ asset('storage/' . $restaurant->user->profile_image) }}"
+                                                    alt="Profile Image" class="img-fluid rounded-circle"
+                                                    style="width: 50px; height: 50px; object-fit: cover;">
+                                            </div>
+                                        @else
+                                            <div class="rounded-circle"
+                                                style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:5px;">
+                                                <i class="fas fa-user" style="font-size: 30px; color: #aaa;"></i>
+                                            </div>
+                                        @endif
+                                        <div class="ms-3">
+                                            <h6 class="mb-0 fs-sm">By, {{ $restaurant->user->name }}</h6>
+                                            <span
+                                                class="text-muted fs-sm">{{ $restaurant->created_at->format('F j, Y') }}</span>
                                         </div>
-                                    @else
-                                        <div class="rounded-circle"
-                                            style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:5px;">
-                                            <i class="fas fa-user" style="font-size: 30px; color: #aaa;"></i>
-                                        </div>
-                                    @endif
-                                    <div class="ms-3">
-                                        <h6 class="mb-0 fs-sm">By, {{ $restaurant->user->name }}</h6>
-                                        <span
-                                            class="text-muted fs-sm">{{ $restaurant->created_at->format('F j, Y') }}</span>
+                                    </div>
+
+                                    <!-- Card Body -->
+                                    <div class="card-body">
+                                        @if ($restaurant->menu_image)
+                                            <a href="{{ asset('storage/' . $restaurant->menu_image) }}" target="_blank">
+                                                <img src="{{ asset('storage/' . $restaurant->menu_image) }}"
+                                                    class="card-img-top" alt="{{ $restaurant->name }} Menu"
+                                                    style="height: 200px; object-fit: contain;">
+                                            </a>
+                                        @else
+                                            <img src="{{ asset('images/no-image.jpg') }}" class="card-img-top"
+                                                alt="No image available" style="height: 200px; object-fit: cover;">
+                                        @endif
+
+                                        <h4 class="card-title mt-3">{{ $restaurant->name }}</h4>
+                                        <p class="text-muted mb-0">{{ Str::limit($restaurant->description, 100) }}</p>
+                                        <p class="text-muted mb-2"><strong>Operating Hours:</strong>
+                                            {{ $restaurant->operating_hours }}</p>
+                                        <p class="text-muted"><strong>Location:</strong> {{ $restaurant->location }}</p>
+                                    </div>
+
+                                    <!-- Card Footer -->
+                                    <div class="card-footer">
+                                        <button type="button" class="btn btn-rounded btn-danger delete-restaurant w-100"
+                                            data-restaurant-id="{{ $restaurant->id }}" data-bs-toggle="modal"
+                                            data-bs-target="#confirmDeleteRestaurantModal">
+                                            Delete
+                                        </button>
                                     </div>
                                 </div>
-
-                                <!-- Card Body -->
-                                <div class="card-body">
-                                    @if ($restaurant->menu_image)
-                                        <a href="{{ asset('storage/' . $restaurant->menu_image) }}" target="_blank">
-                                            <img src="{{ asset('storage/' . $restaurant->menu_image) }}"
-                                                class="card-img-top" alt="{{ $restaurant->name }} Menu"
-                                                style="height: 200px; object-fit: cover;">
-                                        </a>
-                                    @else
-                                        <img src="{{ asset('images/no-image.jpg') }}" class="card-img-top"
-                                            alt="No image available" style="height: 200px; object-fit: cover;">
-                                    @endif
-
-                                    <h4 class="card-title mt-3">{{ $restaurant->name }}</h4>
-                                    <p class="text-muted mb-0">{{ Str::limit($restaurant->description, 100) }}</p>
-                                    <p class="text-muted mb-2"><strong>Operating Hours:</strong>
-                                        {{ $restaurant->operating_hours }}</p>
-                                    <p class="text-muted"><strong>Location:</strong> {{ $restaurant->location }}</p>
-                                </div>
-
-                                <!-- Card Footer -->
-                                <div class="card-footer">
-                                    <button type="button" class="btn btn-rounded btn-danger delete-restaurant w-100"
-                                        data-restaurant-id="{{ $restaurant->id }}" data-bs-toggle="modal"
-                                        data-bs-target="#confirmDeleteRestaurantModal">
-                                        Delete
-                                    </button>
-                                </div>
                             </div>
-                        </div>
-                    @endforeach
-                </div>
+                        @endforeach
+                    </div>
+                @endif
+
             </div>
 
         </div>

@@ -47,7 +47,7 @@
                                 @if ($restaurant->menu_image)
                                     <a href="{{ asset('storage/' . $restaurant->menu_image) }}" target="_blank">
                                         <img src="{{ asset('storage/' . $restaurant->menu_image) }}" class="card-img-top"
-                                            alt="{{ $restaurant->name }} Menu" style="height: 200px; object-fit: cover;">
+                                            alt="{{ $restaurant->name }} Menu" style="height: 200px; object-fit: contain;">
                                     </a>
                                 @else
                                     <img src="{{ asset('images/no-image.jpg') }}" class="card-img-top"

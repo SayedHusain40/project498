@@ -44,7 +44,7 @@
                             @if ($item->image_path)
                                 <a href="{{ asset('storage/' . $item->image_path) }}" target="_blank">
                                     <img src="{{ asset('storage/' . $item->image_path) }}" class="card-img-top"
-                                        alt="{{ $item->title }}" style="height: 200px; object-fit: cover;">
+                                        alt="{{ $item->title }}" style="height: 200px; object-fit: contain;">
                                 </a>
                             @else
                                 <img src="{{ asset('images/no-image.jpg') }}" class="card-img-top" alt="No image available"
