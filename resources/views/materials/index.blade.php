@@ -41,7 +41,6 @@
             display: none;
             position: absolute;
             top: 30px;
-            /* Adjust position as needed */
             right: 0;
             background-color: #fff;
             border: 1px solid #ddd;

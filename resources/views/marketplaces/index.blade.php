@@ -9,6 +9,20 @@
 @endsection
 @section('content')
 
+    <!-- Search Bar -->
+    <div class="d-flex justify-content-between mb-4">
+        <div class="d-flex">
+            <div class="input-icon">
+                <input type="text" id="search" class="form-control" placeholder="Search for..." onkeyup="filterMaterials()" />
+                <span class="input-icon-addon">
+                    <i class="fa fa-search"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+
+        <div class="border-top my-4"></div>
+
     <!-- if there are not porducts-->
     @if ($items->isEmpty())
         <div class="text-center">
@@ -18,7 +32,7 @@
     @else
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
             @foreach ($items as $item)
-                <div class="col">
+                <div class="col marketplace-item">
                     <div class="card border rounded-5">
                         <div class="card-header d-flex align-items-center">
                             @if ($item->user->profile_image)
@@ -76,4 +90,22 @@
             @endforeach
         </div>
     @endif
+@endsection
+
+@section('scripts')
+<script>
+    function filterMaterials() {
+        const searchQuery = document.getElementById('search').value.toLowerCase();
+        const items = document.querySelectorAll('.marketplace-item'); 
+
+        items.forEach(item => {
+            const title = item.querySelector('.card-title').innerText.toLowerCase(); 
+            if (title.includes(searchQuery)) {
+                item.style.display = ''; 
+            } else {
+                item.style.display = 'none'; 
+            }
+        });
+    }
+</script>
 @endsection
