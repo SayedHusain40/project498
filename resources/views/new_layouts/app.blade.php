@@ -741,32 +741,31 @@
             </div>
 
             <footer class="footer">
-                <div class="container-fluid d-flex justify-content-between">
+                <div class="container-fluid d-flex justify-content-between align-items-center">
+                    <!-- Left: Terms and Privacy -->
                     <nav class="pull-left">
                         <ul class="nav">
                             <li class="nav-item">
-                                <a class="nav-link" href="http://www.themekita.com">
-                                    ThemeKita
-                                </a>
+                                <a class="nav-link" href="{{ route('terms') }}">Terms and Conditions</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#"> Help </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#"> Licenses </a>
+                                <a class="nav-link" href="{{ route('privacy') }}">Privacy Policy</a>
                             </li>
                         </ul>
                     </nav>
-                    <div class="copyright">
-                        2024, made with <i class="fa fa-heart heart text-danger"></i> by
-                        <a href="http://www.themekita.com">ThemeKita</a>
+
+                    <!-- Center: Copyright -->
+                    <div class="copyright" style="text-align: center; flex-grow: 1; margin-right: 40px;">
+                        2024, @copyright University of Bahrain
                     </div>
-                    <div>
-                        Distributed by
-                        <a target="_blank" href="https://themewagon.com/">ThemeWagon</a>.
+
+                    <!-- Right: Contact Us -->
+                    <div class="pull-right">
+                        <a target="_blank" href="mailto:202007293@stu.uob.edu.bh,20182953@stu.uob.edu.bh,20195176@stu.uob.edu.bh">Contact Us</a>
                     </div>
                 </div>
             </footer>
+
         </div>
         <!-- End Custom template -->
 

@@ -18,7 +18,7 @@
 </div>
         <div class="mt-4">
         <button type="submit" class="btn btn-primary w-100 py-2 px-4 rounded-lg shadow-md hover:bg-blue-700 transition duration-300">
-                                    Generrate Report
+                                    Generate Report
         </button>
         </div>
     </form>
