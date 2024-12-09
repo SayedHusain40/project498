@@ -16,11 +16,11 @@
             <label for="email">Email</label>
             <input type="email" name="email" class="form-control" value="{{ $user->email }}" required>
         </div>
-
+<!--
         <div class="form-group">
             <label for="role">Role</label>
             <input type="text" name="role" class="form-control" value="{{ $user->role }}" required>
-        </div>
+        </div> -->
 
         <button type="submit" class="btn btn-success">Save Changes</button>
     </form>
