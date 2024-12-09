@@ -26,9 +26,10 @@ class StudySessionController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'topic' => 'required|string|max:255',
+            'topic' => 'required|string|max:100',
+            'description' => 'nullable|string|max:200',
             'session_date' => 'required|date',
-            'location' => 'required|string|max:255',
+            'location' => 'required|string|max:50',
             'course_id' => 'required|exists:courses,id',
             'price_or_volunteer' => 'required|in:price,volunteer',
             'price' => 'nullable|numeric|min:0|required_if:price_or_volunteer,price',

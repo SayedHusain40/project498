@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique(); 
             $table->enum('role', ['user', 'admin'])->default('user');
+            //add here columns
             $table->unsignedBigInteger('major_id')->nullable();
             $table->foreign('major_id')->references('id')->on('departments')->onDelete('set null');
             $table->string('phone')->nullable(); 
