@@ -6,7 +6,7 @@
 
 @section('styles')
     <style>
-      
+
         .dropdown-menu {
             background-color: #ffffff;
             border: 1px solid rgba(0, 0, 0, 0.125);
@@ -72,7 +72,7 @@
                         <h5 class="card-title text-center">Feedback Form</h5>
 
                         <div class="mb-3">
-                            <label for="rating" class="form-label">Rating</label>
+                            <label for="rating" class="form-label">Rate your experience:</label>
                             <div class="d-flex flex-column">
                                 <!-- Rating 1 -->
                                 <div class="form-check">
@@ -106,7 +106,7 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="rating" value="5" id="rating5">
                                     <label class="form-check-label" for="rating5">
-                                        5 - Very Good
+                                        5 - Excellent
                                     </label>
                                 </div>
                             </div>
