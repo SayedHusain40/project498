@@ -94,7 +94,7 @@
 @endsection
 @php
     if (auth()->check()) {
-        if (auth()->user()->role === 'user') {
+        if (auth()->user()->role === 'user' || auth()->user()->role === 'admin') {
             $role = 'user';
         }
     } else {
