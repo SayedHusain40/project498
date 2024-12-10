@@ -13,7 +13,8 @@
     <div class="d-flex justify-content-between mb-4">
         <div class="d-flex">
             <div class="input-icon">
-                <input type="text" id="search" class="form-control" placeholder="Search for..." onkeyup="filterMaterials()" />
+                <input type="text" id="search" class="form-control" placeholder="Search for..."
+                    onkeyup="filterMaterials()" />
                 <span class="input-icon-addon">
                     <i class="fa fa-search"></i>
                 </span>
@@ -21,7 +22,7 @@
         </div>
     </div>
 
-        <div class="border-top my-4"></div>
+    <div class="border-top my-4"></div>
 
     <!-- if there are not porducts-->
     @if ($items->isEmpty())
@@ -66,7 +67,8 @@
                             @endif
 
                             <h4 class="card-title mt-3">{{ $item->title }}</h4>
-                            <p class="text-muted mb-0">{{ Str::limit($item->description, 100) }}</p>
+                            <p class="material-description text-muted" style="font-size: 0.9rem;">
+                                {{ $item->description }}</p>
                             <p class="text-muted mb-2">{{ $item->category }} | Condition:
                                 {{ ucfirst($item->condition) }}</p>
                             <span class="text fw-bold mt-2">Price:
@@ -93,19 +95,19 @@
 @endsection
 
 @section('scripts')
-<script>
-    function filterMaterials() {
-        const searchQuery = document.getElementById('search').value.toLowerCase();
-        const items = document.querySelectorAll('.marketplace-item'); 
+    <script>
+        function filterMaterials() {
+            const searchQuery = document.getElementById('search').value.toLowerCase();
+            const items = document.querySelectorAll('.marketplace-item');
 
-        items.forEach(item => {
-            const title = item.querySelector('.card-title').innerText.toLowerCase(); 
-            if (title.includes(searchQuery)) {
-                item.style.display = ''; 
-            } else {
-                item.style.display = 'none'; 
-            }
-        });
-    }
-</script>
+            items.forEach(item => {
+                const title = item.querySelector('.card-title').innerText.toLowerCase();
+                if (title.includes(searchQuery)) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+    </script>
 @endsection

@@ -23,7 +23,8 @@ class MarketplaceController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
+            'title' => 'required|string|max:50',
+            'description' => 'nullable|string|max:150',
             'price_option' => 'required',
             'category' => 'required|string',
             'condition' => 'required|in:new,used',

@@ -9,10 +9,22 @@
                 <div class="col-lg-4">
                     <div class="card mb-4">
                         <div class="card-body text-center">
-                            <i class="fas fa-user-circle fa-7x" style="color: #007bff;"></i>
+                            <div class="d-flex justify-content-center mb-3">
+                                <div class="rounded-circle d-flex justify-content-center align-items-center"
+                                    style="width: 110px; height: 110px; background-color: #f0f0f0;">
+                                    @if ($user->profile_image)
+                                        <img src="{{ asset('storage/' . $user->profile_image) }}" alt="Profile Image"
+                                            class="img-fluid rounded-circle"
+                                            style="width: 100px; height: 100px; object-fit: cover;">
+                                    @else
+                                        <i class="fas fa-user" style="font-size: 70px; color: #aaa;"></i>
+                                    @endif
+                                </div>
+                            </div>
                             <h5 class="my-3">{{ $user->name }}</h5>
-                            <p class="text-muted mb-1">{{ $user->department->name ?? 'Not Specified' }}</p>
+                            <p class="text-muted mb-1">Major: {{ $user->department->name ?? 'Not Specified' }}</p>
                         </div>
+
                     </div>
                 </div>
                 <div class="col-lg-8">

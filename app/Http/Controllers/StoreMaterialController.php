@@ -16,7 +16,8 @@ class StoreMaterialController extends Controller
     public function __invoke(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'title' => 'required',
+            'title' => 'required|string|max:50',
+            'description' => 'nullable|string|max:150',
             'course_id' => 'required',
             'material_type_id' => 'required|exists:material_types,id',
             'file' => 'required|min:1',

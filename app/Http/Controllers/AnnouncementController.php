@@ -35,9 +35,10 @@ class AnnouncementController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
+            'title' => 'required|string|max:100',
+            'description' => 'nullable|string|max:200',
             'category' => 'required|in:Academic,Career Development,Community Engagement,Competitions and Hackathons,Entertainment and Social',
-            'location' => 'required|string|max:255',
+            'location' => 'required|string|max:50',
             'event_date' => 'required|date',
         ]);
 

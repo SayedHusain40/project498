@@ -98,7 +98,6 @@
             var errorMsg = document.querySelector("#error-msg");
             var validMsg = document.querySelector("#valid-msg");
 
-            // Initialize intl-tel-input
             const iti = window.intlTelInput(input, {
                 preferredCountries: ['bh',''], // Bahrain as the preferred country
                 separateDialCode: true,
