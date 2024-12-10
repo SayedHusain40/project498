@@ -119,12 +119,48 @@
                                 <p class="text-danger">{{ $message }}</p>
                             @enderror
                         </div>
+<div class="text-center">
+    <!-- Button for Registered Users -->
+    @auth
+        <button type="submit" class="btn btn-primary w-100 py-2 px-4 rounded-lg shadow-md">
+            Submit Feedback
+        </button>
+    @endauth
 
-                        <button type="submit" class="btn btn-primary w-100 py-2 px-4 rounded-lg shadow-md">Submit Feedback</button>
+    <!-- Button for Guest Users -->
+    @guest
+        <button type="button" class="btn btn-primary w-100 py-2 px-4 rounded-lg shadow-md" data-bs-toggle="modal" data-bs-target="#guestModal">
+            Submit Feedback
+        </button>
+    @endguest
+</div>
+
                     </div>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<!-- Modal for Guest Users -->
+<div class="modal fade" id="guestModal" tabindex="-1" aria-labelledby="guestModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="guestModalLabel">Login Required</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Please log in or register to submit your feedback.
+            </div>
+            <div class="modal-footer">
+                <a href="{{ route('login') }}" class="btn btn-primary">Log In</a>
+                <a href="{{ route('register') }}" class="btn btn-secondary">Register</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 @endsection

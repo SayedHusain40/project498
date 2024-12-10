@@ -56,6 +56,24 @@ Route::get('/materials/{material}', [MaterialController::class, 'show'])->name('
 Route::get('/departments/questions', [QuestionController::class, 'index'])->name('chats.index');
 Route::get('/departments/{department}/questions', [QuestionController::class, 'show'])->name('chats.department');
 
+// marketplace
+Route::get('/marketplace', [MarketplaceController::class, 'index'])->name('marketplace');
+
+//study session
+Route::get('/study-sessions', [StudySessionController::class, 'index'])->name('study-sessions.index');
+
+//restaurants
+Route::resource('restaurants', RestaurantController::class);
+
+//announcements
+Route::get('/announcements', [AnnouncementController::class, 'index'])->name('announcements.index');
+
+// feedback
+Route::get('/feedback', [FeedbackController::class, 'index'])->name('feedback.index');
+
+//Clubs
+Route::resource('clubs', ClubController::class);
+
 Route::middleware('auth')->group(function () {
 
     //upload profile image
@@ -64,7 +82,6 @@ Route::middleware('auth')->group(function () {
 
 
     // feedback
-    Route::get('/feedback', [FeedbackController::class, 'index'])->name('feedback.index');
     Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
 
     Route::get('/up', UploadController::class)->name('up');
@@ -73,7 +90,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/up', StoreMaterialController::class);
 
     // marketplace
-    Route::get('/marketplace', [MarketplaceController::class, 'index'])->name('marketplace');
     Route::post('/marketplace/upload', [MarketplaceController::class, 'store'])->name('marketplace.upload');
     Route::get('/upload/marketplace', [MarketplaceController::class, 'showUploadForm'])->name('marketplace.show');
 
@@ -92,8 +108,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('my-uploads/restaurants/{id}', [UserUploadsController::class, 'destroyRestaurant'])->name('restaurants.destroy');
     Route::delete('my-uploads/announcements/{id}', [UserUploadsController::class, 'destroyAnnouncement'])->name('announcements.destroy');
     Route::delete('my-uploads/clubs/{id}', [UserUploadsController::class, 'destroyClub'])->name('clubs.destroy');
-
-
 
     //for martials
     Route::delete('/materials/{id}', [MaterialController::class, 'destroy'])->name('materials.delete');
@@ -124,12 +138,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/users/profile', [UserProfileController::class, 'profile'])->name('users.profile');
 
     //study session
-    Route::get('/study-sessions', [StudySessionController::class, 'index'])->name('study-sessions.index');
     Route::get('/study-sessions/create', [StudySessionController::class, 'create'])->name('study-sessions.create');
     Route::post('/study-sessions', [StudySessionController::class, 'store'])->name('study-sessions.store');
 
     //announcements
-    Route::get('/announcements', [AnnouncementController::class, 'index'])->name('announcements.index');
     Route::get('/announcements/create', [AnnouncementController::class, 'create'])->name('announcements.create');
     Route::post('/announcements', [AnnouncementController::class, 'store'])->name('announcements.store');
 
@@ -140,13 +152,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/moderate/view/{type}/{id}', [ModerateController::class, 'view'])->name('moderate.view');
     Route::get('/materials/{material}', [MaterialController::class, 'show'])->name('materials.show');
     Route::get('/discussions/{discussion}', [QuestionController::class, 'department'])->name('discussions.department');
-
-
-    //restaurants
-    Route::resource('restaurants', RestaurantController::class);
-
-    //Clubs
-    Route::resource('clubs', ClubController::class);
 
     //chart
     Route::get('/admin/dashboard', [ChartController::class, 'index']);

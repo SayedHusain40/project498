@@ -166,11 +166,16 @@
             <h3>Questions ( {{ $questions->count() }} )</h3>
             <div class="question-body">
                 <div class="d-flex mb-3">
-                    @if (Auth::user()->profile_image)
+                    @if (Auth::check() && Auth::user()->profile_image)
                         <div class="rounded-circle"
                             style="width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
                             <img src="{{ asset('storage/' . Auth::user()->profile_image) }}" alt="Profile Image"
                                 class="img-fluid rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+                        </div>
+                    @elseif (Auth::check())
+                        <div class="rounded-circle"
+                            style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
+                            <i class="fas fa-user" style="font-size: 30px; color: #aaa;"></i>
                         </div>
                     @else
                         <div class="rounded-circle"
@@ -178,6 +183,7 @@
                             <i class="fas fa-user" style="font-size: 30px; color: #aaa;"></i>
                         </div>
                     @endif
+
                     <div class="w-100">
                         <textarea id="question-input" class="form-control question-input" placeholder="Write a question..." rows="3"></textarea>
                         <div class="d-flex justify-content-between mt-2">
@@ -197,19 +203,25 @@
                     @foreach ($questions as $question)
                         <div class="question" data-question-id="{{ $question->id }}">
                             <div class="d-flex">
-                                @if ($question->user->profile_image)
-                                    <div class="rounded-circle"
-                                        style="width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
-                                        <img src="{{ asset('storage/' . $question->user->profile_image) }}"
-                                            alt="Profile Image" class="img-fluid rounded-circle"
-                                            style="width: 50px; height: 50px; object-fit: cover;">
-                                    </div>
-                                @else
-                                    <div class="rounded-circle"
-                                        style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
-                                        <i class="fas fa-user" style="font-size: 30px; color: #aaa;"></i>
-                                    </div>
-                                @endif
+@if ($question->user && $question->user->profile_image)
+    <div class="rounded-circle"
+        style="width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
+        <img src="{{ asset('storage/' . $question->user->profile_image) }}"
+            alt="Profile Image" class="img-fluid rounded-circle"
+            style="width: 50px; height: 50px; object-fit: cover;">
+    </div>
+@elseif ($question->user)
+    <div class="rounded-circle"
+        style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
+        <i class="fas fa-user" style="font-size: 30px; color: #aaa;"></i>
+    </div>
+@else
+    <div class="rounded-circle"
+        style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
+        <i class="fas fa-user" style="font-size: 30px; color: #aaa;"></i>
+    </div>
+@endif
+
                                 <div class="w-100">
                                     <div class="d-flex justify-content-between align-items-start">
                                         <div>
@@ -385,19 +397,25 @@
                                     <div class="reply-form" id="reply-form-{{ $question->id }}"
                                         style="display: none; margin-top:5px;">
                                         <div class="d-flex">
-                                            @if (Auth::user()->profile_image)
-                                                <div class="rounded-circle"
-                                                    style="width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
-                                                    <img src="{{ asset('storage/' . Auth::user()->profile_image) }}"
-                                                        alt="Profile Image" class="img-fluid rounded-circle"
-                                                        style="width: 50px; height: 50px; object-fit: cover;">
-                                                </div>
-                                            @else
-                                                <div class="rounded-circle"
-                                                    style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
-                                                    <i class="fas fa-user" style="font-size: 30px; color: #aaa;"></i>
-                                                </div>
-                                            @endif
+@if (Auth::check() && Auth::user()->profile_image)
+    <div class="rounded-circle"
+        style="width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
+        <img src="{{ asset('storage/' . Auth::user()->profile_image) }}"
+            alt="Profile Image" class="img-fluid rounded-circle"
+            style="width: 50px; height: 50px; object-fit: cover;">
+    </div>
+@elseif (Auth::check())
+    <div class="rounded-circle"
+        style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
+        <i class="fas fa-user" style="font-size: 30px; color: #aaa;"></i>
+    </div>
+@else
+    <div class="rounded-circle"
+        style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
+        <i class="fas fa-user" style="font-size: 30px; color: #aaa;"></i>
+    </div>
+@endif
+
                                             <div class="w-100">
                                                 <textarea class="form-control question-input" placeholder="Write a reply..." rows="2"></textarea>
                                                 @if (auth()->check())
@@ -552,14 +570,14 @@
                                     ${
                                         data.question.user.profile_image 
                                         ? `<div class="rounded-circle"
-                                                    style="width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
-                                                    <img src="/storage/${data.question.user.profile_image}" alt="Profile Image"
-                                                        class="img-fluid rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
-                                                </div>`
+                                                        style="width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
+                                                        <img src="/storage/${data.question.user.profile_image}" alt="Profile Image"
+                                                            class="img-fluid rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+                                                    </div>`
                                         : `<div class="rounded-circle"
-                                                    style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
-                                                    <i class="fas fa-user" style="font-size: 30px; color: #aaa;"></i>
-                                                </div>`
+                                                        style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
+                                                        <i class="fas fa-user" style="font-size: 30px; color: #aaa;"></i>
+                                                    </div>`
                                     }
                                     <div class="w-100">
                                         <div class="d-flex justify-content-between align-items-start">
@@ -667,14 +685,14 @@
                                     ${
                                         data.reply.user.profile_image 
                                         ? `<div class="rounded-circle"
-                                                    style="width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
-                                                    <img src="/storage/${data.reply.user.profile_image}" alt="Profile Image"
-                                                        class="img-fluid rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
-                                                </div>`
+                                                        style="width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
+                                                        <img src="/storage/${data.reply.user.profile_image}" alt="Profile Image"
+                                                            class="img-fluid rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+                                                    </div>`
                                         : `<div class="rounded-circle"
-                                                    style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
-                                                    <i class="fas fa-user" style="font-size: 30px; color: #aaa;"></i>
-                                                </div>`
+                                                        style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
+                                                        <i class="fas fa-user" style="font-size: 30px; color: #aaa;"></i>
+                                                    </div>`
                                     }
                                     <div class="w-100">
                                         <div class="d-flex justify-content-between align-items-start">
