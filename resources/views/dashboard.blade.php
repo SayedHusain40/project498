@@ -16,30 +16,40 @@
 @endsection
 
 @section('content')
-    <!-- Welcome Message -->
+    <!-- Welcome Message
     <div class="row mb-4">
         <div class="col-12 d-flex flex-column flex-md-row justify-content-between align-items-center">
-            <!-- Message on the left -->
-            <div class="col-12 col-md-6 text-start" style="color:#1a2035">
+             Message on the left
+            <div class="col-12 col-md-6 text-start" style="color:#1a2035"> -->
                 @if (auth()->check())
-                    <h2 class="display-6 text-primary">
-                        👋 Welcome back, {{ auth()->user()->name }}! <br> Your study materials and others are ready to
-                        explore. 📚🚀
-                    </h2>
-                @else
-                    <h2 class="display-5 text-primary" style="color:#1a2035">
-                        🌟 Welcome to our platform! <br> Log in to access study materials and others. 🎓📘
-                    </h2>
-                @endif
-            </div>
+                <div class="card mb-4">
+                    <div class="card-body text-center">
+                        <h2>
+                            Welcome back, {{ auth()->user()->name }}! <br>
+                            Your study materials and others are ready to explore.
+                        </h2>
+                    </div>
+                </div>
+            @else
+                <div class="card mb-4">
+                    <div class="card-body text-center">
+                        <h2>
+                             Welcome to our platform! <br>
+                            Log in to access study materials and others.
+                        </h2>
+                    </div>
+                </div>
+            @endif
 
-            <!-- Image on the right -->
+           <!-- </div>
+
+             Image on the right
             <div class="col-12 col-md-6 text-end">
                 <img src="{{ asset('images/o3.png') }}" alt="Image" class="img-fluid"
                     style="max-width: 100%; height: auto;">
             </div>
         </div>
-    </div>
+    </div> -->
 
 
 
