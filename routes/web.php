@@ -35,6 +35,8 @@ use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\TableController;
 
 use App\Http\Controllers\ChartController;
+use App\Http\Controllers\RatingController;
+
 
 Route::get('/', function () {
     return view('dashboard');
@@ -148,6 +150,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/dashboard', [ChartController::class, 'index']);
     Route::get('/fetch-chart-data', [ChartController::class, 'fetchChartData']);
 
+    Route::get('/admin/ratings', [RatingController::class, 'index'])->name('ratings.index');
+    Route::post('/admin/ratings/{id}/reviewed', [RatingController::class, 'markReviewed'])->name('ratings.markReviewed');
 
 });
 Route::view('/terms', 'terms')->name('terms');
