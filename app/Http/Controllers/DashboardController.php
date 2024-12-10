@@ -26,6 +26,7 @@ class DashboardController extends Controller
         $restaurantCount = Restaurant::count();
         $marketplaceCount = Marketplace::count();
         $studySessionCount = StudySession::count();
+        $studySessionCount = StudySession::count();
 
         // Return view with the data
         return view('dashboard', compact('materialCount', 'questionCount', 'replyCount', 'userCount', 'eventCount', 'restaurantCount', 'marketplaceCount', 'studySessionCount'));
