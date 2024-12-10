@@ -2,11 +2,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\MaterialReport;
+use App\Models\Material;
 use App\Models\Marketplace;
 use App\Models\StudySession;
 use App\Models\Restaurant;
-use App\Models\Announcement; // Assuming Announcement model
+use App\Models\Announcement;
 use Illuminate\Http\Request;
 use TCPDF;
 
@@ -27,7 +27,7 @@ class ReportController extends Controller
                 $pdf = $this->generateUsersPDF($data);
                 return $pdf->Output('users_report.pdf', 'D');
             case 'materials':
-                $data = MaterialReport::all();
+                $data = Material::all();
                 $pdf = $this->generateMaterialsPDF($data);
                 return $pdf->Output('materials_report.pdf', 'D');
             case 'marketplaces':
@@ -102,7 +102,6 @@ class ReportController extends Controller
         $pdf = new TCPDF();
         $pdf->AddPage();
 
-        // Add custom Bootstrap-like styles for table
         $style = '
         <style>
             body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
@@ -114,18 +113,23 @@ class ReportController extends Controller
             table tr:hover { background-color: #f1f1f1; }
         </style>';
 
-        // Create table content
         $html = $style . '
         <h1>Materials Report</h1>
         <table>
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th colspan="6" style="text-align: center;">Materials Overview</th>
+                </tr>
+                <tr>
+                    <th rowspan="2">ID</th>
+                    <th rowspan="2">User ID</th>
+                    <th colspan="2">Details</th>
+                    <th rowspan="2">No. Files</th>
+                    <th rowspan="2">Created At</th>
+                </tr>
+                <tr>
                     <th>Title</th>
                     <th>Description</th>
-                    <th>Category</th>
-                    <th>Location</th>
-                    <th>Event Date</th>
                 </tr>
             </thead>
             <tbody>';
@@ -134,11 +138,11 @@ class ReportController extends Controller
             $html .= '
                 <tr>
                     <td>' . $material->id . '</td>
+                    <td>' . $material->user_id . '</td>
                     <td>' . $material->title . '</td>
                     <td>' . $material->description . '</td>
-                    <td>' . $material->category . '</td>
-                    <td>' . $material->location . '</td>
-                    <td>' . $material->event_date . '</td>
+                    <td>' . $material->file_count . '</td>
+                    <td>' . $material->created_at . '</td>
                 </tr>';
         }
 
@@ -152,7 +156,6 @@ class ReportController extends Controller
         $pdf = new TCPDF();
         $pdf->AddPage();
 
-        // Add custom Bootstrap-like styles for table
         $style = '
         <style>
             body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
@@ -164,19 +167,21 @@ class ReportController extends Controller
             table tr:hover { background-color: #f1f1f1; }
         </style>';
 
-        // Create table content
         $html = $style . '
         <h1>Marketplaces Report</h1>
         <table>
             <thead>
                 <tr>
+                    <th colspan="8" style="text-align: center;">Marketplaces Overview</th>
+                </tr>
+                <tr>
                     <th>ID</th>
+                    <th>User ID</th>
                     <th>Title</th>
                     <th>Description</th>
                     <th>Price</th>
                     <th>Category</th>
                     <th>Condition</th>
-                    <th>Image Path</th>
                 </tr>
             </thead>
             <tbody>';
@@ -185,12 +190,12 @@ class ReportController extends Controller
             $html .= '
                 <tr>
                     <td>' . $marketplace->id . '</td>
+                    <td>' . $marketplace->user_id . '</td>
                     <td>' . $marketplace->title . '</td>
                     <td>' . $marketplace->description . '</td>
                     <td>' . $marketplace->price . '</td>
                     <td>' . $marketplace->category . '</td>
                     <td>' . $marketplace->condition . '</td>
-                    <td>' . $marketplace->image_path . '</td>
                 </tr>';
         }
 
@@ -204,7 +209,6 @@ class ReportController extends Controller
         $pdf = new TCPDF();
         $pdf->AddPage();
 
-        // Add custom Bootstrap-like styles for table
         $style = '
         <style>
             body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
@@ -216,13 +220,16 @@ class ReportController extends Controller
             table tr:hover { background-color: #f1f1f1; }
         </style>';
 
-        // Create table content
         $html = $style . '
         <h1>Study Sessions Report</h1>
         <table>
             <thead>
                 <tr>
+                    <th colspan="8" style="text-align: center;">Study Sessions Overview</th>
+                </tr>
+                <tr>
                     <th>ID</th>
+                    <th>User ID</th>
                     <th>Topic</th>
                     <th>Description</th>
                     <th>Session Date</th>
@@ -237,6 +244,7 @@ class ReportController extends Controller
             $html .= '
                 <tr>
                     <td>' . $session->id . '</td>
+                    <td>' . $session->user_id . '</td>
                     <td>' . $session->topic . '</td>
                     <td>' . $session->description . '</td>
                     <td>' . $session->session_date . '</td>
@@ -256,7 +264,6 @@ class ReportController extends Controller
         $pdf = new TCPDF();
         $pdf->AddPage();
 
-        // Add custom Bootstrap-like styles for table
         $style = '
         <style>
             body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
@@ -268,16 +275,18 @@ class ReportController extends Controller
             table tr:hover { background-color: #f1f1f1; }
         </style>';
 
-        // Create table content
         $html = $style . '
         <h1>Restaurants Report</h1>
         <table>
             <thead>
                 <tr>
+                    <th colspan="7" style="text-align: center;">Restaurants Overview</th>
+                </tr>
+                <tr>
                     <th>ID</th>
+                    <th>User ID</th>
                     <th>Name</th>
                     <th>Description</th>
-                    <th>Menu Image</th>
                     <th>Operating Hours</th>
                     <th>Location</th>
                 </tr>
@@ -288,9 +297,9 @@ class ReportController extends Controller
             $html .= '
                 <tr>
                     <td>' . $restaurant->id . '</td>
+                    <td>' . $restaurant->user_id . '</td>
                     <td>' . $restaurant->name . '</td>
                     <td>' . $restaurant->description . '</td>
-                    <td>' . $restaurant->menu_image . '</td>
                     <td>' . $restaurant->operating_hours . '</td>
                     <td>' . $restaurant->location . '</td>
                 </tr>';
@@ -300,5 +309,57 @@ class ReportController extends Controller
         $pdf->writeHTML($html, true, false, true, false, '');
         return $pdf;
     }
+
+    private function generateAnnouncementsPDF($announcements)
+    {
+        $pdf = new TCPDF();
+        $pdf->AddPage();
+
+        $style = '
+        <style>
+            body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+            h1 { text-align: center; font-size: 24px; margin-bottom: 20px; }
+            table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+            table th, table td { padding: 10px; text-align: left; border: 1px solid #ddd; }
+            table th { background-color: #f8f9fa; font-weight: bold; }
+            table tr:nth-child(even) { background-color: #f2f2f2; }
+            table tr:hover { background-color: #f1f1f1; }
+        </style>';
+
+        $html = $style . '
+        <h1>Announcements Report</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th colspan="6" style="text-align: center;">Announcements Overview</th>
+                </tr>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th>Location</th>
+                    <th>Event Date</th>
+                </tr>
+            </thead>
+            <tbody>';
+
+        foreach ($announcements as $announcement) {
+            $html .= '
+                <tr>
+                    <td>' . $announcement->id . '</td>
+                    <td>' . $announcement->title . '</td>
+                    <td>' . $announcement->description . '</td>
+                    <td>' . $announcement->category . '</td>
+                    <td>' . $announcement->location . '</td>
+                    <td>' . $announcement->event_date . '</td>
+                </tr>';
+        }
+
+        $html .= '</tbody></table>';
+        $pdf->writeHTML($html, true, false, true, false, '');
+        return $pdf;
+    }
+
 
 }
