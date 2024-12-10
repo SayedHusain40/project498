@@ -152,6 +152,16 @@
                                             <span class="sub-item">Add New Restaurant</span>
                                         </a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('announcements.create') }}">
+                                            <span class="sub-item">Post New Events</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('clubs.create') }}">
+                                            <span class="sub-item">Add New clubs</span>
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
                         </li>
@@ -388,14 +398,13 @@
                                 </a>
                             </li>
                             <!-- Route feedback -->
-<!-- Route feedback -->
-<li class="nav-item {{ request()->routeIs('ratings.index') ? 'active' : '' }}">
-    <a href="{{ route('ratings.index') }}">
-        <i class="fas fa-comment-dots"></i> <!-- Icon for ratings -->
-        <p>Users Feedback</p>
-    </a>
-</li>
-
+                            <!-- Route feedback -->
+                            <li class="nav-item {{ request()->routeIs('ratings.index') ? 'active' : '' }}">
+                                <a href="{{ route('ratings.index') }}">
+                                    <i class="fas fa-comment-dots"></i> <!-- Icon for ratings -->
+                                    <p>Users Feedback</p>
+                                </a>
+                            </li>
                         @endif
 
                         <!-- For All users -->
@@ -434,7 +443,7 @@
                 <!-- Navbar Header -->
                 <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
                     <div class="container-fluid">
-                        <nav
+                        {{-- <nav
                             class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
                             <div class="input-group">
                                 <div class="input-group-prepend">
@@ -444,7 +453,7 @@
                                 </div>
                                 <input type="text" placeholder="Search ..." class="form-control" />
                             </div>
-                        </nav>
+                        </nav> --}}
                         <ul class="navbar-nav ms-auto align-items-center">
                             @if ($role === 'guest')
                                 <div class="d-flex">
@@ -471,11 +480,6 @@
                                 </ul>
                             </li>
                             <li class="nav-item topbar-icon dropdown hidden-caret">
-                                <a class="nav-link dropdown-toggle" href="#" id="messageDropdown"
-                                    role="button" data-bs-toggle="dropdown" aria-haspopup="true"
-                                    aria-expanded="false">
-                                    <i class="fa fa-envelope"></i>
-                                </a>
                                 <ul class="dropdown-menu messages-notif-box animated fadeIn"
                                     aria-labelledby="messageDropdown">
                                     <li>
@@ -543,7 +547,7 @@
                                     </li>
                                 </ul>
                             </li>
-                            <li class="nav-item topbar-icon dropdown hidden-caret">
+                            {{-- <li class="nav-item topbar-icon dropdown hidden-caret">
                                 <a class="nav-link dropdown-toggle" href="#" id="notifDropdown" role="button"
                                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fa fa-bell"></i>
@@ -608,7 +612,7 @@
                                         </a>
                                     </li>
                                 </ul>
-                            </li>
+                            </li> --}}
 
                             @if ($role === 'user' or $role === 'guest')
                                 <li class="nav-item topbar-icon dropdown hidden-caret">
@@ -770,7 +774,9 @@
 
                     <!-- Right: Contact Us -->
                     <div class="pull-right">
-                        <a target="_blank" href="mailto:202007293@stu.uob.edu.bh,20182953@stu.uob.edu.bh,20195176@stu.uob.edu.bh">Contact Us</a>
+                        <a target="_blank"
+                            href="mailto:202007293@stu.uob.edu.bh,20182953@stu.uob.edu.bh,20195176@stu.uob.edu.bh">Contact
+                            Us</a>
                     </div>
                 </div>
             </footer>
@@ -778,49 +784,49 @@
         </div>
         <!-- End Custom template -->
 
-    <!-- Load FilePond library -->
-    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
-    <script src="https://unpkg.com/filepond@^4/dist/filepond.js"></script>
+        <!-- Load FilePond library -->
+        <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+        <script src="https://unpkg.com/filepond@^4/dist/filepond.js"></script>
 
-    <!-- Core JS Files -->
-    <script src="{{ asset('assets/js/core/jquery-3.7.1.min.js') }}"></script>
-    <script src="{{ asset('assets/js/core/popper.min.js') }}"></script>
-    <script src="{{ asset('assets/js/core/bootstrap.min.js') }}"></script>
+        <!-- Core JS Files -->
+        <script src="{{ asset('assets/js/core/jquery-3.7.1.min.js') }}"></script>
+        <script src="{{ asset('assets/js/core/popper.min.js') }}"></script>
+        <script src="{{ asset('assets/js/core/bootstrap.min.js') }}"></script>
 
-    <!-- jQuery Scrollbar -->
-    <script src="{{ asset('assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js') }}"></script>
+        <!-- jQuery Scrollbar -->
+        <script src="{{ asset('assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js') }}"></script>
 
-    <!-- Chart JS -->
-    <script src="{{ asset('assets/js/plugin/chart.js/chart.min.js') }}"></script>
+        <!-- Chart JS -->
+        <script src="{{ asset('assets/js/plugin/chart.js/chart.min.js') }}"></script>
 
-    <!-- jQuery Sparkline -->
-    <script src="{{ asset('assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js') }}"></script>
+        <!-- jQuery Sparkline -->
+        <script src="{{ asset('assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js') }}"></script>
 
-    <!-- Chart Circle -->
-    <script src="{{ asset('assets/js/plugin/chart-circle/circles.min.js') }}"></script>
+        <!-- Chart Circle -->
+        <script src="{{ asset('assets/js/plugin/chart-circle/circles.min.js') }}"></script>
 
-    <!-- Datatables -->
-    <script src="{{ asset('assets/js/plugin/datatables/datatables.min.js') }}"></script>
+        <!-- Datatables -->
+        <script src="{{ asset('assets/js/plugin/datatables/datatables.min.js') }}"></script>
 
-    <!-- Bootstrap Notify -->
-    <script src="{{ asset('assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js') }}"></script>
+        <!-- Bootstrap Notify -->
+        <script src="{{ asset('assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js') }}"></script>
 
-    <!-- jQuery Vector Maps -->
-    <script src="{{ asset('assets/js/plugin/jsvectormap/jsvectormap.min.js') }}"></script>
-    <script src="{{ asset('assets/js/plugin/jsvectormap/world.js') }}"></script>
+        <!-- jQuery Vector Maps -->
+        <script src="{{ asset('assets/js/plugin/jsvectormap/jsvectormap.min.js') }}"></script>
+        <script src="{{ asset('assets/js/plugin/jsvectormap/world.js') }}"></script>
 
-    <!-- Sweet Alert -->
-    <script src="{{ asset('assets/js/plugin/sweetalert/sweetalert.min.js') }}"></script>
+        <!-- Sweet Alert -->
+        <script src="{{ asset('assets/js/plugin/sweetalert/sweetalert.min.js') }}"></script>
 
-    <!-- Kaiadmin JS -->
-    <script src="{{ asset('assets/js/kaiadmin.min.js') }}"></script>
+        <!-- Kaiadmin JS -->
+        <script src="{{ asset('assets/js/kaiadmin.min.js') }}"></script>
 
-    <script src="assets/js/setting-demo.js"></script>
+        <script src="assets/js/setting-demo.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.9/js/intlTelInput.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.9/js/intlTelInput.min.js"></script>
 
 
-    @yield('scripts')
+        @yield('scripts')
 </body>
 
 </html>
