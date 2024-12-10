@@ -244,7 +244,7 @@
                             <!-- Route Study Sessions -->
                             <li class="nav-item {{ request()->routeIs('study-sessions.index') ? 'active' : '' }}">
                                 <a href="{{ route('study-sessions.index') }}">
-                                    <i class="fas fa-users"></i>
+                                    <i class="fas fa-chalkboard-teacher"></i>
                                     <p>Study Sessions</p>
                                 </a>
                             </li>
@@ -270,6 +270,14 @@
                                 <a href="{{ route('chats.index') }}">
                                     <i class="fas fa-comments"></i>
                                     <p>Discussions</p>
+                                </a>
+                            </li>
+
+                            <!-- Route clubs -->
+                            <li class="nav-item {{ request()->routeIs('clubs.index') ? 'active' : '' }}">
+                                <a href="{{ route('clubs.index') }}">
+                                    <i class="fas fa-users"></i>
+                                    <p>Clubs</p>
                                 </a>
                             </li>
                             <!-- Route feedback -->
@@ -351,7 +359,7 @@
                             <!-- Route Study Sessions -->
                             <li class="nav-item {{ request()->routeIs('study-sessions.index') ? 'active' : '' }}">
                                 <a href="{{ route('study-sessions.index') }}">
-                                    <i class="fas fa-users"></i>
+                                    <i class="fas fa-chalkboard-teacher"></i>
                                     <p>Study Sessions List</p>
                                 </a>
                             </li>

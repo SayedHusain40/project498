@@ -27,6 +27,8 @@ use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\announcementsController;
 use App\Http\Controllers\ModerateController;
 
+use App\Http\Controllers\ClubController;
+
 
 //admin
 use App\Http\Controllers\Admin\HomeController;
@@ -138,6 +140,9 @@ Route::middleware('auth')->group(function () {
 
     //restaurants
     Route::resource('restaurants', RestaurantController::class);
+
+    //Clubs
+    Route::resource('clubs', ClubController::class);
 
     //chart
     Route::get('/admin/dashboard', [ChartController::class, 'index']);
