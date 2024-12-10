@@ -10,6 +10,7 @@ use App\Models\StudySession;
 use App\Models\Marketplace;
 use App\Models\MaterialType;
 use App\Models\Announcement;
+use App\Models\Club;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -34,10 +35,10 @@ class UserUploadsController extends Controller
         $marketplaceItems = Marketplace::where('user_id', Auth::id())->get();
         $studySessions = StudySession::where('user_id', Auth::id())->get();
         $restaurants = Restaurant::where('user_id', Auth::id())->get();
-        $announcements = Announcement::where('user_id', Auth::id())->get();  
+        $announcements = Announcement::where('user_id', Auth::id())->get();
+        $clubs = Club::where('user_id', Auth::id())->get();
 
-
-        return view('users_uploads.index', compact('courses', 'materialTypes', 'materials', 'marketplaceItems', 'studySessions', 'restaurants', 'announcements'));
+        return view('users_uploads.index', compact('courses', 'materialTypes', 'materials', 'marketplaceItems', 'studySessions', 'restaurants', 'announcements', 'clubs'));
     }
 
 
@@ -76,8 +77,16 @@ class UserUploadsController extends Controller
     {
         $announcement = Announcement::findOrFail($id);
         $announcement->delete();
-        
+
         return response()->json(['message' => 'Announcement deleted successfully.']);
     }
 
+    public function destroyClub($id)
+    {
+        $club = Club::findOrFail($id);
+
+        $club->delete();
+
+        return response()->json(['message' => 'Club deleted successfully.']);
+    }
 }

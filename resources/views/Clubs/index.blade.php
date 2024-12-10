@@ -21,7 +21,21 @@
                 @foreach ($clubs as $club)
                     <div class="col">
                         <div class="card border rounded-5">
+                            <!-- Card Header -->
                             <div class="card-header d-flex align-items-center">
+                                @if ($club->user->profile_image)
+                                    <div class="rounded-circle"
+                                        style="width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:5px;">
+                                        <img src="{{ asset('storage/' . $club->user->profile_image) }}" alt="Profile Image"
+                                            class="img-fluid rounded-circle"
+                                            style="width: 50px; height: 50px; object-fit: cover;">
+                                    </div>
+                                @else
+                                    <div class="rounded-circle"
+                                        style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:5px;">
+                                        <i class="fas fa-user" style="font-size: 30px; color: #aaa;"></i>
+                                    </div>
+                                @endif
                                 <div class="ms-3">
                                     <h6 class="mb-0 fs-sm">By, {{ $club->user->name }}</h6>
                                     <span class="text-muted fs-sm">{{ $club->created_at->format('F j, Y') }}</span>
@@ -30,9 +44,11 @@
 
                             <div class="card-body">
                                 @if ($club->image)
-                                    <img src="{{ asset('storage/' . $club->image) }}" class="card-img-top" alt="{{ $club->name }} Image" style="height: 200px; object-fit: contain;">
+                                    <img src="{{ asset('storage/' . $club->image) }}" class="card-img-top"
+                                        alt="{{ $club->name }} Image" style="height: 200px; object-fit: contain;">
                                 @else
-                                    <img src="{{ asset('images/no-image.jpg') }}" class="card-img-top" alt="No image available" style="height: 200px; object-fit: cover;">
+                                    <img src="{{ asset('images/no-image.jpg') }}" class="card-img-top"
+                                        alt="No image available" style="height: 200px; object-fit: cover;">
                                 @endif
 
                                 <h4 class="card-title mt-3">{{ $club->name }}</h4>
@@ -44,7 +60,8 @@
                                 <form action="{{ route('users.profile') }}" method="POST" class="me-auto">
                                     @csrf
                                     <input type="hidden" name="user_id" value="{{ $club->user->id }}">
-                                    <button type="submit" class="btn btn-primary w-100 rounded-pill">Contact Club Founder</button>
+                                    <button type="submit" class="btn btn-primary w-100 rounded-pill">Contact Club
+                                        Founder</button>
                                 </form>
                             </div>
                         </div>

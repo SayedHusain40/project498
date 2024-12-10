@@ -76,6 +76,10 @@
                     href="#" role="tab" aria-controls="pills-announcements"
                     aria-selected="false">Announcements</a>
             </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="pills-clubs-tab" data-bs-toggle="pill" data-bs-target="#pills-clubs" href="#"
+                    role="tab" aria-controls="pills-clubs" aria-selected="false">Clubs</a>
+            </li>
         </ul>
 
 
@@ -320,7 +324,8 @@
                                         <button type="button" class="btn btn-danger delete-session position-absolute"
                                             style="right: 10px; bottom: 10px;" data-session-id="{{ $session->id }}"
                                             data-bs-toggle="modal" data-bs-target="#confirmDeleteSessionModal">
-                                            Delete
+                                            <i class="fa-solid fa-trash"></i> Delete
+
                                         </button>
 
                                     </div>
@@ -390,7 +395,7 @@
                                         <button type="button" class="btn btn-rounded btn-danger delete-restaurant w-100"
                                             data-restaurant-id="{{ $restaurant->id }}" data-bs-toggle="modal"
                                             data-bs-target="#confirmDeleteRestaurantModal">
-                                            Delete
+                                            <i class="fa-solid fa-trash"></i> Delete
                                         </button>
                                     </div>
                                 </div>
@@ -401,6 +406,69 @@
 
             </div>
 
+            <!-- Clubs Tab -->
+            <div class="tab-pane fade" id="pills-clubs" role="tabpanel" aria-labelledby="pills-clubs-tab">
+                @if ($clubs->isEmpty())
+                    <div class="text-center">
+                        <p>No clubs available at the moment. Please check back later.</p>
+                    </div>
+                @else
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+                        @foreach ($clubs as $club)
+                            <div class="col">
+                                <div class="card border rounded-5">
+                                    <!-- Card Header -->
+                                    <div class="card-header d-flex align-items-center">
+                                        @if ($club->user->profile_image)
+                                            <div class="rounded-circle"
+                                                style="width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:5px;">
+                                                <img src="{{ asset('storage/' . $club->user->profile_image) }}"
+                                                    alt="Profile Image" class="img-fluid rounded-circle"
+                                                    style="width: 50px; height: 50px; object-fit: cover;">
+                                            </div>
+                                        @else
+                                            <div class="rounded-circle"
+                                                style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:5px;">
+                                                <i class="fas fa-user" style="font-size: 30px; color: #aaa;"></i>
+                                            </div>
+                                        @endif
+                                        <div class="ms-3">
+                                            <h6 class="mb-0 fs-sm">By, {{ $club->user->name }}</h6>
+                                            <span
+                                                class="text-muted fs-sm">{{ $club->created_at->format('F j, Y') }}</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        @if ($club->image)
+                                            <img src="{{ asset('storage/' . $club->image) }}" class="card-img-top"
+                                                alt="{{ $club->name }} Image"
+                                                style="height: 200px; object-fit: contain;">
+                                        @else
+                                            <img src="{{ asset('images/no-image.jpg') }}" class="card-img-top"
+                                                alt="No image available" style="height: 200px; object-fit: cover;">
+                                        @endif
+
+                                        <h4 class="card-title mt-3">{{ $club->name }}</h4>
+                                        <p class="text-muted mb-0">{{ Str::limit($club->description, 100) }}</p>
+                                        <p class="text-muted mb-2"><strong>Category:</strong> {{ $club->category }}</p>
+                                    </div>
+
+                                    <div class="card-footer">
+                                        <!-- Add delete button -->
+                                        <button type="button" class="btn btn-danger delete-club w-100 mt-2 rounded-pill"
+                                            data-club-id="{{ $club->id }}">
+                                            <i class="fa-solid fa-trash"></i> Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+
+
         </div>
 
     </div>
@@ -410,102 +478,120 @@
         aria-labelledby="confirmDeleteMaterialModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="confirmDeleteMaterialModalLabel">Confirm Delete</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to delete this material?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger" id="confirmDeleteMaterial">Delete</button>
+                <div class="modal-body text-center">
+                    <i class="fa-solid fa-exclamation-circle modal-icon"></i>
+                    <h5 class="modal-title mt-3" id="confirmDeleteMaterialModalLabel">Are you sure you want to delete this
+                        material?</h5>
+                    <p>This action cannot be undone.</p>
+                    <div class="mt-3">
+                        <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" id="confirmDeleteMaterial" class="btn btn-danger">Delete</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
 
     <!-- Confirm Delete Announcement Modal -->
-    <div class="modal fade" id="confirmDeleteAnnouncementModal" tabindex="-1" role="dialog"
+    <div class="modal fade" id="confirmDeleteAnnouncementModal" tabindex="-1"
         aria-labelledby="confirmDeleteAnnouncementModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="confirmDeleteAnnouncementModalLabel">Confirm Delete</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to delete this announcement?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger" id="confirmDeleteAnnouncement">Delete</button>
+                <div class="modal-body text-center">
+                    <i class="fa-solid fa-exclamation-circle modal-icon"></i>
+                    <h5 class="modal-title mt-3" id="confirmDeleteAnnouncementModalLabel">Are you sure you want to delete
+                        this announcement?</h5>
+                    <p>This action cannot be undone.</p>
+                    <div class="mt-3">
+                        <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" id="confirmDeleteAnnouncement" class="btn btn-danger">Delete</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Confirm Delete Restaurant Modal -->
+
+    <!-- Confirm Delete Marketplace Item Modal -->
     <div class="modal fade" id="confirmDeleteItemModal" tabindex="-1" aria-labelledby="confirmDeleteItemModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="confirmDeleteItemModalLabel">Confirm Delete</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to delete this marketplace item?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger" id="confirmDeleteItem">Delete</button>
+                <div class="modal-body text-center">
+                    <i class="fa-solid fa-exclamation-circle modal-icon"></i>
+                    <h5 class="modal-title mt-3" id="confirmDeleteItemModalLabel">Are you sure you want to delete this
+                        marketplace item?</h5>
+                    <p>This action cannot be undone.</p>
+                    <div class="mt-3">
+                        <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" id="confirmDeleteItem" class="btn btn-danger">Delete</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Confirm Delete Session Modal -->
+
+    <!-- Confirm Delete Study Session Modal -->
     <div class="modal fade" id="confirmDeleteSessionModal" tabindex="-1"
         aria-labelledby="confirmDeleteSessionModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="confirmDeleteSessionModalLabel">Confirm Delete</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to delete this study session?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger" id="confirmDeleteSession">Delete</button>
+                <div class="modal-body text-center">
+                    <i class="fa-solid fa-exclamation-circle modal-icon"></i>
+                    <h5 class="modal-title mt-3" id="confirmDeleteSessionModalLabel">Are you sure you want to delete this
+                        study session?</h5>
+                    <p>This action cannot be undone.</p>
+                    <div class="mt-3">
+                        <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" id="confirmDeleteSession" class="btn btn-danger">Delete</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
 
     <!-- Confirm Delete Restaurant Modal -->
     <div class="modal fade" id="confirmDeleteRestaurantModal" tabindex="-1"
         aria-labelledby="confirmDeleteRestaurantModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="confirmDeleteRestaurantModalLabel">Confirm Delete</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to delete this restaurant?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger" id="confirmDeleteRestaurant">Delete</button>
+                <div class="modal-body text-center">
+                    <i class="fa-solid fa-exclamation-circle modal-icon"></i>
+                    <h5 class="modal-title mt-3" id="confirmDeleteRestaurantModalLabel">Are you sure you want to delete
+                        this restaurant?</h5>
+                    <p>This action cannot be undone.</p>
+                    <div class="mt-3">
+                        <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" id="confirmDeleteRestaurant" class="btn btn-danger">Delete</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+
+    <!-- Confirm Delete club Modal -->
+    <div class="modal fade" id="confirmDeleteClubModal" tabindex="-1" aria-labelledby="confirmDeleteClubLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <i class="fa-solid fa-exclamation-circle modal-icon"></i>
+                    <h5 class="modal-title mt-3" id="confirmDeleteClubLabel">Are you sure you want to delete this club?
+                    </h5>
+                    <p>This action cannot be undone.</p>
+                    <div class="mt-3">
+                        <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" id="confirmDeleteClub" class="btn btn-danger">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 @endsection
 
@@ -517,6 +603,7 @@
             let sessionIdToDelete = null;
             let restaurantIdToDelete = null;
             let announcementIdToDelete = null;
+            let clubIdToDelete = null;
 
             // delete for materials
             document.querySelectorAll('.delete-material').forEach(button => {
@@ -544,6 +631,35 @@
                         }
                     });
                 $('#confirmDeleteMaterialModal').modal('hide');
+            });
+
+
+            // Delete for clubs
+            document.querySelectorAll('.delete-club').forEach(button => {
+                button.addEventListener('click', function() {
+                    clubIdToDelete = this.getAttribute('data-club-id');
+                    $('#confirmDeleteClubModal').modal('show');
+                });
+            });
+
+            // Confirm delete for clubs
+            document.getElementById('confirmDeleteClub').addEventListener('click', function() {
+                fetch(`my-uploads/clubs/${clubIdToDelete}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json',
+                        },
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            document.querySelector(`[data-club-id="${clubIdToDelete}"]`).closest('.col')
+                                .remove();
+                        } else {
+                            alert('Error deleting club.');
+                        }
+                    });
+                $('#confirmDeleteClubModal').modal('hide');
             });
 
             // delete for announcements

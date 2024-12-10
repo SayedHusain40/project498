@@ -90,7 +90,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('my-uploads/marketplace/{id}', [UserUploadsController::class, 'destroyMarketplaceItem'])->name('marketplace.destroy');
     Route::delete('my-uploads/study-sessions/{id}', [UserUploadsController::class, 'destroyStudySession'])->name('study-sessions.destroy');
     Route::delete('my-uploads/restaurants/{id}', [UserUploadsController::class, 'destroyRestaurant'])->name('restaurants.destroy');
-    Route::delete('my-uploads/announcements/{id}', [UserUploadsController::class, 'destroyAnnouncement'])->name('announcements.destroy'); // New route for deleting announcements
+    Route::delete('my-uploads/announcements/{id}', [UserUploadsController::class, 'destroyAnnouncement'])->name('announcements.destroy');
+    Route::delete('my-uploads/clubs/{id}', [UserUploadsController::class, 'destroyClub'])->name('clubs.destroy');
+
 
 
     //for martials
