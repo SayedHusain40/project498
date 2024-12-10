@@ -11,6 +11,22 @@
 @endsection
 
 @section('content')
+
+    <!-- Search Bar -->
+    <div class="d-flex justify-content-between mb-4">
+        <div class="d-flex">
+            <div class="input-icon">
+                <input type="text" id="search" class="form-control" placeholder="Search for..."
+                    onkeyup="filterClub()" />
+                <span class="input-icon-addon">
+                    <i class="fa fa-search"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="border-top my-4" style="border-top: 2px solid #eeeeee !important;"></div>
+
     @if ($clubs->isEmpty())
         <div class="text-center">
             <p>No clubs available at the moment. Please check back later.</p>
@@ -19,7 +35,7 @@
         <div class="container mt-5">
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
                 @foreach ($clubs as $club)
-                    <div class="col">
+                    <div class="col club-item">
                         <div class="card border rounded-5">
                             <!-- Card Header -->
                             <div class="card-header d-flex align-items-center">
@@ -70,4 +86,23 @@
             </div>
         </div>
     @endif
+@endsection
+
+@section('scripts')
+    <script>
+        function filterClub() {
+            const searchQuery = document.getElementById('search').value.toLowerCase();
+            const clubItems = document.querySelectorAll('.club-item');
+
+            clubItems.forEach(item => {
+                const title = item.querySelector('.card-title').innerText.toLowerCase();
+                if (title.includes(searchQuery)) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+    </script>
+
 @endsection

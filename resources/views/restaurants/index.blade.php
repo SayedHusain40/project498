@@ -8,6 +8,24 @@
     Add Restaurants
 @endsection
 @section('content')
+
+    <!-- Search Bar -->
+    <div class="d-flex justify-content-between mb-4">
+        <div class="d-flex">
+            <div class="input-icon">
+                <input type="text" id="search" class="form-control" placeholder="Search for..."
+                    onkeyup="filterRestaurant()" />
+                <span class="input-icon-addon">
+                    <i class="fa fa-search"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="border-top my-4" style="border-top: 2px solid #eeeeee !important;"></div>
+
+
+
     <!-- if there are not porducts-->
     @if ($restaurants->isEmpty())
         <div class="text-center">
@@ -18,7 +36,7 @@
         <div class="container mt-5">
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
                 @foreach ($restaurants as $restaurant)
-                    <div class="col">
+                    <div class="col restaurant-item">
                         <div class="card border rounded-5">
                             <!-- Card Header -->
                             <div class="card-header d-flex align-items-center">
@@ -95,4 +113,20 @@
             document.getElementById("fullImage").src = src;
         }
     </script>
+    <script>
+        function filterRestaurant() {
+            const searchQuery = document.getElementById('search').value.toLowerCase();
+            const restaurantItems = document.querySelectorAll('.restaurant-item');
+
+            restaurantItems.forEach(item => {
+                const title = item.querySelector('.card-title').innerText.toLowerCase();
+                if (title.includes(searchQuery)) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+    </script>
+
 @endsection

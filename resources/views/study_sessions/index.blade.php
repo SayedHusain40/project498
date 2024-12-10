@@ -9,6 +9,22 @@
     Post Study Sessions
 @endsection
 @section('content')
+
+
+    <!-- Search Bar -->
+    <div class="d-flex justify-content-between mb-4">
+        <div class="d-flex">
+            <div class="input-icon">
+                <input type="text" id="search" class="form-control" placeholder="Search for..."
+                    onkeyup="filterStudySessions()" />
+                <span class="input-icon-addon">
+                    <i class="fa fa-search"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="border-top my-4" style="border-top: 2px solid #eeeeee !important;"></div>
     <!-- if there are not porducts-->
     @if ($studySessions->isEmpty())
         <div class="text-center">
@@ -19,7 +35,7 @@
 
             <div class="row">
                 @foreach ($studySessions as $session)
-                    <div class="col-12 mb-4">
+                    <div class="col-12 mb-4 studySession-item">
                         <div class="d-flex rounded-xl shadow-sm" style="height: 200px; background-color: #ffffff;">
                             <div class="bg-primary text-white p-3 rounded-start"
                                 style="width: 200px; border-top-left-radius: 0.5rem; border-bottom-left-radius: 0.5rem;">
@@ -29,7 +45,7 @@
 
                             <div class="p-3 bg-light rounded-end w-100 position-relative"
                                 style="border-top-right-radius: 0.5rem; border-bottom-right-radius: 0.5rem;">
-                                <h3 class="mt-1" style="font-weight: 500; font-size: 15px;"><b>Topic:</b>
+                                <h3 class="mt-1 card-title" style="font-weight: 500; font-size: 15px;"><b>Topic:</b>
                                     {{ $session->topic }}</h3>
                                 <h3 class="mt-1" style="font-weight: 500; font-size: 15px;"><b>Description:</b>
                                     {{ $session->description }}</h3>
@@ -61,4 +77,23 @@
             </div>
         </div>
     @endif
+@endsection
+
+@section('scripts')
+    <script>
+        function filterStudySessions() {
+            const searchQuery = document.getElementById('search').value.toLowerCase();
+            const studySessionItems = document.querySelectorAll('.studySession-item');
+
+            studySessionItems.forEach(item => {
+                const title = item.querySelector('.card-title').innerText.toLowerCase();
+                if (title.includes(searchQuery)) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+    </script>
+
 @endsection
