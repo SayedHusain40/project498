@@ -388,12 +388,13 @@
                                 </a>
                             </li>
                             <!-- Route feedback -->
-                            <li class="nav-item {{ request()->routeIs('feedback.index') ? 'active' : '' }}">
-                                <a href="{{ route('feedback.index') }}">
-                                    <i class="fas fa-comments"></i>
-                                    <p>Users Feedback</p>
-                                </a>
-                            </li>
+<!-- Route feedback -->
+<li class="nav-item {{ request()->routeIs('ratings.index') ? 'active' : '' }}">
+    <a href="{{ route('ratings.index') }}">
+        <i class="fas fa-comment-dots"></i> <!-- Icon for ratings -->
+        <p>Users Feedback</p>
+    </a>
+</li>
 
                         @endif
 
