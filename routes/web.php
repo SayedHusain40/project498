@@ -36,13 +36,13 @@ use App\Http\Controllers\Admin\TableController;
 
 use App\Http\Controllers\ChartController;
 
-Route::get('/', function () {
-    return view('dashboard');
-});
+// Route::get('/', function () {
+//     return view('dashboard');
+// });
 
 Route::get('/discount', [DiscountController::class, 'index'])->name('discount.index');
 
-Route::get('/dashboard', [DashboardController::class, 'index'])
+Route::get('/', [DashboardController::class, 'index'])
 ->name('dashboard');
 // ->middleware('verified')
 
