@@ -35,7 +35,7 @@
     </style>
 @endsection
 
-@section('content')
+ @section('content')
     <div class="container">
         <h2>Enhance Your Profile</h2>
 
@@ -89,6 +89,7 @@
         </form>
     </div>
 @endsection
+
 
 @section('scripts')
     <script>

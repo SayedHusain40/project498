@@ -5,17 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Department;
 use App\Models\Course;
-use App\Models\College;
 use Illuminate\Http\Request;
 
 class AdditionalInfoController extends Controller
 {
     public function edit($id)
     {
-        $user = User::with('expertise')->findOrFail($id);
-        $colleges = College::with('departments.courses')->get();
+        $user = User::with('major', 'expertise')->findOrFail($id);
+        $departments = Department::all();
 
-        return view('profile.additional_info_edit', compact('user', 'colleges'));
+        $courses = Course::all();
+
+        return view('profile.additional_info_edit', compact('user', 'departments', 'courses'));
     }
 
 
