@@ -35,61 +35,63 @@
     </style>
 @endsection
 
- @section('content')
-    <div class="container">
-        <h2>Enhance Your Profile</h2>
+@section('content')
+    <div class="card mb-4">
+        <div class="card-body">
+            <h2>Enhance Your Profile</h2>
 
-        <form id="profile-form" action="{{ route('additional-info.update', $user->id) }}" method="POST">
-            @csrf
+            <form id="profile-form" action="{{ route('additional-info.update', $user->id) }}" method="POST">
+                @csrf
 
-            <div class="mb-3">
-                <label for="major" class="form-label">Major</label>
-                <select id="major" name="major_id" class="form-select" style="width: auto;">
-                    <option value="">Select Major</option>
-                    @foreach ($departments as $department)
-                        <option value="{{ $department->id }}" {{ $user->major_id == $department->id ? 'selected' : '' }}>
-                            {{ $department->name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
+                <div class="mb-3">
+                    <label for="major" class="form-label">Major</label>
+                    <select id="major" name="major_id" class="form-select" style="width: auto;">
+                        <option value="">Select Major</option>
+                        @foreach ($departments as $department)
+                            <option value="{{ $department->id }}"
+                                {{ $user->major_id == $department->id ? 'selected' : '' }}>
+                                {{ $department->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
 
-            <div class="mb-3">
-                <label for="phone" class="form-label">Phone Number</label>
-                <input type="tel" id="phone" name="phone" class="form-control" value="{{ $user->phone }}"
-                    style="width: fit-content;">
-                <span id="valid-msg" class="hide">✓ Valid</span>
-                <span id="error-msg" class="hide"></span>
-                @error('phone')
-                    <p class="text-danger">{{ $message }}</p>
-                @enderror
-            </div>
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" class="form-control" value="{{ $user->phone }}"
+                        style="width: fit-content;">
+                    <span id="valid-msg" class="hide">✓ Valid</span>
+                    <span id="error-msg" class="hide"></span>
+                    @error('phone')
+                        <p class="text-danger">{{ $message }}</p>
+                    @enderror
+                </div>
 
-            <div class="mt-4">
-                <label class="form-label">Select Courses You Are Expertise At:</label>
-                <div class="row g-2">
-                    @foreach ($courses as $course)
-                        <div class="col-5 col-md-4 col-lg-3">
-                            <div class="card checkbox-wrapper-16">
-                                <div class="card-body text-center">
-                                    <input class="checkbox-input" type="checkbox" name="course_ids[]"
-                                        value="{{ $course->id }}"
-                                        {{ $user->expertise->contains($course->id) ? 'checked' : '' }}>
-                                    <span class="checkbox-tile" style="width: fit-content">
-                                        <span class="checkbox-label"> {{ $course->code }} | {{ $course->name }}</span>
-                                    </span>
+                <div class="mt-4">
+                    <label class="form-label">Select Courses You Are Expertise At:</label>
+                    <div class="row g-2">
+                        @foreach ($courses as $course)
+                            <div class="col-5 col-md-4 col-lg-3">
+                                <div class="card checkbox-wrapper-16">
+                                    <div class="card-body text-center">
+                                        <input class="checkbox-input" type="checkbox" name="course_ids[]"
+                                            value="{{ $course->id }}"
+                                            {{ $user->expertise->contains($course->id) ? 'checked' : '' }}>
+                                        <span class="checkbox-tile" style="width: fit-content">
+                                            <span class="checkbox-label"> {{ $course->code }} | {{ $course->name }}</span>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    @endforeach
+                        @endforeach
+                    </div>
                 </div>
-            </div>
 
-            <button type="submit" class="btn btn-primary mt-4">Update</button>
-        </form>
+                <button type="submit" class="btn btn-primary mt-4">Update</button>
+            </form>
+        </div>
     </div>
 @endsection
-
 
 @section('scripts')
     <script>
@@ -100,7 +102,7 @@
             var validMsg = document.querySelector("#valid-msg");
 
             const iti = window.intlTelInput(input, {
-                preferredCountries: ['bh',''], // Bahrain as the preferred country
+                preferredCountries: ['bh', ''], // Bahrain as the preferred country
                 separateDialCode: true,
                 utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.9/js/utils.js" // For validation and formatting
             });
