@@ -159,7 +159,7 @@
                         </span>
                         <div>
                             <h5 class="mb-1">
-                                <b>{{ $marketplaceCount }} <small>Marketplaces</small></b>
+                                <b>{{ $marketplaceCount }} <small>Items</small></b>
                             </h5>
                             <small class="text-muted">Total marketplace listings</small>
                         </div>
