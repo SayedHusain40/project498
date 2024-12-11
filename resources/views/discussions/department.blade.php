@@ -203,24 +203,24 @@
                     @foreach ($questions as $question)
                         <div class="question" data-question-id="{{ $question->id }}">
                             <div class="d-flex">
-@if ($question->user && $question->user->profile_image)
-    <div class="rounded-circle"
-        style="width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
-        <img src="{{ asset('storage/' . $question->user->profile_image) }}"
-            alt="Profile Image" class="img-fluid rounded-circle"
-            style="width: 50px; height: 50px; object-fit: cover;">
-    </div>
-@elseif ($question->user)
-    <div class="rounded-circle"
-        style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
-        <i class="fas fa-user" style="font-size: 30px; color: #aaa;"></i>
-    </div>
-@else
-    <div class="rounded-circle"
-        style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
-        <i class="fas fa-user" style="font-size: 30px; color: #aaa;"></i>
-    </div>
-@endif
+                                @if ($question->user && $question->user->profile_image)
+                                    <div class="rounded-circle"
+                                        style="width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
+                                        <img src="{{ asset('storage/' . $question->user->profile_image) }}"
+                                            alt="Profile Image" class="img-fluid rounded-circle"
+                                            style="width: 50px; height: 50px; object-fit: cover;">
+                                    </div>
+                                @elseif ($question->user)
+                                    <div class="rounded-circle"
+                                        style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
+                                        <i class="fas fa-user" style="font-size: 30px; color: #aaa;"></i>
+                                    </div>
+                                @else
+                                    <div class="rounded-circle"
+                                        style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
+                                        <i class="fas fa-user" style="font-size: 30px; color: #aaa;"></i>
+                                    </div>
+                                @endif
 
                                 <div class="w-100">
                                     <div class="d-flex justify-content-between align-items-start">
@@ -246,14 +246,17 @@
                                                         </li>
                                                     @endif
                                                     @if (auth()->check())
-                                                        <button class="dropdown-item" data-bs-toggle="modal"
-                                                            data-bs-target="#reportModal"
-                                                            onclick="setReportData('question', {{ $question->id }})">Report</button>
+                                                        @if (auth()->id() !== $question->user_id)
+                                                            <button class="dropdown-item" data-bs-toggle="modal"
+                                                                data-bs-target="#reportModal"
+                                                                onclick="setReportData('question', {{ $question->id }})">Report</button>
+                                                        @endif
                                                     @else
                                                         <button class="dropdown-item" data-bs-toggle="modal"
                                                             data-bs-target="#loginSignupModal"
                                                             onclick="setReportData('question', {{ $question->id }})">Report</button>
                                                     @endif
+
 
                                                 </ul>
                                             </div>
@@ -346,15 +349,18 @@
                                                                         @endif
                                                                         <li>
                                                                             @if (auth()->check())
-                                                                                <button class="dropdown-item"
-                                                                                    data-bs-toggle="modal"
-                                                                                    data-bs-target="#reportModal"
-                                                                                    onclick="setReportData('reply', {{ $reply->id }})">Report</button>
+                                                                                @if (auth()->id() !== $reply->user_id)
+                                                                                    <button class="dropdown-item"
+                                                                                        data-bs-toggle="modal"
+                                                                                        data-bs-target="#reportModal"
+                                                                                        onclick="setReportData('reply', {{ $reply->id }})">Report</button>
+                                                                                @endif
                                                                             @else
                                                                                 <button class="dropdown-item"
                                                                                     data-bs-toggle="modal"
                                                                                     data-bs-target="#loginSignupModal">Report</button>
                                                                             @endif
+
 
                                                                         </li>
 
@@ -397,24 +403,24 @@
                                     <div class="reply-form" id="reply-form-{{ $question->id }}"
                                         style="display: none; margin-top:5px;">
                                         <div class="d-flex">
-@if (Auth::check() && Auth::user()->profile_image)
-    <div class="rounded-circle"
-        style="width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
-        <img src="{{ asset('storage/' . Auth::user()->profile_image) }}"
-            alt="Profile Image" class="img-fluid rounded-circle"
-            style="width: 50px; height: 50px; object-fit: cover;">
-    </div>
-@elseif (Auth::check())
-    <div class="rounded-circle"
-        style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
-        <i class="fas fa-user" style="font-size: 30px; color: #aaa;"></i>
-    </div>
-@else
-    <div class="rounded-circle"
-        style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
-        <i class="fas fa-user" style="font-size: 30px; color: #aaa;"></i>
-    </div>
-@endif
+                                            @if (Auth::check() && Auth::user()->profile_image)
+                                                <div class="rounded-circle"
+                                                    style="width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
+                                                    <img src="{{ asset('storage/' . Auth::user()->profile_image) }}"
+                                                        alt="Profile Image" class="img-fluid rounded-circle"
+                                                        style="width: 50px; height: 50px; object-fit: cover;">
+                                                </div>
+                                            @elseif (Auth::check())
+                                                <div class="rounded-circle"
+                                                    style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
+                                                    <i class="fas fa-user" style="font-size: 30px; color: #aaa;"></i>
+                                                </div>
+                                            @else
+                                                <div class="rounded-circle"
+                                                    style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
+                                                    <i class="fas fa-user" style="font-size: 30px; color: #aaa;"></i>
+                                                </div>
+                                            @endif
 
                                             <div class="w-100">
                                                 <textarea class="form-control question-input" placeholder="Write a reply..." rows="2"></textarea>
@@ -570,14 +576,14 @@
                                     ${
                                         data.question.user.profile_image 
                                         ? `<div class="rounded-circle"
-                                                        style="width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
-                                                        <img src="/storage/${data.question.user.profile_image}" alt="Profile Image"
-                                                            class="img-fluid rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
-                                                    </div>`
+                                                                style="width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
+                                                                <img src="/storage/${data.question.user.profile_image}" alt="Profile Image"
+                                                                    class="img-fluid rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+                                                            </div>`
                                         : `<div class="rounded-circle"
-                                                        style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
-                                                        <i class="fas fa-user" style="font-size: 30px; color: #aaa;"></i>
-                                                    </div>`
+                                                                style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
+                                                                <i class="fas fa-user" style="font-size: 30px; color: #aaa;"></i>
+                                                            </div>`
                                     }
                                     <div class="w-100">
                                         <div class="d-flex justify-content-between align-items-start">
@@ -591,7 +597,6 @@
                                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton${data.question.id}">
                                                         <li><button class="dropdown-item" href="#" onclick="editQuestion(${data.question.id}, '${data.question.content}')">Edit</button></li>
                                                         <li><button class="dropdown-item" onclick="confirmDeleteQuestion(${data.question.id})">Delete</button></li>
-                                                        <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#reportModal" onclick="setReportData('question', ${data.question.id})">Report</button></li>
                                                     </ul>
                                                 </div>
                                             </div>
@@ -612,8 +617,18 @@
                                         <div class="reply-list" id="reply-list-${data.question.id}" style="display: none;"></div>
                                         <div class="reply-form" id="reply-form-${data.question.id}" style="display: none;">
                                             <div class="d-flex">
-                                                <img src="https://static.xx.fbcdn.net/rsrc.php/v1/yi/r/odA9sNLrE86.jpg" alt="avatar" class="question-avatar">
-                                                <div class="w-100">
+                                    ${
+                                        data.question.user.profile_image 
+                                        ? `<div class="rounded-circle"
+                                                                style="width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
+                                                                <img src="/storage/${data.question.user.profile_image}" alt="Profile Image"
+                                                                    class="img-fluid rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+                                                            </div>`
+                                        : `<div class="rounded-circle"
+                                                                style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
+                                                                <i class="fas fa-user" style="font-size: 30px; color: #aaa;"></i>
+                                                            </div>`
+                                    }                                                <div class="w-100">
                                                     <textarea class="form-control question-input" placeholder="Write a reply..." rows="2"></textarea>
                                                     <button type="button" class="btn btn-primary mt-2" onclick="postReply(${data.question.id})">Post Reply</button>
                                                 </div>
@@ -685,14 +700,14 @@
                                     ${
                                         data.reply.user.profile_image 
                                         ? `<div class="rounded-circle"
-                                                        style="width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
-                                                        <img src="/storage/${data.reply.user.profile_image}" alt="Profile Image"
-                                                            class="img-fluid rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
-                                                    </div>`
+                                                                style="width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
+                                                                <img src="/storage/${data.reply.user.profile_image}" alt="Profile Image"
+                                                                    class="img-fluid rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+                                                            </div>`
                                         : `<div class="rounded-circle"
-                                                        style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
-                                                        <i class="fas fa-user" style="font-size: 30px; color: #aaa;"></i>
-                                                    </div>`
+                                                                style="width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; background-color: #f0f0f0; margin-right:15px;">
+                                                                <i class="fas fa-user" style="font-size: 30px; color: #aaa;"></i>
+                                                            </div>`
                                     }
                                     <div class="w-100">
                                         <div class="d-flex justify-content-between align-items-start">
@@ -706,7 +721,6 @@
                                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButtonReply${data.reply.id}">
                                                         <li><button class="dropdown-item" href="#" onclick="editReply(${questionId}, ${data.reply.id}, '${data.reply.content}')">Edit</button></li>
                                                         <li><button class="dropdown-item" onclick="confirmDeleteReply(${data.reply.id})">Delete</button></li>
-                                                        <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#reportModal" onclick="setReportData('reply', ${data.reply.id})">Report</button></li>
                                                     </ul>
                                                 </div>
                                             </div>

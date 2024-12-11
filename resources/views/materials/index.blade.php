@@ -121,7 +121,7 @@
         <div class="d-flex">
             <form method="GET" action="{{ route('materials') }}" class="d-flex">
                 <div class="input-group">
-                    <select class="form-select me-2" name="course_code" id="course_code">
+                    <select class="form-select me-2 d-none d-lg-block" name="course_code" id="course_code">
                         <option value="">All courses</option>
                         @foreach ($courses as $course)
                             <option value="{{ $course->code }}"
@@ -130,7 +130,8 @@
                             </option>
                         @endforeach
                     </select>
-                    <select class="form-select me-2" name="material_type_id" id="material_type_id">
+
+                    <select class="form-select me-2 d-none d-lg-block" name="material_type_id" id="material_type_id">
                         <option value="">All types</option>
                         @foreach ($materialTypes as $materialType)
                             <option value="{{ $materialType->id }}"
@@ -139,11 +140,50 @@
                             </option>
                         @endforeach
                     </select>
-                    <button class="btn btn-primary" type="submit">Filter</button>
+
+                    <button class="btn btn-primary d-none d-lg-block" type="submit">Apply Filter</button>
                 </div>
             </form>
         </div>
+
+        <button class="btn btn-outline-primary d-lg-none" id="filterIcon" data-bs-toggle="offcanvas"
+            data-bs-target="#filterSidebar" aria-controls="filterSidebar">
+            <i class="fa fa-filter"></i> Filter
+        </button>
     </div>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="filterSidebar" aria-labelledby="filterSidebarLabel">
+        <div class="offcanvas-header">
+            <h5 id="filterSidebarLabel">Filters</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <form method="GET" action="{{ route('materials') }}" class="d-flex flex-column">
+                <select class="form-select mb-3" name="course_code" id="course_code">
+                    <option value="">All courses</option>
+                    @foreach ($courses as $course)
+                        <option value="{{ $course->code }}"
+                            {{ request('course_code') == $course->code ? 'selected' : '' }}>
+                            {{ $course->name }}-{{ $course->code }}
+                        </option>
+                    @endforeach
+                </select>
+
+                <select class="form-select mb-3" name="material_type_id" id="material_type_id">
+                    <option value="">All types</option>
+                    @foreach ($materialTypes as $materialType)
+                        <option value="{{ $materialType->id }}"
+                            {{ request('material_type_id') == $materialType->id ? 'selected' : '' }}>
+                            {{ $materialType->name }}
+                        </option>
+                    @endforeach
+                </select>
+
+                <button class="btn btn-primary" type="submit">Apply Filters</button>
+            </form>
+        </div>
+    </div>
+
 
     <div class="border-top my-4"></div>
 
@@ -168,13 +208,16 @@
                                         @if ($role === 'guest')
                                             <div style="color: red; padding:10px;" data-bs-toggle="modal"
                                                 data-bs-target="#guestModal">Report</div>
-                                        @else
+                                        @elseif (Auth::id() !== $material->user_id)
                                             <div class="dropdown-item" style="color: red" data-bs-toggle="modal"
                                                 data-bs-target="#reportModal" data-material-id="{{ $material->id }}"
-                                                id="trigger-report-modal">Report</div>
+                                                id="trigger-report-modal">
+                                                Report
+                                            </div>
                                         @endif
                                     </div>
                                 </div>
+
 
                                 <div class="d-flex justify-content-between mb-3">
                                     <span>
